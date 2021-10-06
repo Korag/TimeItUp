@@ -1,10 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TimeItUpData.Library.Models;
 
 namespace TimeItUpData.Library.DataAccess
@@ -16,6 +11,7 @@ namespace TimeItUpData.Library.DataAccess
         public DbSet<Timer> Timers { get; set; }
         public DbSet<Split> Splits { get; set; }
         public DbSet<Alarm> Alarms { get; set; }
+        public DbSet<User> Users { get; set; }
 
         public EFDbContext(IConfiguration configuration)
         {
