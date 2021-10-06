@@ -1,9 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TimeItUpData.Library.Models
 {
@@ -11,7 +6,7 @@ namespace TimeItUpData.Library.Models
     {
         public BasicIdentityUser() : base()
         {
-            
+
         }
     }
 }

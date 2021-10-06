@@ -8,8 +8,8 @@ using TimeItUpAPI.Data;
 
 namespace TimeItUpAPI.Data.Migrations
 {
-    [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(BasicIdentityDbContext))]
+    partial class BasicIdentityDbContext : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
