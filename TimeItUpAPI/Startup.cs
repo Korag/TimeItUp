@@ -13,17 +13,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TimeItUpAPI.Data;
+using TimeItUpData.Library.DataAccess;
 
 namespace TimeItUpAPI
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
-
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -31,10 +32,15 @@ namespace TimeItUpAPI
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddDbContext<EFDbContext>();
+
             services.AddDatabaseDeveloperPageExceptionFilter();
 
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+
             services.AddControllersWithViews();
 
             services.AddSwaggerGen(c =>
@@ -44,7 +50,7 @@ namespace TimeItUpAPI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, EFDbContext context)
         {
             if (env.IsDevelopment())
             {
@@ -75,6 +81,13 @@ namespace TimeItUpAPI
 
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApi v1"));
+
+            CheckIfDbHasBeenCreated(context);
+        }
+
+        public void CheckIfDbHasBeenCreated(EFDbContext context)
+        {
+            context.Database.EnsureCreated();
         }
     }
 }
