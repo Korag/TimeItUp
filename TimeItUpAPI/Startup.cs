@@ -14,6 +14,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TimeItUpAPI.Data;
 using TimeItUpData.Library.DataAccess;
+using TimeItUpData.Library.Models;
 
 namespace TimeItUpAPI
 {
@@ -37,7 +38,7 @@ namespace TimeItUpAPI
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<BasicIdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
