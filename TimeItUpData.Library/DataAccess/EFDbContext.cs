@@ -25,10 +25,13 @@ namespace TimeItUpData.Library.DataAccess
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<User>().HasKey(x => new { x.Id });
+
+            modelBuilder.Entity<Timer>().HasKey(x => new { x.Id, x.UserId });
+
             modelBuilder.Entity<Alarm>().HasKey(x => new { x.Id, x.TimerId });
             modelBuilder.Entity<Split>().HasKey(x => new { x.Id, x.TimerId });
-            modelBuilder.Entity<Timer>().HasKey(x => new { x.Id, x.UserId });
-            modelBuilder.Entity<User>().HasKey(x => new { x.Id });
+            modelBuilder.Entity<Pause>().HasKey(x => new { x.Id, x.TimerId });
 
             base.OnModelCreating(modelBuilder);
         }
