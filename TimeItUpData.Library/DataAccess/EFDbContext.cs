@@ -8,10 +8,13 @@ namespace TimeItUpData.Library.DataAccess
     {
         private readonly IConfiguration _configuration;
 
+        public DbSet<User> Users { get; set; }
+
         public DbSet<Timer> Timers { get; set; }
+
         public DbSet<Split> Splits { get; set; }
         public DbSet<Alarm> Alarms { get; set; }
-        public DbSet<User> Users { get; set; }
+        public DbSet<Pause> Pauses { get; set; }
 
         public EFDbContext(IConfiguration configuration)
         {

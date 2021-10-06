@@ -6,10 +6,10 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TimeItUpAPI.Data;
 
-namespace TimeItUpAPI.Data.Migrations
+namespace TimeItUpAPI.Migrations
 {
     [DbContext(typeof(BasicIdentityDbContext))]
-    partial class BasicIdentityDbContext : ModelSnapshot
+    partial class BasicIdentityDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
