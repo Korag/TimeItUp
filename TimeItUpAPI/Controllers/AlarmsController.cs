@@ -43,7 +43,7 @@ namespace TimeItUpAPI.Controllers
         // PUT: api/Alarms/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAlarm(string id, Alarm alarm)
+        public async Task<IActionResult> PutAlarm(int id, Alarm alarm)
         {
             if (id != alarm.Id)
             {
@@ -112,7 +112,7 @@ namespace TimeItUpAPI.Controllers
             return NoContent();
         }
 
-        private bool AlarmExists(string id)
+        private bool AlarmExists(int id)
         {
             return _context.Alarms.Any(e => e.Id == id);
         }

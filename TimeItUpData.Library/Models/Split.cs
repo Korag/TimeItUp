@@ -1,16 +1,26 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace TimeItUpData.Library.Models
 {
     public class Split
     {
-        public string Id { get; set; }
+        [Key]
+        public int Id { get; set; }
 
-        public string TimerId { get; set; }
+        public int TimerId { get; set; }
         public virtual Timer Timer { get; set; }
 
-        public DateTime StartAt { get; set; }
+        [Required]
+        [DataType(DataType.Date)]
+        public DateTime StartAt { get; set; } = DateTime.UtcNow;
+
+        [Required]
+        [DataType(DataType.Date)]
         public DateTime EndAt { get; set; }
-        public DateTime TotalDuration { get; set; }
+
+        [Required]
+        [DataType(DataType.Text)]
+        public string TotalDuration { get; set; }
     }
 }

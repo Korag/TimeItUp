@@ -43,7 +43,7 @@ namespace TimeItUpAPI.Controllers
         // PUT: api/Timers/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTimer(string id, Timer timer)
+        public async Task<IActionResult> PutTimer(int id, Timer timer)
         {
             if (id != timer.Id)
             {
@@ -112,7 +112,7 @@ namespace TimeItUpAPI.Controllers
             return NoContent();
         }
 
-        private bool TimerExists(string id)
+        private bool TimerExists(int id)
         {
             return _context.Timers.Any(e => e.Id == id);
         }

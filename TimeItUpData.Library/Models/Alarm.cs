@@ -1,18 +1,27 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace TimeItUpData.Library.Models
 {
     public class Alarm
     {
-        public string Id { get; set; }
+        [Key]
+        public int Id { get; set; }
 
-        public string TimerId { get; set; }
+        public int TimerId { get; set; }
         public virtual Timer Timer { get; set; }
 
+        [Required]
+        [StringLength(100, MinimumLength = 2)]
+        [DataType(DataType.Text)]
         public string Name { get; set; }
+
+        [StringLength(255, MinimumLength = 2)]
+        [DataType(DataType.Text)]
         public string Description { get; set; }
 
-        public DateTime StartAt { get; set; }
-        public DateTime EndAt { get; set; }
+        [Required]
+        [DataType(DataType.Date)]
+        public DateTime Time { get; set; } = DateTime.UtcNow;
     }
 }

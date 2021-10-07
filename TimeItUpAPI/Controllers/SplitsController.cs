@@ -43,7 +43,7 @@ namespace TimeItUpAPI.Controllers
         // PUT: api/Splits/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutSplit(string id, Split split)
+        public async Task<IActionResult> PutSplit(int id, Split split)
         {
             if (id != split.Id)
             {
@@ -112,7 +112,7 @@ namespace TimeItUpAPI.Controllers
             return NoContent();
         }
 
-        private bool SplitExists(string id)
+        private bool SplitExists(int id)
         {
             return _context.Splits.Any(e => e.Id == id);
         }
