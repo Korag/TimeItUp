@@ -20,6 +20,7 @@ namespace TimeItUpData.Library.Models
         public DateTime EndAt { get; set; }
 
         [Required]
+        [StringLength(30, MinimumLength = 2)]
         [DataType(DataType.Text)]
         public string TotalDuration { get; set; }
     }

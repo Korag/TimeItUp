@@ -21,28 +21,29 @@ namespace TimeItUpData.Library.Migrations
 
             modelBuilder.Entity("TimeItUpData.Library.Models.Alarm", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
 
-                    b.Property<string>("TimerId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("TimerId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("EndAt")
-                        .HasColumnType("datetime2");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
-                    b.Property<DateTime>("StartAt")
+                    b.Property<DateTime>("Time")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("TimerId1")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("TimerId1")
+                        .HasColumnType("int");
 
                     b.Property<string>("TimerUserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id", "TimerId");
@@ -54,11 +55,11 @@ namespace TimeItUpData.Library.Migrations
 
             modelBuilder.Entity("TimeItUpData.Library.Models.Pause", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
 
-                    b.Property<string>("TimerId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("TimerId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("EndAt")
                         .HasColumnType("datetime2");
@@ -66,14 +67,17 @@ namespace TimeItUpData.Library.Migrations
                     b.Property<DateTime>("StartAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("TimerId1")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("TimerId1")
+                        .HasColumnType("int");
 
                     b.Property<string>("TimerUserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime>("TotalDuration")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("TotalDuration")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.HasKey("Id", "TimerId");
 
@@ -84,11 +88,11 @@ namespace TimeItUpData.Library.Migrations
 
             modelBuilder.Entity("TimeItUpData.Library.Models.Split", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
 
-                    b.Property<string>("TimerId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("TimerId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("EndAt")
                         .HasColumnType("datetime2");
@@ -96,14 +100,17 @@ namespace TimeItUpData.Library.Migrations
                     b.Property<DateTime>("StartAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("TimerId1")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("TimerId1")
+                        .HasColumnType("int");
 
                     b.Property<string>("TimerUserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime>("TotalDuration")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("TotalDuration")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.HasKey("Id", "TimerId");
 
@@ -114,8 +121,8 @@ namespace TimeItUpData.Library.Migrations
 
             modelBuilder.Entity("TimeItUpData.Library.Models.Timer", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
@@ -124,7 +131,8 @@ namespace TimeItUpData.Library.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<DateTime>("EndAt")
                         .HasColumnType("datetime2");
@@ -133,7 +141,9 @@ namespace TimeItUpData.Library.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<bool>("Paused")
                         .HasColumnType("bit");
@@ -144,11 +154,14 @@ namespace TimeItUpData.Library.Migrations
                     b.Property<DateTime>("StartAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("TotalDuration")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("TotalDuration")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
-                    b.Property<DateTime>("TotalPausedTime")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("TotalPausedTime")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id", "UserId");
 
@@ -163,13 +176,19 @@ namespace TimeItUpData.Library.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("EmailAddress")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)");
 
                     b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)");
 
                     b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)");
 
                     b.HasKey("Id");
 
@@ -180,7 +199,9 @@ namespace TimeItUpData.Library.Migrations
                 {
                     b.HasOne("TimeItUpData.Library.Models.Timer", "Timer")
                         .WithMany("Alarms")
-                        .HasForeignKey("TimerId1", "TimerUserId");
+                        .HasForeignKey("TimerId1", "TimerUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Timer");
                 });
@@ -189,7 +210,9 @@ namespace TimeItUpData.Library.Migrations
                 {
                     b.HasOne("TimeItUpData.Library.Models.Timer", "Timer")
                         .WithMany()
-                        .HasForeignKey("TimerId1", "TimerUserId");
+                        .HasForeignKey("TimerId1", "TimerUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Timer");
                 });
@@ -198,7 +221,9 @@ namespace TimeItUpData.Library.Migrations
                 {
                     b.HasOne("TimeItUpData.Library.Models.Timer", "Timer")
                         .WithMany("Splits")
-                        .HasForeignKey("TimerId1", "TimerUserId");
+                        .HasForeignKey("TimerId1", "TimerUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Timer");
                 });
