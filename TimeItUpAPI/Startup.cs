@@ -34,13 +34,13 @@ namespace TimeItUpAPI
 
             #region DI
 
-            services.AddSingleton<IAlarmRepository, AlarmRepository>();
-            services.AddSingleton<IIdentityAccountRepository, IdentityAccountRepository>();
-            services.AddSingleton<ISplitRepository, SplitRepository>();
-            services.AddSingleton<ITimerRepository, TimerRepository>();
-            services.AddSingleton<IUserRepository, UserRepository>();
+            services.AddTransient<IAlarmRepository, AlarmRepository>();
+            services.AddTransient<IIdentityAccountRepository, IdentityAccountRepository>();
+            services.AddTransient<ISplitRepository, SplitRepository>();
+            services.AddTransient<ITimerRepository, TimerRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
 
-            services.AddSingleton<IGeneralRepository, GeneralRepository>();
+            services.AddTransient<IGeneralRepository, GeneralRepository>();
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
