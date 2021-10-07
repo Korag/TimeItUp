@@ -6,9 +6,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using System;
 using TimeItUpAPI.Data;
 using TimeItUpData.Library.DataAccess;
 using TimeItUpData.Library.Models;
+using TimeItUpData.Library.Repositories;
 
 namespace TimeItUpAPI
 {
@@ -29,6 +31,20 @@ namespace TimeItUpAPI
                     Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddDbContext<EFDbContext>();
+
+            #region DI
+
+            services.AddSingleton<IAlarmRepository, AlarmRepository>();
+            services.AddSingleton<IIdentityAccountRepository, IdentityAccountRepository>();
+            services.AddSingleton<ISplitRepository, SplitRepository>();
+            services.AddSingleton<ITimerRepository, TimerRepository>();
+            services.AddSingleton<IUserRepository, UserRepository>();
+
+            services.AddSingleton<IGeneralRepository, GeneralRepository>();
+
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            #endregion
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
