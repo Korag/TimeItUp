@@ -1,10 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TimeItUpAPI.Models;
 using TimeItUpData.Library.DataAccess;
 using TimeItUpData.Library.Models;
+using TimeItUpData.Library.Repositories;
 
 namespace TimeItUpAPI.Controllers
 {
@@ -12,53 +16,67 @@ namespace TimeItUpAPI.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly EFDbContext _context;
+        private readonly IUserRepository _userRepo;
+        private readonly IGeneralRepository _generalRepo;
 
-        public UsersController(EFDbContext context)
+        private readonly IMapper _mapper;
+
+        public UsersController(IUserRepository userRepo, IGeneralRepository generalRepo)
         {
-            _context = context;
+            _userRepo = userRepo;
+            _generalRepo = generalRepo;
         }
 
         // GET: api/Users
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        //[Authorize]
+        public async Task<ActionResult<ICollection<UserDto>>> GetUsers()
         {
-            return await _context.Users.ToListAsync();
+            var usersModel = await _userRepo.GetAllUsersAsync();
+            var usersDto = _mapper.Map<ICollection<UserDto>>(usersModel);
+
+            return usersDto.ToList();
         }
 
         // GET: api/Users/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUser(string id)
+        //[Authorize]
+        public async Task<ActionResult<UserDto>> GetUserById(string id)
         {
-            var user = await _context.Users.FindAsync(id);
+            var user = await _userRepo.GetUserById(id);
 
             if (user == null)
             {
                 return NotFound();
             }
 
-            return user;
+            var userDto = _mapper.Map<UserDto>(user);
+
+            return userDto;
         }
 
         // PUT: api/Users/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(string id, User user)
+        //[Authorize]
+        public async Task<IActionResult> PutUser(string id, UpdateUserDto user)
         {
-            if (id != user.Id)
+            if (id != user.Id || !ModelState.IsValid)
             {
-                return BadRequest();
+                return BadRequest(ModelState);
             }
 
-            _context.Entry(user).State = EntityState.Modified;
+            var existingUser = await _userRepo.GetUserById(id);
+            existingUser = _mapper.Map<UpdateUserDto, User>(user, existingUser);
+
+            await _generalRepo.ChangeEntryStateToModified(existingUser);
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _generalRepo.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!UserExists(id))
+                if (!_userRepo.CheckIfUserExist(id))
                 {
                     return NotFound();
                 }
@@ -72,18 +90,20 @@ namespace TimeItUpAPI.Controllers
         }
 
         // POST: api/Users
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<User>> PostUser(User user)
+        //[Authorize]
+        public async Task<ActionResult<UserDto>> PostUser(AddUserDto user)
         {
-            _context.Users.Add(user);
+            var newUser = _mapper.Map<User>(user);
+            await _userRepo.AddUserAsync(newUser);
+            
             try
             {
-                await _context.SaveChangesAsync();
+                await _generalRepo.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
-                if (UserExists(user.Id))
+                if (_userRepo.CheckIfUserExist(newUser.Id))
                 {
                     return Conflict();
                 }
@@ -93,28 +113,25 @@ namespace TimeItUpAPI.Controllers
                 }
             }
 
-            return CreatedAtAction("GetUser", new { id = user.Id }, user);
+            return CreatedAtAction("GetUserById", new { id = newUser.Id }, newUser);
         }
 
         // DELETE: api/Users/5
         [HttpDelete("{id}")]
+        //[Authorize]
         public async Task<IActionResult> DeleteUser(string id)
         {
-            var user = await _context.Users.FindAsync(id);
-            if (user == null)
+            var existingUser = await _userRepo.GetUserById(id);
+
+            if (existingUser == null)
             {
                 return NotFound();
             }
 
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
+            _userRepo.RemoveUser(existingUser);
+            await _generalRepo.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        private bool UserExists(string id)
-        {
-            return _context.Users.Any(e => e.Id == id);
         }
     }
 }
