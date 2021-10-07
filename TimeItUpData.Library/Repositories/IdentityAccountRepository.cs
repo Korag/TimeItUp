@@ -4,7 +4,7 @@ using TimeItUpData.Library.Models;
 
 namespace TimeItUpData.Library.Repositories
 {
-    public class IdentityAccountRepository
+    public class IdentityAccountRepository : IIdentityAccountRepository
     {
         private readonly EFDbContext _context;
 

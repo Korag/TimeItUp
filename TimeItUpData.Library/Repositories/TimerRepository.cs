@@ -2,7 +2,7 @@
 
 namespace TimeItUpData.Library.Repositories
 {
-    public class TimerRepository
+    public class TimerRepository : ITimerRepository
     {
         private readonly EFDbContext _context;
 
