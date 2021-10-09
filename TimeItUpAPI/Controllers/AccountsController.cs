@@ -31,7 +31,7 @@ namespace TimeItUpAPI.Controllers
         private readonly IConfiguration _config;
         private readonly IMapper _mapper;
 
-        public AccountsController(UserManager<BasicIdentityUser> userManager, 
+        public AccountsController(UserManager<BasicIdentityUser> userManager,
                                   SignInManager<BasicIdentityUser> signInManager,
                                   IConfiguration config,
                                   IMapper mapper,
@@ -56,11 +56,11 @@ namespace TimeItUpAPI.Controllers
             if (ModelState.IsValid)
             {
                 var result = await _signInManager.PasswordSignInAsync(user.Email, user.Password, isPersistent: false, lockoutOnFailure: false);
-                
+
                 if (result.Succeeded)
                 {
-                    var existingUser = _userManager.Users.FirstOrDefault(z => z.Email == user.Email);
-                    var token = await GenerateJwtToken(existingUser.Email);
+                    var existingUserAccount = _userManager.Users.FirstOrDefault(z => z.Email == user.Email);
+                    var token = await GenerateJwtToken(existingUserAccount.Email);
 
                     return Ok(token);
                 }
@@ -72,17 +72,17 @@ namespace TimeItUpAPI.Controllers
         [HttpPost]
         [AllowAnonymous]
         [Route("register")]
-        public async Task<ActionResult<UserDto>> Register(UserRegisterDto user)
+        public async Task<ActionResult<UserDto>> RegisterUserAccount(UserRegisterDto user)
         {
             if (ModelState.IsValid)
             {
-                var newUser = _mapper.Map<BasicIdentityUser>(user);
-                var result = await _userManager.CreateAsync(newUser, user.Password);
+                var newUserAccount = _mapper.Map<BasicIdentityUser>(user);
+                var result = await _userManager.CreateAsync(newUserAccount, user.Password);
 
                 if (result.Succeeded)
                 {
                     var createdUser = _mapper.Map<User>(user);
-                    createdUser = _mapper.Map<BasicIdentityUser, User>(newUser, createdUser);
+                    createdUser = _mapper.Map<BasicIdentityUser, User>(newUserAccount, createdUser);
 
                     await _userRepo.AddUserAsync(createdUser);
                     await _generalRepo.SaveChangesAsync();
@@ -103,7 +103,7 @@ namespace TimeItUpAPI.Controllers
         // DELETE: api/Accounts/5
         [HttpDelete("{id}")]
         [Authorize]
-        public async Task<IActionResult> DeleteUser(string id)
+        public async Task<IActionResult> DeleteUserAccount(string id)
         {
             var existingUser = await _userRepo.GetUserById(id);
 
@@ -126,10 +126,66 @@ namespace TimeItUpAPI.Controllers
             return StatusCode(StatusCodes.Status500InternalServerError);
         }
 
-        //TODO: Change User Password
+        // PUT: api/Accounts/Password/{id}
+        [HttpPut]
+        [Authorize]
+        [Route("Password/{id}")]
+        public async Task<IActionResult> ChangeUserAccountPassword(string id, UpdateUserAccountPasswordDto userAccount)
+        {
+            if (id != userAccount.Id)
+            {
+                return NotFound();
+            }
+            else if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var existingUserAccount = await _userManager.FindByIdAsync(id);
+            var result = await _userManager.ChangePasswordAsync(existingUserAccount, userAccount.OldPassword, userAccount.NewPassword);
+
+            if (result.Succeeded)
+            {
+                return NoContent();
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+        }
+
+        // PUT: api/Accounts/Email/{email}
+        [HttpPut]
+        [Authorize]
+        [Route("Email/{email}")]
+        public async Task<IActionResult> ChangeUserAccountEmail(string email, UpdateUserAccountEmailDto userAccount)
+        {
+            if (email != userAccount.Email)
+            {
+                return NotFound();
+            }
+            else if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var existingUserAccount = await _userManager.FindByEmailAsync(email);
+            var token = await _userManager.GenerateChangeEmailTokenAsync(existingUserAccount, userAccount.NewEmail);
+            var result = await _userManager.ChangeEmailAsync(existingUserAccount, userAccount.NewEmail, token);
+
+            if (result.Succeeded)
+            {
+                return NoContent();
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+        }
+
         //TODO: Reset User Password
-        //TODO: Change User Email
         //TODO: Confirm Email Address
+        //TODO: Email Provider
 
         private async Task<JwtTokenDto> GenerateJwtToken(string emailAddress)
         {

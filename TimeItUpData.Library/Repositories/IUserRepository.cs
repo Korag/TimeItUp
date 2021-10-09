@@ -8,6 +8,7 @@ namespace TimeItUpData.Library.Repositories
     {
         Task<ICollection<User>> GetAllUsersAsync();
         Task<User> GetUserById(string id);
+        Task<User> GetUserByEmailAddress(string email);
         bool CheckIfUserExist(string id);
         void RemoveUser(User user);
         Task AddUserAsync(User user);

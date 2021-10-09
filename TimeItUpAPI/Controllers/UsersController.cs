@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TimeItUpAPI.Models;
-using TimeItUpData.Library.DataAccess;
 using TimeItUpData.Library.Models;
 using TimeItUpData.Library.Repositories;
 
@@ -65,7 +64,22 @@ namespace TimeItUpAPI.Controllers
             return userDto;
         }
 
-        //TODO: GetUserByEmail
+        // GET: api/Users/test@contoso.com
+        [HttpGet("Email/{email}")]
+        [Authorize]
+        public async Task<ActionResult<UserDto>> GetUserByEmail(string email)
+        {
+            var user = await _userRepo.GetUserByEmailAddress(email);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var userDto = _mapper.Map<UserDto>(user);
+
+            return userDto;
+        }
 
         // PUT: api/Users/5
         [HttpPut("{id}")]
