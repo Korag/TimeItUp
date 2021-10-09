@@ -21,15 +21,16 @@ namespace TimeItUpAPI.Controllers
 
         private readonly IMapper _mapper;
 
-        public UsersController(IUserRepository userRepo, IGeneralRepository generalRepo)
+        public UsersController(IUserRepository userRepo, IGeneralRepository generalRepo, IMapper mapper)
         {
             _userRepo = userRepo;
             _generalRepo = generalRepo;
+            _mapper = mapper;
         }
 
         // GET: api/Users
         [HttpGet]
-        //[Authorize]
+        [Authorize]
         public async Task<ActionResult<ICollection<UserDto>>> GetUsers()
         {
             var usersModel = await _userRepo.GetAllUsersAsync();
