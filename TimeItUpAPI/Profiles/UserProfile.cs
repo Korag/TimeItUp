@@ -11,6 +11,7 @@ namespace TimeItUpAPI.Profiles
             CreateMap<User, UserDto>();
             CreateMap<UpdateUserDto, User>();
             CreateMap<AddUserDto, User>();
+            CreateMap<UserRegisterDto, User>();
         }
     }
 }

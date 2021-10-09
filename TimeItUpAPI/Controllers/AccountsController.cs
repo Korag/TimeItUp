@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -12,6 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TimeItUpAPI.Models;
 using TimeItUpData.Library.Models;
+using TimeItUpData.Library.Repositories;
 
 namespace TimeItUpAPI.Controllers
 {
@@ -21,16 +24,28 @@ namespace TimeItUpAPI.Controllers
     {
         private readonly UserManager<BasicIdentityUser> _userManager;
         private readonly SignInManager<BasicIdentityUser> _signInManager;
+
+        private readonly IUserRepository _userRepo;
+        private readonly IGeneralRepository _generalRepo;
+
         private readonly IConfiguration _config;
+        private readonly IMapper _mapper;
 
         public AccountsController(UserManager<BasicIdentityUser> userManager, 
                                   SignInManager<BasicIdentityUser> signInManager,
-                                  IConfiguration config)
+                                  IConfiguration config,
+                                  IMapper mapper,
+                                  IUserRepository userRepo,
+                                  IGeneralRepository generalRepo)
         {
             _userManager = userManager;
             _signInManager = signInManager;
 
             _config = config;
+            _mapper = mapper;
+
+            _userRepo = userRepo;
+            _generalRepo = generalRepo;
         }
 
         [HttpPost]
@@ -54,6 +69,68 @@ namespace TimeItUpAPI.Controllers
             return BadRequest(ModelState);
         }
 
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("register")]
+        public async Task<ActionResult<UserDto>> Register(UserRegisterDto user)
+        {
+            if (ModelState.IsValid)
+            {
+                var newUser = _mapper.Map<BasicIdentityUser>(user);
+                var result = await _userManager.CreateAsync(newUser, user.Password);
+
+                if (result.Succeeded)
+                {
+                    var createdUser = _mapper.Map<User>(user);
+                    createdUser = _mapper.Map<BasicIdentityUser, User>(newUser, createdUser);
+
+                    await _userRepo.AddUserAsync(createdUser);
+                    await _generalRepo.SaveChangesAsync();
+
+                    return CreatedAtAction("GetUserById", "UsersController", new { id = createdUser.Id }, createdUser);
+                }
+                else
+                {
+                    ModelState.AddModelError("Overall", "The user with the specified email address already exists in the system");
+                    return Conflict(ModelState);
+                }
+            }
+
+            ModelState.AddModelError("Overall", "Incorrectly entered new user data");
+            return BadRequest(ModelState);
+        }
+
+        // DELETE: api/Accounts/5
+        [HttpDelete("{id}")]
+        [Authorize]
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+            var existingUser = await _userRepo.GetUserById(id);
+
+            if (existingUser == null)
+            {
+                return NotFound();
+            }
+
+            _userRepo.RemoveUser(existingUser);
+
+            var userAccount = await _userManager.FindByIdAsync(id);
+            var result = await _userManager.DeleteAsync(userAccount);
+
+            if (result.Succeeded)
+            {
+                await _generalRepo.SaveChangesAsync();
+                return NoContent();
+            }
+
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+
+        //TODO: Change User Password
+        //TODO: Reset User Password
+        //TODO: Change User Email
+        //TODO: Confirm Email Address
+
         private async Task<JwtTokenDto> GenerateJwtToken(string emailAddress)
         {
             var user = await _userManager.FindByEmailAsync(emailAddress);
@@ -75,6 +152,5 @@ namespace TimeItUpAPI.Controllers
 
             return new JwtTokenDto { Jwt = new JwtSecurityTokenHandler().WriteToken(token), EmailAddress = user.Email };
         }
-
     }
 }
