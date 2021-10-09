@@ -4,7 +4,7 @@ namespace TimeItUpAPI.Models
 {
     public class UserLoginDto
     {
-        [Required(ErrorMessage = "Pole \"{0}\" jest wymagane")]
+        [Required]
         [StringLength(40, MinimumLength = 2)]
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }

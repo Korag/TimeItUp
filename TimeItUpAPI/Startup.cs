@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System;
+using System.Collections.Generic;
 using TimeItUpAPI.Data;
 using TimeItUpData.Library.DataAccess;
 using TimeItUpData.Library.Models;
@@ -17,6 +18,7 @@ namespace TimeItUpAPI
     public class Startup
     {
         public IConfiguration Configuration { get; }
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
         public Startup(IConfiguration configuration)
         {
@@ -57,6 +59,15 @@ namespace TimeItUpAPI
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApi", Version = "v1" });
+            });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: Configuration.GetValue<string>("CORS:Name"),
+                                  builder =>
+                                  {
+                                      builder.WithOrigins(Configuration.GetSection("CORS").GetSection("AllowedOrigins").Get<string[]>());
+                                  });
             });
         }
 
@@ -99,7 +110,9 @@ namespace TimeItUpAPI
                 }
             );
 
-            CheckIfDbHasBeenCreated(context);
+            //app.UseCors(Configuration.GetValue<string>("CORS:Name"));
+
+            //CheckIfDbHasBeenCreated(context);
         }
 
         public void CheckIfDbHasBeenCreated(EFDbContext context)
