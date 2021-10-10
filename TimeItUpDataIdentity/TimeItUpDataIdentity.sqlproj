@@ -3,16 +3,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <Name>TimeItUpData</Name>
+    <Name>TimeItUpDataIdentity</Name>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectVersion>4.1</ProjectVersion>
-    <ProjectGuid>{57fbf7b5-76af-40ba-942c-e8477f9b36de}</ProjectGuid>
+    <ProjectGuid>{be24551c-1c81-45ee-bbde-56e3ea597c13}</ProjectGuid>
     <DSP>Microsoft.Data.Tools.Schema.Sql.Sql130DatabaseSchemaProvider</DSP>
     <OutputType>Database</OutputType>
     <RootPath>
     </RootPath>
-    <RootNamespace>TimeItUpData</RootNamespace>
-    <AssemblyName>TimeItUpData</AssemblyName>
+    <RootNamespace>TimeItUpDataIdentity</RootNamespace>
+    <AssemblyName>TimeItUpDataIdentity</AssemblyName>
     <ModelCollation>1033,CI</ModelCollation>
     <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
     <DeployToDatabase>True</DeployToDatabase>
@@ -63,10 +63,12 @@
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\__EFMigrationsHistory.sql" />
-    <Build Include="dbo\Tables\Users.sql" />
-    <Build Include="dbo\Tables\Timers.sql" />
-    <Build Include="dbo\Tables\Alarms.sql" />
-    <Build Include="dbo\Tables\Pauses.sql" />
-    <Build Include="dbo\Tables\Splits.sql" />
+    <Build Include="dbo\Tables\AspNetRoles.sql" />
+    <Build Include="dbo\Tables\AspNetUsers.sql" />
+    <Build Include="dbo\Tables\AspNetRoleClaims.sql" />
+    <Build Include="dbo\Tables\AspNetUserClaims.sql" />
+    <Build Include="dbo\Tables\AspNetUserLogins.sql" />
+    <Build Include="dbo\Tables\AspNetUserRoles.sql" />
+    <Build Include="dbo\Tables\AspNetUserTokens.sql" />
   </ItemGroup>
 </Project>
