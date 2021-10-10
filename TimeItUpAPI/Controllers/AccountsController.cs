@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
-using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using TimeItUpAPI.Models;
@@ -18,7 +17,6 @@ using TimeItUpData.Library.Models;
 using TimeItUpData.Library.Repositories;
 using TimeItUpServices.Library.EmailService;
 using TimeItUpServices.Library.EmailService.Model;
-using TimeItUpServices.Extensions.UrlHelper;
 using static TimeItUpServices.Library.EmailService.Model.EmailClassifierDictionary;
 
 namespace TimeItUpAPI.Controllers
@@ -205,8 +203,10 @@ namespace TimeItUpAPI.Controllers
             }
 
             var user = await _userRepo.GetUserByIdAsync(userAccount.Id);
-            var token = await _userManager.GeneratePasswordResetTokenAsync(userAccount);
-            var resetPasswordActionUrl = this.Url.GenerateResetUserPasswordActionURL(user.Id, token);
+            var token = await GetPasswordCode(userAccount);
+            var resetPasswordActionUrl = @$"https://localcommunityvotingplatform.azurewebsites.net/resetpassword?token={token}";
+
+            //TODO: Generate URL to GET UI form -> with passed generated token
 
             EmailMessageContentDto emailMessage = new EmailMessageContentDto(user.EmailAddress, String.Concat(user.FirstName, " ", user.LastName), EmailClassifierType.ResetAccountPassword.ToString(), resetPasswordActionUrl);
             await _emailProvider.SendEmailMessageAsync(emailMessage);
@@ -214,13 +214,11 @@ namespace TimeItUpAPI.Controllers
             return Ok();
         }
 
-        // PUT: api/Accounts/ResetPassword/{email}/{token}}
-        [HttpPost]
+        // PUT: api/Accounts/ResetPassword}
         [HttpPut]
         [AllowAnonymous]
-        [Route("ResetPassword/{email}/{token}")]
-        
-        public async Task<IActionResult> ResetUserPassword(ResetUserAccountPasswordDto userAccountData)
+        [Route("ResetPassword")]
+        public async Task<IActionResult> ResetUserAccountPassword(ResetUserAccountPasswordDto userAccountData)
         {
             var userAccount = await _userManager.FindByEmailAsync(userAccountData.Email);
 
@@ -241,6 +239,12 @@ namespace TimeItUpAPI.Controllers
             }
 
             return BadRequest();
+        }
+
+        private async Task<string> GetPasswordCode(BasicIdentityUser userAccount)
+        {
+            var user = await _userRepo.GetUserByIdAsync(userAccount.Id);
+            return await _userManager.GeneratePasswordResetTokenAsync(userAccount);
         }
 
         private async Task<JwtTokenDto> GenerateJwtToken(string emailAddress)
@@ -264,5 +268,7 @@ namespace TimeItUpAPI.Controllers
 
             return new JwtTokenDto { Jwt = new JwtSecurityTokenHandler().WriteToken(token), EmailAddress = user.Email };
         }
+
+        //Adapt HTML TEMPLATE EMAIL!!!!!! AND TEST 
     }
 }

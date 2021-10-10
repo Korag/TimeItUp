@@ -1,4 +1,5 @@
 ﻿using MailKit.Net.Smtp;
+using Microsoft.AspNetCore.Hosting;
 using MimeKit;
 using MimeKit.Utils;
 using System.IO;
@@ -11,13 +12,13 @@ namespace TimeItUpServices.Library.EmailService
     public class EmailServiceProvider : IEmailServiceProvider
     {
         private IEmailProviderConfigurationProfile _emailConfigurationProfile;
-        //private IHostingEnvironment _environment;
+        private IHostingEnvironment _environment;
 
-        public EmailServiceProvider(IEmailProviderConfigurationProfile emailConfigurationProfile 
-                                    /*IHostingEnvironment environment*/)
+        public EmailServiceProvider(IEmailProviderConfigurationProfile emailConfigurationProfile,
+                                    IHostingEnvironment environment)
         {
             _emailConfigurationProfile = emailConfigurationProfile;
-            //_environment = environment;
+            _environment = environment;
         }
 
         public async Task SendEmailMessageAsync(EmailMessageContentDto emailMessageContent)
@@ -41,13 +42,9 @@ namespace TimeItUpServices.Library.EmailService
                                ______________________
                                TimeItUp Dev Team";
 
-            //var logo = builder.LinkedResources.Add(Path.Combine(_environment.WebRootPath, @"images\logo_fill_transparent.png"));
-            var logo = builder.LinkedResources.Add(@".\Resources\logo_fill_transparent.png");
-
+            var logo = builder.LinkedResources.Add(Path.Combine(_environment.WebRootPath, @"images\clock_time_outline.gif"));
             logo.ContentId = MimeUtils.GenerateMessageId();
-
-            //string html = File.ReadAllText(Path.Combine(_environment.WebRootPath, @"resources\StructureOfEmailMessage\index.htm"));
-            string html = File.ReadAllText(@".\Resources\StructureOfEmailMessage\index.htm");
+            string html = File.ReadAllText(Path.Combine(_environment.WebRootPath, @"resources\EmailMessageTemplate\index.htm"));
 
             builder.HtmlBody = html
                                   .Replace("{BrandLogo}", logo.ContentId)

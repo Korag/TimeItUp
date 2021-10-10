@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\resources\EmailMessageTemplate\index.htm" />
+    <Content Remove="wwwroot\resources\EmailMessageTemplate\logo_fill_transparent.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.10" />
@@ -23,6 +28,11 @@
   <ItemGroup>
     <ProjectReference Include="..\TimeItUpData.Library\TimeItUpData.Library.csproj" />
     <ProjectReference Include="..\TimeItUpServices.Library\TimeItUpServices.Library.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\resources\EmailMessageTemplate\index.htm" />
+    <None Include="wwwroot\images\logo_fill_transparent.png" />
   </ItemGroup>
 
 </Project>

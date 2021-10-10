@@ -11,7 +11,7 @@ namespace TimeItUpServices.Library.EmailService.Model
 
         public static readonly Dictionary<string, string> EmailTopic = new Dictionary<string, string>
          {
-           {EmailClassifierType.ResetAccountPassword.ToString(), "Data Analysis System - Resetting the system password."},
+           {EmailClassifierType.ResetAccountPassword.ToString(), "TimeItUp - Resetting the system password."},
         };
 
         public static readonly Dictionary<string, string> HeaderOfEmailContent = new Dictionary<string, string>
