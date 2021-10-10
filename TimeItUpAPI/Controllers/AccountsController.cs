@@ -183,7 +183,52 @@ namespace TimeItUpAPI.Controllers
             }
         }
 
-        //TODO: Reset User Password
+        // PUT: api/Accounts/TryResetPassword/{email}
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("TryResetPassword/{email}")]
+        public async Task<IActionResult> GetResetPasswordCode(string email)
+        {
+            var userAccount = await _userManager.FindByEmailAsync(email);
+
+            if (userAccount == null)
+            {
+                return NotFound();
+            }
+
+            var token = _userManager.GeneratePasswordResetTokenAsync(userAccount);
+
+            return Ok();
+        }
+
+        // PUT: api/Accounts/ResetPassword/{email}/{token}}
+        [HttpPost]
+        [HttpPut]
+        [AllowAnonymous]
+        [Route("ResetPassword/{email}/{token}")]
+        public async Task<IActionResult> ResetUserPassword(ResetUserAccountPasswordDto userAccountData)
+        {
+            var userAccount = await _userManager.FindByEmailAsync(userAccountData.Email);
+
+            if (userAccount == null)
+            {
+                return NotFound();
+            }
+            else if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            var result = await _userManager.ResetPasswordAsync(userAccount, userAccountData.Token, userAccountData.NewPassword);
+
+            if (result.Succeeded)
+            {
+                return NoContent();
+            }
+
+            return BadRequest();
+        }
+
         //TODO: Confirm Email Address
         //TODO: Email Provider
 
