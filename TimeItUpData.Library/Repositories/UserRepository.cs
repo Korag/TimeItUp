@@ -21,7 +21,7 @@ namespace TimeItUpData.Library.Repositories
             return await _context.Users.ToListAsync();
         }
 
-        public async Task<User> GetUserById(string id)
+        public async Task<User> GetUserByIdAsync(string id)
         {
             return await _context.Users.Where(z=> z.Id == id).FirstOrDefaultAsync();
         }
@@ -43,7 +43,7 @@ namespace TimeItUpData.Library.Repositories
 
         public async Task AddUserAsync(User user)
         {
-            _context.Users.AddAsync(user);
+            await _context.Users.AddAsync(user);
         }
     }
 }

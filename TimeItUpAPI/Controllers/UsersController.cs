@@ -52,7 +52,7 @@ namespace TimeItUpAPI.Controllers
         [Authorize]
         public async Task<ActionResult<UserDto>> GetUserById(string id)
         {
-            var user = await _userRepo.GetUserById(id);
+            var user = await _userRepo.GetUserByIdAsync(id);
 
             if (user == null)
             {
@@ -91,7 +91,7 @@ namespace TimeItUpAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            var existingUser = await _userRepo.GetUserById(id);
+            var existingUser = await _userRepo.GetUserByIdAsync(id);
             existingUser = _mapper.Map<UpdateUserDto, User>(user, existingUser);
 
             await _generalRepo.ChangeEntryStateToModified(existingUser);

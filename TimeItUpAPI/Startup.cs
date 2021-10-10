@@ -16,6 +16,8 @@ using TimeItUpAPI.Data;
 using TimeItUpData.Library.DataAccess;
 using TimeItUpData.Library.Models;
 using TimeItUpData.Library.Repositories;
+using TimeItUpServices.Library.EmailService;
+using TimeItUpServices.Library.EmailService.Profile;
 
 namespace TimeItUpAPI
 {
@@ -48,8 +50,12 @@ namespace TimeItUpAPI
             services.AddTransient<ISplitRepository, SplitRepository>();
             services.AddTransient<ITimerRepository, TimerRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
-
             services.AddTransient<IGeneralRepository, GeneralRepository>();
+
+            services.AddTransient<IEmailServiceProvider, EmailServiceProvider>();
+            services.AddSingleton<IEmailProviderConfigurationProfile>
+                (Configuration.GetSection("EmailProviderConfiguration").Get<EmailProviderConfigurationProfile>());
+
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

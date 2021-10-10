@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TimeItUpData.Library\TimeItUpData.Library.csproj" />
+    <ProjectReference Include="..\TimeItUpServices.Library\TimeItUpServices.Library.csproj" />
   </ItemGroup>
 
 </Project>

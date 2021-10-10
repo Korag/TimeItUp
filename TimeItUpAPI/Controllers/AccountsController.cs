@@ -10,11 +10,16 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using TimeItUpAPI.Models;
 using TimeItUpData.Library.Models;
 using TimeItUpData.Library.Repositories;
+using TimeItUpServices.Library.EmailService;
+using TimeItUpServices.Library.EmailService.Model;
+using TimeItUpServices.Extensions.UrlHelper;
+using static TimeItUpServices.Library.EmailService.Model.EmailClassifierDictionary;
 
 namespace TimeItUpAPI.Controllers
 {
@@ -29,12 +34,14 @@ namespace TimeItUpAPI.Controllers
         private readonly IGeneralRepository _generalRepo;
 
         private readonly IConfiguration _config;
+        private readonly IEmailServiceProvider _emailProvider;
         private readonly IMapper _mapper;
 
         public AccountsController(UserManager<BasicIdentityUser> userManager,
                                   SignInManager<BasicIdentityUser> signInManager,
                                   IConfiguration config,
                                   IMapper mapper,
+                                  IEmailServiceProvider emailProvider,
                                   IUserRepository userRepo,
                                   IGeneralRepository generalRepo)
         {
@@ -43,6 +50,7 @@ namespace TimeItUpAPI.Controllers
 
             _config = config;
             _mapper = mapper;
+            _emailProvider = emailProvider;
 
             _userRepo = userRepo;
             _generalRepo = generalRepo;
@@ -77,6 +85,8 @@ namespace TimeItUpAPI.Controllers
             if (ModelState.IsValid)
             {
                 var newUserAccount = _mapper.Map<BasicIdentityUser>(user);
+                newUserAccount.EmailConfirmed = true;
+
                 var result = await _userManager.CreateAsync(newUserAccount, user.Password);
 
                 if (result.Succeeded)
@@ -91,12 +101,10 @@ namespace TimeItUpAPI.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("Overall", "The user with the specified email address already exists in the system");
-                    return Conflict(ModelState);
+                    return Conflict();
                 }
             }
 
-            ModelState.AddModelError("Overall", "Incorrectly entered new user data");
             return BadRequest(ModelState);
         }
 
@@ -105,7 +113,7 @@ namespace TimeItUpAPI.Controllers
         [Authorize]
         public async Task<IActionResult> DeleteUserAccount(string id)
         {
-            var existingUser = await _userRepo.GetUserById(id);
+            var existingUser = await _userRepo.GetUserByIdAsync(id);
 
             if (existingUser == null)
             {
@@ -196,7 +204,12 @@ namespace TimeItUpAPI.Controllers
                 return NotFound();
             }
 
-            var token = _userManager.GeneratePasswordResetTokenAsync(userAccount);
+            var user = await _userRepo.GetUserByIdAsync(userAccount.Id);
+            var token = await _userManager.GeneratePasswordResetTokenAsync(userAccount);
+            var resetPasswordActionUrl = this.Url.GenerateResetUserPasswordActionURL(user.Id, token);
+
+            EmailMessageContentDto emailMessage = new EmailMessageContentDto(user.EmailAddress, String.Concat(user.FirstName, " ", user.LastName), EmailClassifierType.ResetAccountPassword.ToString(), resetPasswordActionUrl);
+            await _emailProvider.SendEmailMessageAsync(emailMessage);
 
             return Ok();
         }
@@ -206,6 +219,7 @@ namespace TimeItUpAPI.Controllers
         [HttpPut]
         [AllowAnonymous]
         [Route("ResetPassword/{email}/{token}")]
+        
         public async Task<IActionResult> ResetUserPassword(ResetUserAccountPasswordDto userAccountData)
         {
             var userAccount = await _userManager.FindByEmailAsync(userAccountData.Email);
@@ -228,9 +242,6 @@ namespace TimeItUpAPI.Controllers
 
             return BadRequest();
         }
-
-        //TODO: Confirm Email Address
-        //TODO: Email Provider
 
         private async Task<JwtTokenDto> GenerateJwtToken(string emailAddress)
         {

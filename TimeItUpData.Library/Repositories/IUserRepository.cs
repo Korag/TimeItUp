@@ -7,7 +7,7 @@ namespace TimeItUpData.Library.Repositories
     public interface IUserRepository
     {
         Task<ICollection<User>> GetAllUsersAsync();
-        Task<User> GetUserById(string id);
+        Task<User> GetUserByIdAsync(string id);
         Task<User> GetUserByEmailAddress(string email);
         bool CheckIfUserExist(string id);
         void RemoveUser(User user);
