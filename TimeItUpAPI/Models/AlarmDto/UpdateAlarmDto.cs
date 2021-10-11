@@ -20,6 +20,6 @@ namespace TimeItUpAPI.Models
 
         [Required]
         [DataType(DataType.Date)]
-        public DateTime ActivationTime { get; set; } = DateTime.UtcNow;
+        public DateTime ActivationTime { get; set; }
     }
 }

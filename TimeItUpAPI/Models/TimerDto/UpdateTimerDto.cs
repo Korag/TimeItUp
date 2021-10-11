@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace TimeItUpAPI.Models
 {
-    public class CreateAlarmDto
+    public class UpdateTimerDto
     {
-        public int TimerId { get; set; }
+        [Required]
+        public int Id { get; set; }
 
         [Required]
         [StringLength(100, MinimumLength = 2)]
@@ -21,6 +22,6 @@ namespace TimeItUpAPI.Models
 
         [Required]
         [DataType(DataType.Date)]
-        public DateTime ActivationTime { get; set; } = DateTime.UtcNow;
+        public DateTime StartAt { get; set; }
     }
 }
