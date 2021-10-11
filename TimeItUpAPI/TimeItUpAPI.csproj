@@ -32,7 +32,6 @@
 
   <ItemGroup>
     <None Include="wwwroot\resources\EmailMessageTemplate\index.htm" />
-    <None Include="wwwroot\images\logo_fill_transparent.png" />
   </ItemGroup>
 
 </Project>

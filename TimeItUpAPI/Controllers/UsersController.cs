@@ -13,23 +13,20 @@ using TimeItUpData.Library.Repositories;
 namespace TimeItUpAPI.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly UserManager<BasicIdentityUser> _userManager;
-
         private readonly IUserRepository _userRepo;
         private readonly IGeneralRepository _generalRepo;
 
         private readonly IMapper _mapper;
 
-        public UsersController(UserManager<BasicIdentityUser> userManager, 
-                               IUserRepository userRepo, 
-                               IGeneralRepository generalRepo, 
+        public UsersController(UserManager<BasicIdentityUser> userManager,
+                               IUserRepository userRepo,
+                               IGeneralRepository generalRepo,
                                IMapper mapper)
         {
-            _userManager = userManager;
-
             _userRepo = userRepo;
             _generalRepo = generalRepo;
 
@@ -41,18 +38,18 @@ namespace TimeItUpAPI.Controllers
         [Authorize]
         public async Task<ActionResult<ICollection<UserDto>>> GetUsers()
         {
-            var usersModel = await _userRepo.GetAllUsersAsync();
-            var usersDto = _mapper.Map<ICollection<UserDto>>(usersModel);
+            var users = await _userRepo.GetAllUsersAsync();
+            var usersDto = _mapper.Map<ICollection<UserDto>>(users);
 
-            return usersDto.ToList();
+            return Ok(usersDto.ToList());
         }
 
         // GET: api/Users/5
         [HttpGet("{id}")]
         [Authorize]
-        public async Task<ActionResult<UserDto>> GetUserById(string id)
+        public async Task<ActionResult<UserDto>> GetUserById(string userId)
         {
-            var user = await _userRepo.GetUserByIdAsync(id);
+            var user = await _userRepo.GetUserByIdAsync(userId);
 
             if (user == null)
             {
@@ -61,10 +58,10 @@ namespace TimeItUpAPI.Controllers
 
             var userDto = _mapper.Map<UserDto>(user);
 
-            return userDto;
+            return Ok(userDto);
         }
 
-        // GET: api/Users/test@contoso.com
+        // GET: api/Users/Email/test@contoso.com
         [HttpGet("Email/{email}")]
         [Authorize]
         public async Task<ActionResult<UserDto>> GetUserByEmail(string email)
@@ -78,41 +75,32 @@ namespace TimeItUpAPI.Controllers
 
             var userDto = _mapper.Map<UserDto>(user);
 
-            return userDto;
+            return Ok(userDto);
         }
 
         // PUT: api/Users/5
         [HttpPut("{id}")]
         [Authorize]
-        public async Task<IActionResult> PutUser(string id, UpdateUserDto user)
+        public async Task<IActionResult> PutUser(string userId, UpdateUserDto user)
         {
-            if (id != user.Id || !ModelState.IsValid)
+            if (userId != user.Id || !ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var existingUser = await _userRepo.GetUserByIdAsync(id);
+            var existingUser = await _userRepo.GetUserByIdAsync(userId);
+
+            if (existingUser == null)
+            {
+                return NotFound();
+            }
+
             existingUser = _mapper.Map<UpdateUserDto, User>(user, existingUser);
 
             await _generalRepo.ChangeEntryStateToModified(existingUser);
-
-            try
-            {
-                await _generalRepo.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!_userRepo.CheckIfUserExist(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            await _generalRepo.SaveChangesAsync();
 
             return NoContent();
-        }      
+        }
     }
 }

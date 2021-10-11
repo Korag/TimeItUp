@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using TimeItUpAPI.Models;
+using TimeItUpData.Library.Models;
 
 namespace TimeItUpAPI.Profiles
 {
@@ -6,7 +8,9 @@ namespace TimeItUpAPI.Profiles
     {
         public AlarmProfile()
         {
-
+            CreateMap<Alarm, AlarmDto>();
+            CreateMap<UpdateAlarmDto, Alarm>();
+            CreateMap<CreateAlarmDto, Alarm>();
         }
     }
 }

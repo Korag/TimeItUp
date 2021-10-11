@@ -9,7 +9,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using TimeItUpAPI.Data;
@@ -91,7 +90,7 @@ namespace TimeItUpAPI
                         ValidateIssuer = false,
                         ValidateAudience = false,
                         ValidateLifetime = true,
- 
+
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetValue<string>("Secrets:JwtKey"))),
                         ClockSkew = TimeSpan.FromMinutes(5)
                     };

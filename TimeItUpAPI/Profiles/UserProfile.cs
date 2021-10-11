@@ -1,6 +1,6 @@
-﻿using TimeItUpAPI.Models;
+﻿using AutoMapper;
+using TimeItUpAPI.Models;
 using TimeItUpData.Library.Models;
-using AutoMapper;
 
 namespace TimeItUpAPI.Profiles
 {

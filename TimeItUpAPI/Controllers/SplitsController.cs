@@ -19,6 +19,22 @@ namespace TimeItUpAPI.Controllers
             _context = context;
         }
 
+        //GET: GetAllSplits
+        //GET: GetSplitById
+        //GET: GetAllSplitsByTimerId
+
+        //GET: GetAllActiveSplits
+        //GET: GetAllPastSplits
+        //GET: GetAllActiveSplitsByTimerId
+        //GET: GetAllPastSplitsByTimerId
+
+        //POST: AddNewSplit
+
+        //PUT: EditSplit
+        //PUT: FinishSplit
+
+        //DELETE: RemoveSplit
+
         // GET: api/Splits
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Split>>> GetSplits()

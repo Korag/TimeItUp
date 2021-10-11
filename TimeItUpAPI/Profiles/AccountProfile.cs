@@ -10,7 +10,7 @@ namespace TimeItUpAPI.Profiles
         {
             CreateMap<UserRegisterDto, BasicIdentityUser>()
                 .ForMember(dest => dest.UserName, opts => opts.MapFrom(src => src.Email));
-            
+
             CreateMap<BasicIdentityUser, User>()
                  .ForMember(dest => dest.EmailAddress, opts => opts.MapFrom(src => src.Email));
         }

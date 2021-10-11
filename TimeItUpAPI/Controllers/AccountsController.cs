@@ -268,7 +268,5 @@ namespace TimeItUpAPI.Controllers
 
             return new JwtTokenDto { Jwt = new JwtSecurityTokenHandler().WriteToken(token), EmailAddress = user.Email };
         }
-
-        //Adapt HTML TEMPLATE EMAIL!!!!!! AND TEST 
     }
 }

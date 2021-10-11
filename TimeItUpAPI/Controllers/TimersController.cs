@@ -19,6 +19,27 @@ namespace TimeItUpAPI.Controllers
             _context = context;
         }
 
+        //GET: GetAllTimers
+        //GET: GetTimerById
+        //GET: GetAllTimersByUserId
+
+        //GET: TimerSplits
+        //GET: TimerPauses
+        //GET: GetTimerActivePauses
+        //GET: GetTimerPastPauses
+
+        //GET: GetAllActiveTimers
+        //GET: GetAllPastTimers
+        //GET: GetAllActiveTimersByUserId
+        //GET: GetAllPastTimersByUserId
+
+        //POST: AddNewTimer
+
+        //PUT: EditTimer
+        //PUT: FinishTimer
+
+        //DELETE: RemoveTimer
+
         // GET: api/Timers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Timer>>> GetTimers()
