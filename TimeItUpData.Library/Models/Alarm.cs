@@ -22,6 +22,6 @@ namespace TimeItUpData.Library.Models
 
         [Required]
         [DataType(DataType.Date)]
-        public DateTime ActivationTime { get; set; } = DateTime.UtcNow;
+        public DateTime ActivationTime { get; set; } = DateTime.UtcNow.AddDays(1);
     }
 }
