@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TimeItUpData.Library.Models
 {
@@ -26,6 +22,6 @@ namespace TimeItUpData.Library.Models
         [Required]
         [StringLength(30, MinimumLength = 2)]
         [DataType(DataType.Text)]
-        public string TotalDuration { get; set; } 
+        public string TotalDuration { get; set; }
     }
 }

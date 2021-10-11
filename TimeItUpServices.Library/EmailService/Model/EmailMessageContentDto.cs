@@ -4,7 +4,7 @@
     {
         public string EmailRecipientAddress { get; set; }
         public string EmailRecipientFullName { get; set; }
-       
+
         public string EmailTopic { get; set; }
         public string HeaderOfEmailContent { get; set; }
         public string PrimaryContent { get; set; }
@@ -13,9 +13,9 @@
         public string AdditionalURLToAction { get; set; }
         public string URLActionText { get; set; }
 
-        public EmailMessageContentDto(string emailRecipientAddress, 
-                                      string emailRecipientFullName, 
-                                      string emailClassifierKey, 
+        public EmailMessageContentDto(string emailRecipientAddress,
+                                      string emailRecipientFullName,
+                                      string emailClassifierKey,
                                       string additionalUrlToAction = null)
         {
             this.EmailRecipientAddress = emailRecipientAddress;
