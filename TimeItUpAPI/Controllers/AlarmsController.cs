@@ -39,8 +39,6 @@ namespace TimeItUpAPI.Controllers
             _mapper = mapper;
         }
 
-        //PUT: PostponeAlar
-
         // GET: api/Alarms
         [HttpGet]
         [Authorize]
@@ -109,8 +107,8 @@ namespace TimeItUpAPI.Controllers
             return Ok(alarmsDto);
         }
 
-        // GET: api/Alarms/Active/User/{userId}
-        [HttpGet("Active/User/{userId}")]
+        // GET: api/Alarms/Past/User/{userId}
+        [HttpGet("Past/User/{userId}")]
         [Authorize]
         public async Task<ActionResult<ICollection<AlarmDto>>> GetOnlyPastUserAlarms(string userId)
         {
@@ -125,6 +123,66 @@ namespace TimeItUpAPI.Controllers
             user.Timers?.ToList().ForEach(z => z.Alarms.Where(z => z.ActivationTime < DateTime.UtcNow).ToList().ForEach(c => userAlarms.Add(c)));
 
             var alarmsDto = _mapper.Map<ICollection<AlarmDto>>(userAlarms).ToList();
+
+            return Ok(alarmsDto);
+        }
+
+        // GET: api/Alarms/Timer/{timerId}
+        [HttpGet("Timer/{timerId}")]
+        [Authorize]
+        public async Task<ActionResult<ICollection<AlarmDto>>> GetAlarmsByTimerId(int timerId)
+        {
+            var timer = await _timerRepo.GetTimerByIdAsync(timerId);
+
+            if (timer == null)
+            {
+                return NotFound();
+            }
+
+            var timerAlarms = new List<Alarm>();
+            timerAlarms = timer.Alarms?.ToList();
+
+            var alarmsDto = _mapper.Map<ICollection<AlarmDto>>(timerAlarms).ToList();
+
+            return Ok(alarmsDto);
+        }
+
+        // GET: api/Alarms/Active/Timer/{timerId}
+        [HttpGet("Active/Timer/{timerId}")]
+        [Authorize]
+        public async Task<ActionResult<ICollection<AlarmDto>>> GetActiveAlarmsByTimerId(int timerId)
+        {
+            var timer = await _timerRepo.GetTimerByIdAsync(timerId);
+
+            if (timer == null)
+            {
+                return NotFound();
+            }
+
+            var timerAlarms = new List<Alarm>();
+            timerAlarms = timer.Alarms?.Where(z => z.ActivationTime > DateTime.UtcNow).ToList();
+
+            var alarmsDto = _mapper.Map<ICollection<AlarmDto>>(timerAlarms).ToList();
+
+            return Ok(alarmsDto);
+        }
+
+        // GET: api/Alarms/Past/Timer/{timerId}
+        [HttpGet("Past/Timer/{timerId}")]
+        [Authorize]
+        public async Task<ActionResult<ICollection<AlarmDto>>> GetPastAlarmsByTimerId(int timerId)
+        {
+            var timer = await _timerRepo.GetTimerByIdAsync(timerId);
+
+            if (timer == null)
+            {
+                return NotFound();
+            }
+
+            var timerAlarms = new List<Alarm>();
+            timerAlarms = timer.Alarms?.Where(z => z.ActivationTime < DateTime.UtcNow).ToList();
+
+            var alarmsDto = _mapper.Map<ICollection<AlarmDto>>(timerAlarms).ToList();
 
             return Ok(alarmsDto);
         }

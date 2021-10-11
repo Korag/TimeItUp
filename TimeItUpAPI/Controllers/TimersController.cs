@@ -1,110 +1,327 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TimeItUpData.Library.DataAccess;
+using TimeItUpAPI.Models;
 using TimeItUpData.Library.Models;
+using TimeItUpData.Library.Repositories;
 
 namespace TimeItUpAPI.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class TimersController : ControllerBase
     {
-        private readonly EFDbContext _context;
+        private readonly ITimerRepository _timerRepo;
+        private readonly ISplitRepository _splitRepo;
+        private readonly IPauseRepository _pauseRepo;
+        private readonly IUserRepository _userRepo;
+        private readonly IGeneralRepository _generalRepo;
 
-        public TimersController(EFDbContext context)
+        private readonly IMapper _mapper;
+
+
+        public TimersController(ITimerRepository timerRepo,
+                                IUserRepository userRepo,
+                                ISplitRepository splitRepo,
+                                IPauseRepository pauseRepo,
+                                IGeneralRepository generalRepo,
+                                IMapper mapper)
         {
-            _context = context;
+            _timerRepo = timerRepo;
+            _userRepo = userRepo;
+            _splitRepo = splitRepo;
+            _pauseRepo = pauseRepo;
+            _generalRepo = generalRepo;
+
+            _mapper = mapper;
         }
-
-        //GET: GetAllTimers
-        //GET: GetTimerById
-        //GET: GetAllTimersByUserId
-
-        //GET: TimerSplits
-        //GET: TimerPauses
-        //GET: GetTimerActivePauses
-        //GET: GetTimerPastPauses
-
-        //GET: GetAllActiveTimers
-        //GET: GetAllPastTimers
-        //GET: GetAllActiveTimersByUserId
-        //GET: GetAllPastTimersByUserId
-
-        //POST: AddNewTimer
-
-        //PUT: EditTimer
-        //PUT: FinishTimer
-
-        //DELETE: RemoveTimer
 
         // GET: api/Timers
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Timer>>> GetTimers()
+        [Authorize]
+        public async Task<ActionResult<ICollection<TimerDto>>> GetTimers()
         {
-            return await _context.Timers.ToListAsync();
+            var timers = await _timerRepo.GetAllTimersAsync();
+            var timersDto = _mapper.Map<ICollection<TimerDto>>(timers).ToList();
+
+            return Ok(timersDto);
+        }
+
+        // GET: api/Timers/Active
+        [HttpGet("Active")]
+        [Authorize]
+        public async Task<ActionResult<ICollection<TimerDto>>> GetActiveTimers()
+        {
+            var timers = await _timerRepo.GetAllActiveTimersAsync();
+            var timersDto = _mapper.Map<ICollection<TimerDto>>(timers).ToList();
+
+            return Ok(timersDto);
+        }
+
+        // GET: api/Timers/Finished
+        [HttpGet("Finished")]
+        [Authorize]
+        public async Task<ActionResult<ICollection<TimerDto>>> GetFinishedTimers()
+        {
+            var timers = await _timerRepo.GetAllFinishedTimersAsync();
+            var timersDto = _mapper.Map<ICollection<TimerDto>>(timers).ToList();
+
+            return Ok(timersDto);
+        }
+
+        // GET: api/Timers/Paused
+        [HttpGet("Paused")]
+        [Authorize]
+        public async Task<ActionResult<ICollection<TimerDto>>> GetPausedTimers()
+        {
+            var timers = await _timerRepo.GetAllPausedTimersAsync();
+            var timersDto = _mapper.Map<ICollection<TimerDto>>(timers).ToList();
+
+            return Ok(timersDto);
         }
 
         // GET: api/Timers/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Timer>> GetTimer(string id)
+        [Authorize]
+        public async Task<ActionResult<TimerDto>> GetTimerById(int id)
         {
-            var timer = await _context.Timers.FindAsync(id);
+            var timer = await _timerRepo.GetTimerByIdAsync(id);
 
             if (timer == null)
             {
                 return NotFound();
             }
 
-            return timer;
+            var timerDto = _mapper.Map<TimerDto>(timer);
+
+            return Ok(timerDto);
         }
 
-        // PUT: api/Timers/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutTimer(int id, Timer timer)
+        // GET: api/Timers/CompleteInfo/5
+        [HttpGet("CompleteInfo/{id}")]
+        [Authorize]
+        public async Task<ActionResult<CompleteTimerInfoDto>> GetCompleteTimerInfoById(int id)
         {
-            if (id != timer.Id)
+            var timer = await _timerRepo.GetTimerByIdAsync(id);
+
+            if (timer == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            _context.Entry(timer).State = EntityState.Modified;
+            var completeTimerInfo = new CompleteTimerInfoDto()
+            {
+                Timer = _mapper.Map<TimerDto>(timer),
+                Splits = _mapper.Map<ICollection<SplitDto>>(timer.Splits),
+                Alarms = _mapper.Map<ICollection<AlarmDto>>(timer.Alarms),
+                Pauses = _mapper.Map<ICollection<PauseDto>>(timer.Pauses)
+            };
 
-            try
+            return Ok(completeTimerInfo);
+        }
+
+        // GET: api/Timers/User/{userId}
+        [HttpGet("User/{userId}")]
+        [Authorize]
+        public async Task<ActionResult<ICollection<TimerDto>>> GetUserTimers(string userId)
+        {
+            var user = await _userRepo.GetUserByIdAsync(userId);
+
+            if (user == null)
             {
-                await _context.SaveChangesAsync();
+                return NotFound();
             }
-            catch (DbUpdateConcurrencyException)
+
+            var userTimers = user.Timers?.ToList();
+            var timersDto = _mapper.Map<ICollection<TimerDto>>(userTimers).ToList();
+
+            return Ok(timersDto);
+        }
+
+        // GET: api/Timers/Active/User/{userId}
+        [HttpGet("Active/User/{userId}")]
+        [Authorize]
+        public async Task<ActionResult<ICollection<TimerDto>>> GetOnlyActiveUserTimers(string userId)
+        {
+            var user = await _userRepo.GetUserByIdAsync(userId);
+
+            if (user == null)
             {
-                if (!TimerExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound();
             }
+
+            var userTimers = user.Timers?.Where(z => !z.Finished && !z.Paused).ToList();
+            var timersDto = _mapper.Map<ICollection<TimerDto>>(userTimers).ToList();
+
+            return Ok(timersDto);
+        }
+
+        // GET: api/Timers/Finished/User/{userId}
+        [HttpGet("Finished/User/{userId}")]
+        [Authorize]
+        public async Task<ActionResult<ICollection<TimerDto>>> GetOnlyFinishedUserTimers(string userId)
+        {
+            var user = await _userRepo.GetUserByIdAsync(userId);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var userTimers = user.Timers?.Where(z => z.Finished).ToList();
+            var timersDto = _mapper.Map<ICollection<TimerDto>>(userTimers).ToList();
+
+            return Ok(timersDto);
+        }
+
+        // GET: api/Timers/Paused/User/{userId}
+        [HttpGet("Paused/User/{userId}")]
+        [Authorize]
+        public async Task<ActionResult<ICollection<TimerDto>>> GetOnlyPausedUserTimers(string userId)
+        {
+            var user = await _userRepo.GetUserByIdAsync(userId);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var userTimers = user.Timers?.Where(z => z.Paused).ToList();
+            var timersDto = _mapper.Map<ICollection<TimerDto>>(userTimers).ToList();
+
+            return Ok(timersDto);
+        }
+
+        // PUT: api/Timer/5
+        [HttpPut("{id}")]
+        [Authorize]
+        public async Task<IActionResult> PutTimer(int timerId, UpdateTimerDto timer)
+        {
+            if (timerId != timer.Id || !ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var existingTimer = await _timerRepo.GetTimerByIdAsync(timerId);
+
+            if (existingTimer == null)
+            {
+                return NotFound();
+            }
+
+            existingTimer = _mapper.Map<UpdateTimerDto, Timer>(timer, existingTimer);
+
+            await _generalRepo.ChangeEntryStateToModified(existingTimer);
+            await _generalRepo.SaveChangesAsync();
 
             return NoContent();
         }
 
-        // POST: api/Timers
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Timer>> PostTimer(Timer timer)
+        // PUT: api/Timer/Start/5
+        [HttpPut("Start/{id}")]
+        [Authorize]
+        public async Task<IActionResult> StartTimer(int timerId)
         {
-            _context.Timers.Add(timer);
+            var timer = await _timerRepo.GetTimerByIdAsync(timerId);
+
+            if (timer == null)
+            {
+                return NotFound();
+            }
+
+            if (timer.StartAt == DateTime.MinValue)
+            {
+                return BadRequest();
+            }
+
+            timer.StartAt = DateTime.UtcNow;
+            timer.Paused = false;
+
+            //CREATE NEW SPLIT
+
+            await _generalRepo.ChangeEntryStateToModified(timer);
+            await _generalRepo.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        // PUT: api/Timer/Finish/5
+        [HttpPut("Finish/{id}")]
+        [Authorize]
+        public async Task<IActionResult> FinishTimer(int timerId)
+        {
+            var timer = await _timerRepo.GetTimerByIdAsync(timerId);
+
+            if (timer == null)
+            {
+                return NotFound();
+            }
+
+            if (timer.StartAt == DateTime.MinValue || timer.Finished)
+            {
+                return BadRequest();
+            }
+
+            if (timer.Paused)
+            {
+                var lastPause = timer.Pauses.Where(z => z.EndAt == DateTime.MinValue).FirstOrDefault();
+                lastPause.EndAt = DateTime.UtcNow;
+
+                //Calculate Duration
+                lastPause.TotalDuration = "INIT DURATION";
+
+                await _generalRepo.ChangeEntryStateToModified(lastPause);
+            }
+            else
+            {
+                var lastSplit = timer.Splits.Where(z => z.EndAt == DateTime.MinValue).FirstOrDefault();
+                lastSplit.EndAt = DateTime.UtcNow;
+
+                //Calculate Duration
+                lastSplit.TotalDuration = "INIT DURATION";
+
+                await _generalRepo.ChangeEntryStateToModified(lastSplit);
+            }
+
+            timer.EndAt = DateTime.UtcNow;
+            //Calculate TotalDuration of timer from Adding all TotalDuration from Splits
+            timer.TotalDuration = "INIT DURATION";
+
+            await _generalRepo.ChangeEntryStateToModified(timer);
+            await _generalRepo.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        // POST: api/Alarms
+        [HttpPost]
+        [Authorize]
+        public async Task<ActionResult<Alarm>> PostTimer(CreateTimerDto timer)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var createdTimer = _mapper.Map<Timer>(timer);
+            //CHECK
+            createdTimer.Splits = new List<Split>();
+
+            await _timerRepo.AddTimerAsync(createdTimer);
+
             try
             {
-                await _context.SaveChangesAsync();
+                await _generalRepo.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
-                if (TimerExists(timer.Id))
+                if (_timerRepo.CheckIfTimerExist(createdTimer.Id))
                 {
                     return Conflict();
                 }
@@ -114,28 +331,25 @@ namespace TimeItUpAPI.Controllers
                 }
             }
 
-            return CreatedAtAction("GetTimer", new { id = timer.Id }, timer);
+            return CreatedAtAction("GetTimerById", new { id = createdTimer.Id }, createdTimer);
         }
 
         // DELETE: api/Timers/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTimer(string id)
+        [Authorize]
+        public async Task<IActionResult> RemoveTimer(int id)
         {
-            var timer = await _context.Timers.FindAsync(id);
+            var timer = await _timerRepo.GetTimerByIdAsync(id);
+
             if (timer == null)
             {
                 return NotFound();
             }
 
-            _context.Timers.Remove(timer);
-            await _context.SaveChangesAsync();
+            _timerRepo.RemoveTimer(timer);
+            await _generalRepo.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        private bool TimerExists(int id)
-        {
-            return _context.Timers.Any(e => e.Id == id);
         }
     }
 }

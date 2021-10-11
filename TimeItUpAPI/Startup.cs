@@ -45,7 +45,6 @@ namespace TimeItUpAPI
             #region DI
 
             services.AddTransient<IAlarmRepository, AlarmRepository>();
-            services.AddTransient<IIdentityAccountRepository, IdentityAccountRepository>();
             services.AddTransient<ISplitRepository, SplitRepository>();
             services.AddTransient<ITimerRepository, TimerRepository>();
             services.AddTransient<IUserRepository, UserRepository>();

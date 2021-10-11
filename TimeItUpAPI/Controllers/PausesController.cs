@@ -22,9 +22,13 @@ namespace TimeItUpAPI.Controllers
         //GET: GetAllPastPausesByTimerId
 
         //POST: AddNewPause
+        //PUT: reinstateTimer
+        //PUT: PauseTimer
 
         //PUT: EditPause
+
         //PUT: FinishPause
+        //PUT: StartPause
 
         //DELETE: RemovePause
     }

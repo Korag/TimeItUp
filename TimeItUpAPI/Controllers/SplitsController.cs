@@ -31,6 +31,8 @@ namespace TimeItUpAPI.Controllers
         //POST: AddNewSplit
 
         //PUT: EditSplit
+
+        //PUT: StartSplit
         //PUT: FinishSplit
 
         //DELETE: RemoveSplit
