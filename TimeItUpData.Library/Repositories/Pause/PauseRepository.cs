@@ -1,16 +1,21 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using TimeItUpData.Library.DataAccess;
 using TimeItUpData.Library.Models;
 
 namespace TimeItUpData.Library.Repositories
 {
-    public class IdentityAccountRepository : IIdentityAccountRepository
+    public class PauseRepository : IPauseRepository
     {
         private readonly EFDbContext _context;
 
-        public IdentityAccountRepository(EFDbContext context, UserManager<BasicIdentityUser> userManager)
+        public TimerRepository(EFDbContext context)
         {
             _context = context;
         }
+
     }
 }
