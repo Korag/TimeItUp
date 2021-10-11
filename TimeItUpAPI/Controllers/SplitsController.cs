@@ -1,10 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TimeItUpAPI.Models;
 using TimeItUpData.Library.DataAccess;
 using TimeItUpData.Library.Models;
+using TimeItUpData.Library.Repositories;
 
 namespace TimeItUpAPI.Controllers
 {
@@ -12,96 +17,209 @@ namespace TimeItUpAPI.Controllers
     [ApiController]
     public class SplitsController : ControllerBase
     {
-        private readonly EFDbContext _context;
+        private readonly ISplitRepository _splitRepo;
+        private readonly ITimerRepository _timerRepo;
+        private readonly IUserRepository _userRepo;
+        private readonly IGeneralRepository _generalRepo;
 
-        public SplitsController(EFDbContext context)
+        private readonly IMapper _mapper;
+
+        public SplitsController(IUserRepository userRepo,
+                                ISplitRepository splitRepo,
+                                ITimerRepository timerRepo,
+                                IGeneralRepository generalRepo,
+                                IMapper mapper)
         {
-            _context = context;
+            _splitRepo = splitRepo;
+            _timerRepo = timerRepo;
+
+            _userRepo = userRepo;
+            _generalRepo = generalRepo;
+
+            _mapper = mapper;
         }
-
-        //GET: GetAllSplits
-        //GET: GetSplitById
-        //GET: GetAllSplitsByTimerId
-
-        //GET: GetAllActiveSplits
-        //GET: GetAllPastSplits
-        //GET: GetAllActiveSplitsByTimerId
-        //GET: GetAllPastSplitsByTimerId
-
-        //POST: AddNewSplit
-
-        //PUT: EditSplit
-
-        //PUT: StartSplit
-        //PUT: FinishSplit
-
-        //DELETE: RemoveSplit
 
         // GET: api/Splits
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Split>>> GetSplits()
+        [Authorize]
+        public async Task<ActionResult<ICollection<SplitDto>>> GetSplits()
         {
-            return await _context.Splits.ToListAsync();
+            var splits = await _splitRepo.GetAllSplitsAsync();
+            var splitsDto = _mapper.Map<ICollection<SplitDto>>(splits).ToList();
+
+            return Ok(splitsDto);
+        }
+
+        // GET: api/Splits/Active
+        [HttpGet("Active")]
+        [Authorize]
+        public async Task<ActionResult<ICollection<SplitDto>>> GetActiveSplits()
+        {
+            var splits = await _splitRepo.GetAllActiveSplitsAsync();
+            var splitsDto = _mapper.Map<ICollection<SplitDto>>(splits).ToList();
+
+            return Ok(splitsDto);
+        }
+        // GET: api/Splits/Past
+        [HttpGet("Past")]
+        [Authorize]
+        public async Task<ActionResult<ICollection<SplitDto>>> GetPastTimers()
+        {
+            var splits = await _splitRepo.GetAllPastSplitsAsync();
+            var splitsDto = _mapper.Map<ICollection<SplitDto>>(splits).ToList();
+
+            return Ok(splitsDto);
         }
 
         // GET: api/Splits/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Split>> GetSplit(string id)
+        [Authorize]
+        public async Task<ActionResult<SplitDto>> GetSplitsById(int id)
         {
-            var split = await _context.Splits.FindAsync(id);
+            var split = await _splitRepo.GetSplitByIdAsync(id);
 
             if (split == null)
             {
                 return NotFound();
             }
 
-            return split;
+            var splitDto = _mapper.Map<SplitDto>(split);
+
+            return Ok(splitDto);
         }
 
-        // PUT: api/Splits/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutSplit(int id, Split split)
+        // GET: api/Splits/Timer/{timerId}
+        [HttpGet("Timer/{timerId}")]
+        [Authorize]
+        public async Task<ActionResult<ICollection<SplitDto>>> GetTimerSplits(int timerId)
         {
-            if (id != split.Id)
+            var timer = await _timerRepo.GetTimerByIdAsync(timerId);
+
+            if (timer == null)
+            {
+                return NotFound();
+            }
+
+            var timerSplits = timer.Splits?.ToList();
+            var splitsDto = _mapper.Map<ICollection<SplitDto>>(timerSplits).ToList();
+
+            return Ok(splitsDto);
+        }
+
+        // GET: api/Splits/Active/Timer/{timerId}
+        [HttpGet("Active/Timer/{timerId}")]
+        [Authorize]
+        public async Task<ActionResult<ICollection<SplitDto>>> GetTimerActiveSplits(int timerId)
+        {
+            var timer = await _timerRepo.GetTimerByIdAsync(timerId);
+
+            if (timer == null)
+            {
+                return NotFound();
+            }
+
+            var timerSplits = timer.Splits?.Where(z => z.StartAt != DateTime.MinValue && z.EndAt == DateTime.MinValue).ToList();
+            var splitsDto = _mapper.Map<ICollection<SplitDto>>(timerSplits).ToList();
+
+            return Ok(splitsDto);
+        }
+
+        // GET: api/Splits/Past/Timer/{timerId}
+        [HttpGet("Past/Timer/{timerId}")]
+        [Authorize]
+        public async Task<ActionResult<ICollection<SplitDto>>> GetTimerPastSplits(int timerId)
+        {
+            var timer = await _timerRepo.GetTimerByIdAsync(timerId);
+
+            if (timer == null)
+            {
+                return NotFound();
+            }
+
+            var timerSplits = timer.Splits?.Where(z => z.StartAt != DateTime.MinValue && z.EndAt != DateTime.MinValue).ToList();
+            var splitsDto = _mapper.Map<ICollection<SplitDto>>(timerSplits).ToList();
+
+            return Ok(splitsDto);
+        }
+
+        // PUT: api/Split/Start/5
+        [HttpPut("Start/{id}")]
+        [Authorize]
+        public async Task<IActionResult> StartSplit(int splitId)
+        {
+            var split = await _splitRepo.GetSplitByIdAsync(splitId);
+
+            if (split == null)
+            {
+                return NotFound();
+            }
+
+            if (split.StartAt == DateTime.MinValue)
             {
                 return BadRequest();
             }
 
-            _context.Entry(split).State = EntityState.Modified;
+            split.StartAt = DateTime.UtcNow;
 
-            try
+            await _generalRepo.ChangeEntryStateToModified(split);
+            await _generalRepo.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        // PUT: api/Split/Finish/5
+        [HttpPut("Split/{id}")]
+        [Authorize]
+        public async Task<IActionResult> FinishSplit(int splitId)
+        {
+            var split = await _splitRepo.GetSplitByIdAsync(splitId);
+
+            if (split == null)
             {
-                await _context.SaveChangesAsync();
+                return NotFound();
             }
-            catch (DbUpdateConcurrencyException)
+
+            if (split.StartAt == DateTime.MinValue)
             {
-                if (!SplitExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return BadRequest();
             }
+
+            //Calculate Duration
+            split.EndAt = DateTime.UtcNow;
+            split.TotalDuration = "INIT DURATION";
+
+            await _generalRepo.ChangeEntryStateToModified(split);
+            await _generalRepo.SaveChangesAsync();
 
             return NoContent();
         }
 
         // POST: api/Splits
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Split>> PostSplit(Split split)
+        [Authorize]
+        public async Task<ActionResult<Split>> PostSplit(CreateSplitDto split)
         {
-            _context.Splits.Add(split);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var createdSplit = _mapper.Map<Split>(split);
+
+            if (createdSplit.Timer == null)
+            {
+                return NotFound();
+            }
+
+           await _splitRepo.AddSplitAsync(createdSplit);
+
             try
             {
-                await _context.SaveChangesAsync();
+                await _generalRepo.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
-                if (SplitExists(split.Id))
+                if (_splitRepo.CheckIfSplitExist(createdSplit.Id))
                 {
                     return Conflict();
                 }
@@ -111,28 +229,25 @@ namespace TimeItUpAPI.Controllers
                 }
             }
 
-            return CreatedAtAction("GetSplit", new { id = split.Id }, split);
+            return CreatedAtAction("GetSplitById", new { id = createdSplit.Id }, createdSplit);
         }
 
-        // DELETE: api/Splits/5
+        // DELETE: api/Split/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteSplit(string id)
+        [Authorize]
+        public async Task<IActionResult> RemoveSplit(int id)
         {
-            var split = await _context.Splits.FindAsync(id);
+            var split = await _splitRepo.GetSplitByIdAsync(id);
+
             if (split == null)
             {
                 return NotFound();
             }
 
-            _context.Splits.Remove(split);
-            await _context.SaveChangesAsync();
+            _splitRepo.RemoveSplit(split);
+            await _generalRepo.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        private bool SplitExists(int id)
-        {
-            return _context.Splits.Any(e => e.Id == id);
         }
     }
 }

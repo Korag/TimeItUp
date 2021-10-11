@@ -243,9 +243,15 @@ namespace TimeItUpAPI.Controllers
             timer.StartAt = DateTime.UtcNow;
             timer.Paused = false;
 
-            //CREATE NEW SPLIT
+            var initialSplit = new Split()
+            {
+                TimerId = timer.Id,
+                StartAt = DateTime.UtcNow
+            };
+            timer.Splits.Add(initialSplit);
 
             await _generalRepo.ChangeEntryStateToModified(timer);
+            await _generalRepo.ChangeEntryStateToModified(initialSplit);
             await _generalRepo.SaveChangesAsync();
 
             return NoContent();
