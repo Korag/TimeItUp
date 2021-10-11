@@ -12,7 +12,7 @@ namespace TimeItUpData.Library.Repositories
     {
         private readonly EFDbContext _context;
 
-        public TimerRepository(EFDbContext context)
+        public PauseRepository(EFDbContext context)
         {
             _context = context;
         }

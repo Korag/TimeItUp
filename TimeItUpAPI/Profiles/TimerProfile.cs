@@ -11,7 +11,6 @@ namespace TimeItUpAPI.Profiles
             CreateMap<Timer, TimerDto>();
             CreateMap<UpdateTimerDto, Timer>();
             CreateMap<CreateTimerDto, Timer>();
-
         }
     }
 }

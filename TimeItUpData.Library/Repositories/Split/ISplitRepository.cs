@@ -1,6 +1,17 @@
-﻿namespace TimeItUpData.Library.Repositories
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using TimeItUpData.Library.Models;
+
+namespace TimeItUpData.Library.Repositories
 {
     public interface ISplitRepository
     {
+        Task<ICollection<Split>> GetAllSplitsAsync();
+        Task<ICollection<Split>> GetAllActiveSplitsAsync();
+        Task<ICollection<Split>> GetAllPastSplitsAsync();
+        Task<Split> GetSplitByIdAsync(int id);
+        void RemoveSplit(Split split);
+        Task AddSplitAsync(Split split);
+        bool CheckIfSplitExist(int id);
     }
 }
