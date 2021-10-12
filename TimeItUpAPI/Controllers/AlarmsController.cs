@@ -13,7 +13,6 @@ using TimeItUpData.Library.Repositories;
 namespace TimeItUpAPI.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize]
     [ApiController]
     public class AlarmsController : ControllerBase
     {
@@ -41,7 +40,6 @@ namespace TimeItUpAPI.Controllers
 
         // GET: api/Alarms
         [HttpGet]
-        [Authorize]
         public async Task<ActionResult<ICollection<AlarmDto>>> GetAlarms()
         {
             var alarms = await _alarmRepo.GetAllAlarmsAsync();

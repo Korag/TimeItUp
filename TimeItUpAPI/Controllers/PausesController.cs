@@ -13,7 +13,9 @@ using TimeItUpServices.Library;
 
 namespace TimeItUpAPI.Controllers
 {
-    public class PausesController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class PausesController : ControllerBase
     {
         private readonly IPauseRepository _pauseRepo;
         private readonly ITimerRepository _timerRepo;
@@ -45,6 +47,39 @@ namespace TimeItUpAPI.Controllers
             var pausesDto = _mapper.Map<ICollection<PauseDto>>(pauses).ToList();
 
             return Ok(pausesDto);
+        }
+
+        // PUT: api/Pauses/Active/All/CalculatePeriod
+        [HttpPut("Active/All/CalculatePeriod")]
+        [Authorize]
+        public async Task<IActionResult> CalculateAllActivePausesPeriod()
+        {
+            var pauses = await _pauseRepo.GetAllActivePausesAsync();
+            await CalculatePausePeriod(pauses);
+
+            return NoContent();
+        }
+
+        // PUT: api/Pauses/Multiple/CalculatePeriod
+        [HttpPut("Multiple/CalculatePeriod")]
+        [Authorize]
+        public async Task<IActionResult> CalculateSelectedPausesPeriod(ICollection<int> ids)
+        {
+            var pauses = await _pauseRepo.GetPausesByIdsAsync(ids);
+            await CalculatePausePeriod(pauses);
+
+            return NoContent();
+        }
+
+        // PUT: api/Pauses/CalculatePeriod/{id}
+        [HttpPut("CalculatePeriod/{id}")]
+        [Authorize]
+        public async Task<IActionResult> CalculateSelectedPausePeriod(int id)
+        {
+            var pause = await _pauseRepo.GetPauseByIdAsync(id);
+            await CalculatePausePeriod(new List<Pause> { pause });
+
+            return NoContent();
         }
 
         // GET: api/Pauses/Active
@@ -278,6 +313,19 @@ namespace TimeItUpAPI.Controllers
             await _generalRepo.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        private async Task CalculatePausePeriod(ICollection<Pause> pauses)
+        {
+            var pausesList = pauses.ToList();
+
+            for (int i = 0; i < pausesList.Count; i++)
+            {
+                pausesList[i] = _timeCalc.CalculatePauseTimePeriod(pausesList[i]);
+                await _generalRepo.ChangeEntryStateToModified(pausesList[i]);
+            }
+
+            await _generalRepo.SaveChangesAsync();
         }
     }
 }

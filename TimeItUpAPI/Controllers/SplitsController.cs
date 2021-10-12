@@ -14,7 +14,6 @@ using TimeItUpServices.Library;
 namespace TimeItUpAPI.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize]
     [ApiController]
     public class SplitsController : ControllerBase
     {
@@ -50,6 +49,39 @@ namespace TimeItUpAPI.Controllers
             return Ok(splitsDto);
         }
 
+        // PUT: api/Splits/Active/All/CalculatePeriod
+        [HttpPut("Active/All/CalculatePeriod")]
+        [Authorize]
+        public async Task<IActionResult> CalculateAllActiveSplitsPeriod()
+        {
+            var splits = await _splitRepo.GetAllActiveSplitsAsync();
+            await CalculateSplitPeriod(splits);
+
+            return NoContent();
+        }
+
+        // PUT: api/Splits/Multiple/CalculatePeriod
+        [HttpPut("Multiple/CalculatePeriod")]
+        [Authorize]
+        public async Task<IActionResult> CalculateSelectedSplitsPeriod(ICollection<int> ids)
+        {
+            var splits = await _splitRepo.GetSplitsByIdsAsync(ids);
+            await CalculateSplitPeriod(splits);
+
+            return NoContent();
+        }
+
+        // PUT: api/Splits/CalculatePeriod/{id}
+        [HttpPut("CalculatePeriod/{id}")]
+        [Authorize]
+        public async Task<IActionResult> CalculateSelectedSplitPeriod(int id)
+        {
+            var split = await _splitRepo.GetSplitByIdAsync(id);
+            await CalculateSplitPeriod(new List<Split> { split });
+
+            return NoContent();
+        }
+
         // GET: api/Splits/Active
         [HttpGet("Active")]
         [Authorize]
@@ -64,7 +96,7 @@ namespace TimeItUpAPI.Controllers
         // GET: api/Splits/Past
         [HttpGet("Past")]
         [Authorize]
-        public async Task<ActionResult<ICollection<SplitDto>>> GetPastTimers()
+        public async Task<ActionResult<ICollection<SplitDto>>> GetPastSplits()
         {
             var splits = await _splitRepo.GetAllPastSplitsAsync();
             var splitsDto = _mapper.Map<ICollection<SplitDto>>(splits).ToList();
@@ -260,6 +292,32 @@ namespace TimeItUpAPI.Controllers
             await _generalRepo.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        private async Task CalculateTimerPeriods(ICollection<Timer> timers)
+        {
+            var timersList = timers.ToList();
+
+            for (int i = 0; i < timersList.Count; i++)
+            {
+                timersList[i] = _timeCalc.CalculateTimerTimePeriods(timersList[i]);
+                await _generalRepo.ChangeEntryStateToModified(timersList[i]);
+            }
+
+            await _generalRepo.SaveChangesAsync();
+        }
+
+        private async Task CalculateSplitPeriod(ICollection<Split> splits)
+        {
+            var splitsList = splits.ToList();
+
+            for (int i = 0; i < splitsList.Count; i++)
+            {
+                splitsList[i] = _timeCalc.CalculateSplitTimePeriod(splitsList[i]);
+                await _generalRepo.ChangeEntryStateToModified(splitsList[i]);
+            }
+
+            await _generalRepo.SaveChangesAsync();
         }
     }
 }

@@ -14,7 +14,6 @@ using TimeItUpServices.Library;
 namespace TimeItUpAPI.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize]
     [ApiController]
     public class TimersController : ControllerBase
     {
@@ -53,6 +52,39 @@ namespace TimeItUpAPI.Controllers
             var timersDto = _mapper.Map<ICollection<TimerDto>>(timers).ToList();
 
             return Ok(timersDto);
+        }
+
+        // PUT: api/Timers/Active/All/CalculatePeriods
+        [HttpPut("Active/All/CalculatePeriods")]
+        [Authorize]
+        public async Task<IActionResult> CalculateAllActiveTimersPeriods()
+        {
+            var timers = await _timerRepo.GetAllActiveTimersAsync();
+            await CalculateTimerPeriods(timers);
+
+            return NoContent();
+        }
+
+        // PUT: api/Splits/Multiple/CalculatePeriods
+        [HttpPut("Multiple/CalculatePeriods")]
+        [Authorize]
+        public async Task<IActionResult> CalculateSelectedTimersPeriods(ICollection<int> ids)
+        {
+            var timers = await _timerRepo.GetTimersByIdsAsync(ids);
+            await CalculateTimerPeriods(timers);
+
+            return NoContent();
+        }
+
+        // PUT: api/Timers/CalculatePeriods/{id}
+        [HttpPut("CalculatePeriods/{id}")]
+        [Authorize]
+        public async Task<IActionResult> CalculateSelectedTimerPeriods(int id)
+        {
+            var timer = await _timerRepo.GetTimerByIdAsync(id);
+            await CalculateTimerPeriods(new List<Timer>{ timer });
+
+            return NoContent();
         }
 
         // GET: api/Timers/Active
@@ -108,9 +140,9 @@ namespace TimeItUpAPI.Controllers
         // GET: api/Timers/Multiple
         [HttpGet("Multiple")]
         [Authorize]
-        public async Task<ActionResult<ICollection<TimerDto>>> GetSplitsByIds([FromBody] ICollection<int> idSet)
+        public async Task<ActionResult<ICollection<TimerDto>>> GetTimersByIds([FromBody] ICollection<int> idSet)
         {
-            var timers = await _splitRepo.GetSplitsByIdsAsync(idSet);
+            var timers = await _timerRepo.GetTimersByIdsAsync(idSet);
             var timersDto = _mapper.Map<ICollection<TimerDto>>(timers);
 
             return Ok(timersDto);
@@ -322,40 +354,40 @@ namespace TimeItUpAPI.Controllers
             return NoContent();
         }
 
-        //// PUT: api/Timer/Reinstate/5
-        //[HttpPut("Reinstate/{id}")]
-        //[Authorize]
-        //public async Task<IActionResult> ReinstateTimer(int timerId)
-        //{
-        //    var timer = await _timerRepo.GetTimerByIdAsync(timerId);
+        // PUT: api/Timer/Reinstate/5
+        [HttpPut("Reinstate/{id}")]
+        [Authorize]
+        public async Task<IActionResult> ReinstateTimer(int timerId)
+        {
+            var timer = await _timerRepo.GetTimerByIdAsync(timerId);
 
-        //    if (timer == null)
-        //    {
-        //        return NotFound();
-        //    }
+            if (timer == null)
+            {
+                return NotFound();
+            }
 
-        //    if (timer.StartAt != DateTime.MinValue)
-        //    {
-        //        return BadRequest();
-        //    }
+            if (timer.StartAt == DateTime.MinValue || timer.EndAt == DateTime.MinValue)
+            {
+                return BadRequest();
+            }
 
-        //    timer.StartAt = DateTime.UtcNow;
-        //    timer.Paused = false;
+            timer.EndAt = DateTime.UtcNow;
+            timer.Paused = false;
 
-        //    var initialSplit = new Split()
-        //    {
-        //        TimerId = timer.Id,
-        //        StartAt = DateTime.UtcNow
-        //    };
-        //    timer.Splits.Add(initialSplit);
+            var nextSplit = new Split()
+            {
+                TimerId = timer.Id,
+                StartAt = DateTime.UtcNow
+            };
+            timer.Splits.Add(nextSplit);
 
-        //    await _generalRepo.ChangeEntryStateToModified(timer);
-        //    //Necessary?
-        //    await _generalRepo.ChangeEntryStateToModified(initialSplit);
-        //    await _generalRepo.SaveChangesAsync();
+            await _generalRepo.ChangeEntryStateToModified(timer);
+            //Necessary?
+            await _generalRepo.ChangeEntryStateToModified(nextSplit);
+            await _generalRepo.SaveChangesAsync();
 
-        //    return NoContent();
-        //}
+            return NoContent();
+        }
 
         // POST: api/Timers
         [HttpPost]
@@ -409,6 +441,19 @@ namespace TimeItUpAPI.Controllers
             await _generalRepo.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        private async Task CalculateTimerPeriods(ICollection<Timer> timers)
+        {
+            var timersList = timers.ToList();
+
+            for (int i = 0; i < timersList.Count; i++)
+            {
+                timersList[i] = _timeCalc.CalculateTimerTimePeriods(timersList[i]);
+                await _generalRepo.ChangeEntryStateToModified(timersList[i]);
+            }
+
+            await _generalRepo.SaveChangesAsync();
         }
     }
 }

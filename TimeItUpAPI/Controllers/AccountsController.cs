@@ -22,7 +22,6 @@ using static TimeItUpServices.Library.EmailService.Model.EmailClassifierDictiona
 namespace TimeItUpAPI.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize]
     [ApiController]
     public class AccountsController : ControllerBase
     {

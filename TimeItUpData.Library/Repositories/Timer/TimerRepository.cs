@@ -23,7 +23,7 @@ namespace TimeItUpData.Library.Repositories
 
         public async Task<ICollection<Timer>> GetAllActiveTimersAsync()
         {
-            return await _context.Timers.Where(z => !z.Finished && !z.Paused).ToListAsync();
+            return await _context.Timers.Where(z => !z.Finished).ToListAsync();
         }
 
         public async Task<ICollection<Timer>> GetAllFinishedTimersAsync()

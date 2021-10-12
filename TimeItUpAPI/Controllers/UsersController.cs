@@ -12,7 +12,6 @@ using TimeItUpData.Library.Repositories;
 namespace TimeItUpAPI.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize]
     [ApiController]
     public class UsersController : ControllerBase
     {
