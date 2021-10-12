@@ -233,7 +233,7 @@ namespace TimeItUpAPI.Controllers
         // POST: api/Pauses
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult<Pause>> PostSplit(CreatePauseDto pause)
+        public async Task<ActionResult<PauseDto>> PostSplit(CreatePauseDto pause)
         {
             if (!ModelState.IsValid)
             {
@@ -264,8 +264,9 @@ namespace TimeItUpAPI.Controllers
                     throw;
                 }
             }
+            var pauseDto = _mapper.Map<PauseDto>(createdPause);
 
-            return CreatedAtAction("GetPauseById", new { id = createdPause.Id }, createdPause);
+            return CreatedAtAction("GetPauseById", new { id = pauseDto.Id }, pauseDto);
         }
 
         // DELETE: api/Pause/5

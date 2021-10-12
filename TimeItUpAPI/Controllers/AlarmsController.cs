@@ -251,7 +251,7 @@ namespace TimeItUpAPI.Controllers
         // POST: api/Alarms
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult<Alarm>> PostAlarm(CreateAlarmDto alarm)
+        public async Task<ActionResult<AlarmDto>> PostAlarm(CreateAlarmDto alarm)
         {
             if (!ModelState.IsValid)
             {
@@ -276,8 +276,9 @@ namespace TimeItUpAPI.Controllers
                     throw;
                 }
             }
+            var alarmDto = _mapper.Map<AlarmDto>(createdAlarm);
 
-            return CreatedAtAction("GetAlarmById", new { id = createdAlarm.Id }, createdAlarm);
+            return CreatedAtAction("GetAlarmById", new { id = alarmDto.Id }, alarmDto);
         }
 
         // DELETE: api/Alarms/5

@@ -209,7 +209,7 @@ namespace TimeItUpAPI.Controllers
         // POST: api/Splits
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult<Split>> PostSplit(CreateSplitDto split)
+        public async Task<ActionResult<SplitDto>> PostSplit(CreateSplitDto split)
         {
             if (!ModelState.IsValid)
             {
@@ -240,8 +240,9 @@ namespace TimeItUpAPI.Controllers
                     throw;
                 }
             }
+            var splitDto = _mapper.Map<SplitDto>(createdSplit);
 
-            return CreatedAtAction("GetSplitById", new { id = createdSplit.Id }, createdSplit);
+            return CreatedAtAction("GetSplitById", new { id = splitDto.Id }, splitDto);
         }
 
         // DELETE: api/Split/5

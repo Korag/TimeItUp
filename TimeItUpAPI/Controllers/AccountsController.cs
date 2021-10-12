@@ -94,7 +94,9 @@ namespace TimeItUpAPI.Controllers
                     await _userRepo.AddUserAsync(createdUser);
                     await _generalRepo.SaveChangesAsync();
 
-                    return CreatedAtAction("GetUserById", "UsersController", new { id = createdUser.Id }, createdUser);
+                    var userDto = _mapper.Map<UserDto>(createdUser);
+
+                    return CreatedAtAction("GetUserById", "UsersController", new { id = userDto.Id }, userDto);
                 }
                 else
                 {

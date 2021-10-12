@@ -329,7 +329,7 @@ namespace TimeItUpAPI.Controllers
         // POST: api/Alarms
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult<Alarm>> PostTimer(CreateTimerDto timer)
+        public async Task<ActionResult<TimerDto>> PostTimer(CreateTimerDto timer)
         {
             if (!ModelState.IsValid)
             {
@@ -357,8 +357,9 @@ namespace TimeItUpAPI.Controllers
                     throw;
                 }
             }
+            var timerDto = _mapper.Map<TimerDto>(createdTimer);
 
-            return CreatedAtAction("GetTimerById", new { id = createdTimer.Id }, createdTimer);
+            return CreatedAtAction("GetTimerById", new { id = timerDto.Id }, timerDto);
         }
 
         // DELETE: api/Timers/5
