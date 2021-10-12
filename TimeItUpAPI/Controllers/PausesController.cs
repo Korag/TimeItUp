@@ -38,17 +38,6 @@ namespace TimeItUpAPI.Controllers
             _mapper = mapper;
         }
 
-        // GET: api/Pauses
-        [HttpGet]
-        [Authorize]
-        public async Task<ActionResult<ICollection<PauseDto>>> GetPauses()
-        {
-            var pauses = await _pauseRepo.GetAllPausesAsync();
-            var pausesDto = _mapper.Map<ICollection<PauseDto>>(pauses).ToList();
-
-            return Ok(pausesDto);
-        }
-
         // PUT: api/Pauses/Active/All/CalculatePeriod
         [HttpPut("Active/All/CalculatePeriod")]
         [Authorize]
@@ -82,6 +71,17 @@ namespace TimeItUpAPI.Controllers
             return NoContent();
         }
 
+        // GET: api/Pauses
+        [HttpGet]
+        [Authorize]
+        public async Task<ActionResult<ICollection<PauseDto>>> GetAllPauses()
+        {
+            var pauses = await _pauseRepo.GetAllPausesAsync();
+            var pausesDto = _mapper.Map<ICollection<PauseDto>>(pauses).ToList();
+
+            return Ok(pausesDto);
+        }
+
         // GET: api/Pauses/Active
         [HttpGet("Active")]
         [Authorize]
@@ -107,7 +107,7 @@ namespace TimeItUpAPI.Controllers
         // GET: api/Splits/5
         [HttpGet("{id}")]
         [Authorize]
-        public async Task<ActionResult<SplitDto>> GetPausesById(int id)
+        public async Task<ActionResult<SplitDto>> GetPauseById(int id)
         {
             var pause = await _pauseRepo.GetPauseByIdAsync(id);
 
@@ -261,7 +261,7 @@ namespace TimeItUpAPI.Controllers
         // POST: api/Pauses
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult<PauseDto>> PostSplit(CreatePauseDto pause)
+        public async Task<ActionResult<PauseDto>> CreatePause(CreatePauseDto pause)
         {
             if (!ModelState.IsValid)
             {

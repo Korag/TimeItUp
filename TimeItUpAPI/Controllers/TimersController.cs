@@ -18,7 +18,6 @@ namespace TimeItUpAPI.Controllers
     public class TimersController : ControllerBase
     {
         private readonly ITimerRepository _timerRepo;
-        private readonly ISplitRepository _splitRepo;
         private readonly IUserRepository _userRepo;
         private readonly IGeneralRepository _generalRepo;
 
@@ -28,30 +27,17 @@ namespace TimeItUpAPI.Controllers
 
         public TimersController(ITimerRepository timerRepo,
                                 IUserRepository userRepo,
-                                ISplitRepository splitRepo,
                                 IGeneralRepository generalRepo,
                                 ITimePeriodTimerCalcFacade timeCalc,
                                 IMapper mapper)
         {
             _timerRepo = timerRepo;
-            _splitRepo = splitRepo;
 
             _userRepo = userRepo;
             _generalRepo = generalRepo;
 
             _timeCalc = timeCalc;
             _mapper = mapper;
-        }
-
-        // GET: api/Timers
-        [HttpGet]
-        [Authorize]
-        public async Task<ActionResult<ICollection<TimerDto>>> GetTimers()
-        {
-            var timers = await _timerRepo.GetAllTimersAsync();
-            var timersDto = _mapper.Map<ICollection<TimerDto>>(timers).ToList();
-
-            return Ok(timersDto);
         }
 
         // PUT: api/Timers/Active/All/CalculatePeriods
@@ -85,6 +71,17 @@ namespace TimeItUpAPI.Controllers
             await CalculateTimerPeriods(new List<Timer>{ timer });
 
             return NoContent();
+        }
+
+        // GET: api/Timers
+        [HttpGet]
+        [Authorize]
+        public async Task<ActionResult<ICollection<TimerDto>>> GetAllTimers()
+        {
+            var timers = await _timerRepo.GetAllTimersAsync();
+            var timersDto = _mapper.Map<ICollection<TimerDto>>(timers).ToList();
+
+            return Ok(timersDto);
         }
 
         // GET: api/Timers/Active
@@ -192,7 +189,7 @@ namespace TimeItUpAPI.Controllers
         // GET: api/Timers/Active/User/{userId}
         [HttpGet("Active/User/{userId}")]
         [Authorize]
-        public async Task<ActionResult<ICollection<TimerDto>>> GetOnlyActiveUserTimers(string userId)
+        public async Task<ActionResult<ICollection<TimerDto>>> GetActiveUserTimers(string userId)
         {
             var user = await _userRepo.GetUserByIdAsync(userId);
 
@@ -210,7 +207,7 @@ namespace TimeItUpAPI.Controllers
         // GET: api/Timers/Finished/User/{userId}
         [HttpGet("Finished/User/{userId}")]
         [Authorize]
-        public async Task<ActionResult<ICollection<TimerDto>>> GetOnlyFinishedUserTimers(string userId)
+        public async Task<ActionResult<ICollection<TimerDto>>> GetFinishedUserTimers(string userId)
         {
             var user = await _userRepo.GetUserByIdAsync(userId);
 
@@ -228,7 +225,7 @@ namespace TimeItUpAPI.Controllers
         // GET: api/Timers/Paused/User/{userId}
         [HttpGet("Paused/User/{userId}")]
         [Authorize]
-        public async Task<ActionResult<ICollection<TimerDto>>> GetOnlyPausedUserTimers(string userId)
+        public async Task<ActionResult<ICollection<TimerDto>>> GetPausedUserTimers(string userId)
         {
             var user = await _userRepo.GetUserByIdAsync(userId);
 
@@ -246,7 +243,7 @@ namespace TimeItUpAPI.Controllers
         // PUT: api/Timer/5
         [HttpPut("{id}")]
         [Authorize]
-        public async Task<IActionResult> PutTimer(int timerId, UpdateTimerDto timer)
+        public async Task<IActionResult> UpdateTimer(int timerId, UpdateTimerDto timer)
         {
             if (timerId != timer.Id || !ModelState.IsValid)
             {
@@ -346,8 +343,6 @@ namespace TimeItUpAPI.Controllers
             timer.EndAt = DateTime.UtcNow;
             timer = _timeCalc.CalculateTimerTimePeriods(timer);
 
-            //ADD CALCULATION TO DTOS GET METHODS
-            
             await _generalRepo.ChangeEntryStateToModified(timer);
             await _generalRepo.SaveChangesAsync();
 
@@ -392,7 +387,7 @@ namespace TimeItUpAPI.Controllers
         // POST: api/Timers
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult<TimerDto>> PostTimer(CreateTimerDto timer)
+        public async Task<ActionResult<TimerDto>> CreateTimer(CreateTimerDto timer)
         {
             if (!ModelState.IsValid)
             {

@@ -40,7 +40,7 @@ namespace TimeItUpAPI.Controllers
 
         // GET: api/Alarms
         [HttpGet]
-        public async Task<ActionResult<ICollection<AlarmDto>>> GetAlarms()
+        public async Task<ActionResult<ICollection<AlarmDto>>> GetAllAlarms()
         {
             var alarms = await _alarmRepo.GetAllAlarmsAsync();
             var alarmsDto = _mapper.Map<ICollection<AlarmDto>>(alarms).ToList();
@@ -109,7 +109,9 @@ namespace TimeItUpAPI.Controllers
             }
 
             var userAlarms = new List<Alarm>();
-            user.Timers?.ToList().ForEach(z => z.Alarms.Where(z => z.ActivationTime > DateTime.UtcNow).ToList().ForEach(c => userAlarms.Add(c)));
+            user.Timers?.ToList().ForEach(z => z.Alarms
+                        .Where(z => z.ActivationTime > DateTime.UtcNow)
+                        .ToList().ForEach(c => userAlarms.Add(c)));
 
             var alarmsDto = _mapper.Map<ICollection<AlarmDto>>(userAlarms).ToList();
 
@@ -139,7 +141,7 @@ namespace TimeItUpAPI.Controllers
         // GET: api/Alarms/Timer/{timerId}
         [HttpGet("Timer/{timerId}")]
         [Authorize]
-        public async Task<ActionResult<ICollection<AlarmDto>>> GetAlarmsByTimerId(int timerId)
+        public async Task<ActionResult<ICollection<AlarmDto>>> GetTimerAlarms(int timerId)
         {
             var timer = await _timerRepo.GetTimerByIdAsync(timerId);
 
@@ -159,7 +161,7 @@ namespace TimeItUpAPI.Controllers
         // GET: api/Alarms/Active/Timer/{timerId}
         [HttpGet("Active/Timer/{timerId}")]
         [Authorize]
-        public async Task<ActionResult<ICollection<AlarmDto>>> GetActiveAlarmsByTimerId(int timerId)
+        public async Task<ActionResult<ICollection<AlarmDto>>> GetTimerActiveAlarms(int timerId)
         {
             var timer = await _timerRepo.GetTimerByIdAsync(timerId);
 
@@ -179,7 +181,7 @@ namespace TimeItUpAPI.Controllers
         // GET: api/Alarms/Past/Timer/{timerId}
         [HttpGet("Past/Timer/{timerId}")]
         [Authorize]
-        public async Task<ActionResult<ICollection<AlarmDto>>> GetPastAlarmsByTimerId(int timerId)
+        public async Task<ActionResult<ICollection<AlarmDto>>> GetTimerPastAlarms(int timerId)
         {
             var timer = await _timerRepo.GetTimerByIdAsync(timerId);
 
@@ -199,7 +201,7 @@ namespace TimeItUpAPI.Controllers
         // PUT: api/Alarms/5
         [HttpPut("{id}")]
         [Authorize]
-        public async Task<IActionResult> PutAlarm(int alarmId, UpdateAlarmDto alarm)
+        public async Task<IActionResult> UpdateAlarm(int alarmId, UpdateAlarmDto alarm)
         {
             if (alarmId != alarm.Id || !ModelState.IsValid)
             {
@@ -249,7 +251,7 @@ namespace TimeItUpAPI.Controllers
         // POST: api/Alarms
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult<AlarmDto>> PostAlarm(CreateAlarmDto alarm)
+        public async Task<ActionResult<AlarmDto>> CreateAlarm(CreateAlarmDto alarm)
         {
             if (!ModelState.IsValid)
             {
@@ -282,7 +284,7 @@ namespace TimeItUpAPI.Controllers
         // DELETE: api/Alarms/5
         [HttpDelete("{id}")]
         [Authorize]
-        public async Task<IActionResult> DeleteAlarm(int id)
+        public async Task<IActionResult> RemoveAlarm(int id)
         {
             var alarm = await _alarmRepo.GetAlarmByIdAsync(id);
 

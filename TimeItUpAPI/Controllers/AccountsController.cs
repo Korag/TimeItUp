@@ -190,7 +190,7 @@ namespace TimeItUpAPI.Controllers
         // PUT: api/Accounts/TryResetPassword/{email}
         [HttpPost("TryResetPassword/{email}")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetResetPasswordCode(string email)
+        public async Task<IActionResult> TryResetUserAccountPassword(string email)
         {
             var userAccount = await _userManager.FindByEmailAsync(email);
 
@@ -200,7 +200,7 @@ namespace TimeItUpAPI.Controllers
             }
 
             var user = await _userRepo.GetUserByIdAsync(userAccount.Id);
-            var token = await GetPasswordCode(userAccount);
+            var token = await GenerateResetPasswordCode(userAccount);
             var resetPasswordActionUrl = @$"https://localcommunityvotingplatform.azurewebsites.net/resetpassword?token={token}";
 
             //TODO: Generate URL to GET UI form -> with passed generated token
@@ -238,7 +238,7 @@ namespace TimeItUpAPI.Controllers
             return BadRequest();
         }
 
-        private async Task<string> GetPasswordCode(BasicIdentityUser userAccount)
+        private async Task<string> GenerateResetPasswordCode(BasicIdentityUser userAccount)
         {
             var user = await _userRepo.GetUserByIdAsync(userAccount.Id);
             return await _userManager.GeneratePasswordResetTokenAsync(userAccount);

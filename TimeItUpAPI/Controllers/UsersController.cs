@@ -34,7 +34,7 @@ namespace TimeItUpAPI.Controllers
         // GET: api/Users
         [HttpGet]
         [Authorize]
-        public async Task<ActionResult<ICollection<UserDto>>> GetUsers()
+        public async Task<ActionResult<ICollection<UserDto>>> GetAllUsers()
         {
             var users = await _userRepo.GetAllUsersAsync();
             var usersDto = _mapper.Map<ICollection<UserDto>>(users);
@@ -90,7 +90,7 @@ namespace TimeItUpAPI.Controllers
         // PUT: api/Users/5
         [HttpPut("{id}")]
         [Authorize]
-        public async Task<IActionResult> PutUser(string userId, UpdateUserDto user)
+        public async Task<IActionResult> UpdateUser(string userId, UpdateUserDto user)
         {
             if (userId != user.Id || !ModelState.IsValid)
             {

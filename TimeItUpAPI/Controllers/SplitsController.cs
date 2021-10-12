@@ -38,17 +38,6 @@ namespace TimeItUpAPI.Controllers
             _mapper = mapper;
         }
 
-        // GET: api/Splits
-        [HttpGet]
-        [Authorize]
-        public async Task<ActionResult<ICollection<SplitDto>>> GetSplits()
-        {
-            var splits = await _splitRepo.GetAllSplitsAsync();
-            var splitsDto = _mapper.Map<ICollection<SplitDto>>(splits).ToList();
-
-            return Ok(splitsDto);
-        }
-
         // PUT: api/Splits/Active/All/CalculatePeriod
         [HttpPut("Active/All/CalculatePeriod")]
         [Authorize]
@@ -80,6 +69,17 @@ namespace TimeItUpAPI.Controllers
             await CalculateSplitPeriod(new List<Split> { split });
 
             return NoContent();
+        }
+
+        // GET: api/Splits
+        [HttpGet]
+        [Authorize]
+        public async Task<ActionResult<ICollection<SplitDto>>> GetAllSplits()
+        {
+            var splits = await _splitRepo.GetAllSplitsAsync();
+            var splitsDto = _mapper.Map<ICollection<SplitDto>>(splits).ToList();
+
+            return Ok(splitsDto);
         }
 
         // GET: api/Splits/Active
@@ -240,7 +240,7 @@ namespace TimeItUpAPI.Controllers
         // POST: api/Splits
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult<SplitDto>> PostSplit(CreateSplitDto split)
+        public async Task<ActionResult<SplitDto>> CreateSplit(CreateSplitDto split)
         {
             if (!ModelState.IsValid)
             {
@@ -292,19 +292,6 @@ namespace TimeItUpAPI.Controllers
             await _generalRepo.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        private async Task CalculateTimerPeriods(ICollection<Timer> timers)
-        {
-            var timersList = timers.ToList();
-
-            for (int i = 0; i < timersList.Count; i++)
-            {
-                timersList[i] = _timeCalc.CalculateTimerTimePeriods(timersList[i]);
-                await _generalRepo.ChangeEntryStateToModified(timersList[i]);
-            }
-
-            await _generalRepo.SaveChangesAsync();
         }
 
         private async Task CalculateSplitPeriod(ICollection<Split> splits)
