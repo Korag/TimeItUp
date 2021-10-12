@@ -14,6 +14,7 @@ namespace TimeItUpAPI.Models
 
         public string TotalDuration { get; set; }
         public string TotalPausedTime { get; set; }
+        public string TotalCountdownTime { get; set; }
         public bool Paused { get; set; }
         public bool Finished { get; set; }
         public int SplitsNumber { get; set; }

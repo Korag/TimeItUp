@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace TimeItUpAPI.Models
 {
@@ -16,9 +15,5 @@ namespace TimeItUpAPI.Models
         [StringLength(255, MinimumLength = 2)]
         [DataType(DataType.Text)]
         public string Description { get; set; }
-
-        [Required]
-        [DataType(DataType.Date)]
-        public DateTime StartAt { get; set; }
     }
 }

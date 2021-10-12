@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace TimeItUpAPI.Models
 {
@@ -23,5 +20,9 @@ namespace TimeItUpAPI.Models
         [StringLength(30, MinimumLength = 2)]
         [DataType(DataType.Text)]
         public string TotalDuration { get; set; } = "0d:0h:0m:0s:0ms";
+
+        [Required]
+        [DataType(DataType.Time)]
+        public TimeSpan TotalDurationTimeSpan { get; set; } = TimeSpan.Zero;
     }
 }

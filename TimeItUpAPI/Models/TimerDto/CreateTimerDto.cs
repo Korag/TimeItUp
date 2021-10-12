@@ -25,6 +25,18 @@ namespace TimeItUpAPI.Models
         public DateTime EndAt { get; set; } = DateTime.MinValue;
 
         [Required]
+        [DataType(DataType.Time)]
+        public TimeSpan TotalDurationTimeSpan { get; set; } = TimeSpan.Zero;
+
+        [Required]
+        [DataType(DataType.Time)]
+        public TimeSpan TotalPausedTimeSpan { get; set; } = TimeSpan.Zero;
+
+        [Required]
+        [DataType(DataType.Time)]
+        public TimeSpan TotalCountdownTimeSpan { get; set; } = TimeSpan.Zero;
+
+        [Required]
         [StringLength(30, MinimumLength = 2)]
         [DataType(DataType.Text)]
         public string TotalDuration { get; set; } = "0d:0h:0m:0s:0ms";
@@ -33,6 +45,11 @@ namespace TimeItUpAPI.Models
         [StringLength(30, MinimumLength = 2)]
         [DataType(DataType.Text)]
         public string TotalPausedTime { get; set; } = "0d:0h:0m:0s:0ms";
+
+        [Required]
+        [StringLength(30, MinimumLength = 2)]
+        [DataType(DataType.Text)]
+        public string TotalCountdownTime { get; set; } = "0d:0h:0m:0s:0ms";
 
         [Required]
         public bool Paused { get; set; } = false;

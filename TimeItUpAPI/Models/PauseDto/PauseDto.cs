@@ -8,6 +8,8 @@ namespace TimeItUpAPI.Models
 
         public DateTime StartAt { get; set; }
         public DateTime EndAt { get; set; }
+
         public string TotalDuration { get; set; }
+        public TimeSpan TotalDurationTimeSpan { get; set; }
     }
 }
