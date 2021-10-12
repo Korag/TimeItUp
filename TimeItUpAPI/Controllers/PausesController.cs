@@ -7,35 +7,32 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TimeItUpAPI.Models;
-using TimeItUpData.Library.DataAccess;
 using TimeItUpData.Library.Models;
 using TimeItUpData.Library.Repositories;
+using TimeItUpServices.Library;
 
 namespace TimeItUpAPI.Controllers
 {
     public class PausesController : Controller
     {
-        private readonly ISplitRepository _splitRepo;
         private readonly IPauseRepository _pauseRepo;
         private readonly ITimerRepository _timerRepo;
-        private readonly IUserRepository _userRepo;
         private readonly IGeneralRepository _generalRepo;
 
+        private readonly ITimePeriodTimerCalcFacade _timeCalc;
         private readonly IMapper _mapper;
 
-        public PausesController(IUserRepository userRepo,
-                                ISplitRepository splitRepo,
-                                IPauseRepository pauseRepo,
+        public PausesController(IPauseRepository pauseRepo,
                                 ITimerRepository timerRepo,
                                 IGeneralRepository generalRepo,
+                                ITimePeriodTimerCalcFacade timeCalc,
                                 IMapper mapper)
         {
-            _userRepo = userRepo;
-            _splitRepo = splitRepo;
             _pauseRepo = pauseRepo;
             _timerRepo = timerRepo;
             _generalRepo = generalRepo;
 
+            _timeCalc = timeCalc;
             _mapper = mapper;
         }
 
@@ -176,14 +173,11 @@ namespace TimeItUpAPI.Controllers
             pause.Timer.Paused = true;
 
             var lastSplit = pause.Timer.Splits?.Where(z => z.EndAt == DateTime.MinValue).FirstOrDefault();
-            
+
             if (lastSplit != null)
             {
                 lastSplit.EndAt = DateTime.UtcNow;
-
-                //Calculate Duration
-                lastSplit.TotalDuration = "INIT DURATION";
-
+                lastSplit = _timeCalc.CalculateSplitTimePeriod(lastSplit);
                 await _generalRepo.ChangeEntryStateToModified(lastSplit);
             }
 
@@ -210,9 +204,8 @@ namespace TimeItUpAPI.Controllers
                 return BadRequest();
             }
 
-            //Calculate Duration
             pause.EndAt = DateTime.UtcNow;
-            pause.TotalDuration = "INIT DURATION";
+            pause = _timeCalc.CalculatePauseTimePeriod(pause);
             pause.Timer.Paused = false;
 
             var nextSplit = new Split()

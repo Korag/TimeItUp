@@ -15,6 +15,7 @@ using TimeItUpAPI.Data;
 using TimeItUpData.Library.DataAccess;
 using TimeItUpData.Library.Models;
 using TimeItUpData.Library.Repositories;
+using TimeItUpServices.Library;
 using TimeItUpServices.Library.EmailService;
 using TimeItUpServices.Library.EmailService.Profile;
 
@@ -51,6 +52,8 @@ namespace TimeItUpAPI
             services.AddTransient<IGeneralRepository, GeneralRepository>();
 
             services.AddTransient<IEmailServiceProvider, EmailServiceProvider>();
+            services.AddTransient<ITimeAndDateHelper, TimeAndDateHelper>();
+            services.AddTransient<ITimePeriodTimerCalcFacade, TimePeriodTimerCalcFacade>();
             services.AddSingleton<IEmailProviderConfigurationProfile>
                 (Configuration.GetSection("EmailProviderConfiguration").Get<EmailProviderConfigurationProfile>());
 

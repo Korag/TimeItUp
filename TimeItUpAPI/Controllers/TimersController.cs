@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using TimeItUpAPI.Models;
 using TimeItUpData.Library.Models;
 using TimeItUpData.Library.Repositories;
+using TimeItUpServices.Library;
 
 namespace TimeItUpAPI.Controllers
 {
@@ -19,26 +20,27 @@ namespace TimeItUpAPI.Controllers
     {
         private readonly ITimerRepository _timerRepo;
         private readonly ISplitRepository _splitRepo;
-        private readonly IPauseRepository _pauseRepo;
         private readonly IUserRepository _userRepo;
         private readonly IGeneralRepository _generalRepo;
 
+        private readonly ITimePeriodTimerCalcFacade _timeCalc;
         private readonly IMapper _mapper;
 
 
         public TimersController(ITimerRepository timerRepo,
                                 IUserRepository userRepo,
                                 ISplitRepository splitRepo,
-                                IPauseRepository pauseRepo,
                                 IGeneralRepository generalRepo,
+                                ITimePeriodTimerCalcFacade timeCalc,
                                 IMapper mapper)
         {
             _timerRepo = timerRepo;
-            _userRepo = userRepo;
             _splitRepo = splitRepo;
-            _pauseRepo = pauseRepo;
+
+            _userRepo = userRepo;
             _generalRepo = generalRepo;
 
+            _timeCalc = timeCalc;
             _mapper = mapper;
         }
 
@@ -293,10 +295,7 @@ namespace TimeItUpAPI.Controllers
                 if (lastPause != null)
                 {
                     lastPause.EndAt = DateTime.UtcNow;
-
-                    //Calculate Duration
-                    lastPause.TotalDuration = "INIT DURATION";
-
+                    lastPause = _timeCalc.CalculatePauseTimePeriod(lastPause);
                     await _generalRepo.ChangeEntryStateToModified(lastPause);
                 }
             }
@@ -307,26 +306,58 @@ namespace TimeItUpAPI.Controllers
                 if (lastSplit != null)
                 {
                     lastSplit.EndAt = DateTime.UtcNow;
-
-                    //Calculate Duration
-                    lastSplit.TotalDuration = "INIT DURATION";
-
+                    lastSplit = _timeCalc.CalculateSplitTimePeriod(lastSplit);
                     await _generalRepo.ChangeEntryStateToModified(lastSplit);
-                }  
+                }
             }
 
             timer.EndAt = DateTime.UtcNow;
+            timer = _timeCalc.CalculateTimerTimePeriods(timer);
 
-            //Calculate TotalDuration of timer from Adding all TotalDuration from Splits
-            timer.TotalDuration = "INIT DURATION";
-
+            //ADD CALCULATION TO DTOS GET METHODS
+            
             await _generalRepo.ChangeEntryStateToModified(timer);
             await _generalRepo.SaveChangesAsync();
 
             return NoContent();
         }
 
-        // POST: api/Alarms
+        //// PUT: api/Timer/Reinstate/5
+        //[HttpPut("Reinstate/{id}")]
+        //[Authorize]
+        //public async Task<IActionResult> ReinstateTimer(int timerId)
+        //{
+        //    var timer = await _timerRepo.GetTimerByIdAsync(timerId);
+
+        //    if (timer == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    if (timer.StartAt != DateTime.MinValue)
+        //    {
+        //        return BadRequest();
+        //    }
+
+        //    timer.StartAt = DateTime.UtcNow;
+        //    timer.Paused = false;
+
+        //    var initialSplit = new Split()
+        //    {
+        //        TimerId = timer.Id,
+        //        StartAt = DateTime.UtcNow
+        //    };
+        //    timer.Splits.Add(initialSplit);
+
+        //    await _generalRepo.ChangeEntryStateToModified(timer);
+        //    //Necessary?
+        //    await _generalRepo.ChangeEntryStateToModified(initialSplit);
+        //    await _generalRepo.SaveChangesAsync();
+
+        //    return NoContent();
+        //}
+
+        // POST: api/Timers
         [HttpPost]
         [Authorize]
         public async Task<ActionResult<TimerDto>> PostTimer(CreateTimerDto timer)

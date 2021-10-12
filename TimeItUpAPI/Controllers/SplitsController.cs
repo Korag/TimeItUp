@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using TimeItUpAPI.Models;
 using TimeItUpData.Library.Models;
 using TimeItUpData.Library.Repositories;
+using TimeItUpServices.Library;
 
 namespace TimeItUpAPI.Controllers
 {
@@ -19,23 +20,22 @@ namespace TimeItUpAPI.Controllers
     {
         private readonly ISplitRepository _splitRepo;
         private readonly ITimerRepository _timerRepo;
-        private readonly IUserRepository _userRepo;
         private readonly IGeneralRepository _generalRepo;
 
+        private readonly ITimePeriodTimerCalcFacade _timeCalc;
         private readonly IMapper _mapper;
 
-        public SplitsController(IUserRepository userRepo,
-                                ISplitRepository splitRepo,
+        public SplitsController(ISplitRepository splitRepo,
                                 ITimerRepository timerRepo,
                                 IGeneralRepository generalRepo,
+                                ITimePeriodTimerCalcFacade timeCalc,
                                 IMapper mapper)
         {
             _splitRepo = splitRepo;
             _timerRepo = timerRepo;
-
-            _userRepo = userRepo;
             _generalRepo = generalRepo;
 
+            _timeCalc = timeCalc;
             _mapper = mapper;
         }
 
@@ -196,9 +196,8 @@ namespace TimeItUpAPI.Controllers
                 return BadRequest();
             }
 
-            //Calculate Duration
             split.EndAt = DateTime.UtcNow;
-            split.TotalDuration = "INIT DURATION";
+            split = _timeCalc.CalculateSplitTimePeriod(split);
 
             await _generalRepo.ChangeEntryStateToModified(split);
             await _generalRepo.SaveChangesAsync();
