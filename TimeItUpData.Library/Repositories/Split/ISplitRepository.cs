@@ -10,6 +10,7 @@ namespace TimeItUpData.Library.Repositories
         Task<ICollection<Split>> GetAllActiveSplitsAsync();
         Task<ICollection<Split>> GetAllPastSplitsAsync();
         Task<Split> GetSplitByIdAsync(int id);
+        Task<ICollection<Split>> GetSplitsByIdsAsync(ICollection<int> idSet);
         void RemoveSplit(Split split);
         Task AddSplitAsync(Split split);
         bool CheckIfSplitExist(int id);

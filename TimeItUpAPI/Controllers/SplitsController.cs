@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TimeItUpAPI.Models;
-using TimeItUpData.Library.DataAccess;
 using TimeItUpData.Library.Models;
 using TimeItUpData.Library.Repositories;
 
@@ -86,6 +85,17 @@ namespace TimeItUpAPI.Controllers
             var splitDto = _mapper.Map<SplitDto>(split);
 
             return Ok(splitDto);
+        }
+
+        // GET: api/Splits/Multiple
+        [HttpGet("Multiple")]
+        [Authorize]
+        public async Task<ActionResult<ICollection<SplitDto>>> GetSplitsByIds([FromBody] ICollection<int> idSet)
+        {
+            var splits = await _splitRepo.GetSplitsByIdsAsync(idSet);
+            var splitsDto = _mapper.Map<ICollection<AlarmDto>>(splits);
+
+            return Ok(splitsDto);
         }
 
         // GET: api/Splits/Timer/{timerId}
@@ -211,7 +221,7 @@ namespace TimeItUpAPI.Controllers
                 return NotFound();
             }
 
-           await _splitRepo.AddSplitAsync(createdSplit);
+            await _splitRepo.AddSplitAsync(createdSplit);
 
             try
             {

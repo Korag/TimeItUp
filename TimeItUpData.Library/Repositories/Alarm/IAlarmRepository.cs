@@ -8,6 +8,7 @@ namespace TimeItUpData.Library.Repositories
     {
         Task<ICollection<Alarm>> GetAllAlarmsAsync();
         Task<Alarm> GetAlarmByIdAsync(int id);
+        Task<ICollection<Alarm>> GetAlarmsByIdsAsync(ICollection<int> idSet);
         void RemoveAlarm(Alarm alarm);
         Task AddAlarmAsync(Alarm alarm);
         bool CheckIfAlarmExist(int id);

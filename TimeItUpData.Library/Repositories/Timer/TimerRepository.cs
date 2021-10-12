@@ -41,6 +41,11 @@ namespace TimeItUpData.Library.Repositories
             return await _context.Timers.Where(z => z.Id == id).FirstOrDefaultAsync();
         }
 
+        public async Task<ICollection<Timer>> GetTimersByIdsAsync(ICollection<int> idSet)
+        {
+            return await _context.Timers.Where(z => idSet.Contains(z.Id)).ToListAsync();
+        }
+
         public void RemoveTimer(Timer timer)
         {
             _context.Timers.Remove(timer);

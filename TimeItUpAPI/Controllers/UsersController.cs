@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -59,6 +58,17 @@ namespace TimeItUpAPI.Controllers
             var userDto = _mapper.Map<UserDto>(user);
 
             return Ok(userDto);
+        }
+
+        // GET: api/Users/Multiple
+        [HttpGet("Multiple")]
+        [Authorize]
+        public async Task<ActionResult<ICollection<UserDto>>> GetUsersByIds([FromBody] ICollection<string> idSet)
+        {
+            var users = await _userRepo.GetUsersByIdsAsync(idSet);
+            var usersDto = _mapper.Map<ICollection<TimerDto>>(users);
+
+            return Ok(usersDto);
         }
 
         // GET: api/Users/Email/test@contoso.com

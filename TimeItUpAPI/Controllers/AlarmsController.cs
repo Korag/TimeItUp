@@ -67,6 +67,17 @@ namespace TimeItUpAPI.Controllers
             return Ok(alarmDto);
         }
 
+        // GET: api/Alarms/Multiple
+        [HttpGet("Multiple")]
+        [Authorize]
+        public async Task<ActionResult<ICollection<AlarmDto>>> GetAlarmsByIds([FromBody] ICollection<int> idSet)
+        {
+            var alarms = await _alarmRepo.GetAlarmsByIdsAsync(idSet);
+            var alarmsDto = _mapper.Map<ICollection<AlarmDto>>(alarms);
+
+            return Ok(alarmsDto);
+        }
+
         // GET: api/Alarms/User/{userId}
         [HttpGet("User/{userId}")]
         [Authorize]

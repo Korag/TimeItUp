@@ -50,7 +50,7 @@ namespace TimeItUpData.Library.Models
         public int SplitsNumber { get { return this.Splits.Count(); } }
 
         [Required]
-        public int AlarmsNumber { get { return this.Alarms.Count(); }}
+        public int AlarmsNumber { get { return this.Alarms.Count(); } }
 
         [Required]
         public int PausesNumber { get { return this.Pauses.Count(); } }

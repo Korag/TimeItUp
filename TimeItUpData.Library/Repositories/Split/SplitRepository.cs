@@ -37,6 +37,11 @@ namespace TimeItUpData.Library.Repositories
             return await _context.Splits.Where(z => z.Id == id).FirstOrDefaultAsync();
         }
 
+        public async Task<ICollection<Split>> GetSplitsByIdsAsync(ICollection<int> idSet)
+        {
+            return await _context.Splits.Where(z => idSet.Contains(z.Id)).ToListAsync();
+        }
+
         public void RemoveSplit(Split split)
         {
             _context.Splits.Remove(split);

@@ -14,6 +14,7 @@ namespace TimeItUpAPI.Controllers
 
         //GET: GetAllPause
         //GET: GetPauseById
+        //GET: GetPausesByIds
         //GET: GetAllPausesByTimerId
 
         //GET: GetAllActivePauses

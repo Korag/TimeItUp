@@ -26,6 +26,11 @@ namespace TimeItUpData.Library.Repositories
             return await _context.Alarms.Where(z => z.Id == id).FirstOrDefaultAsync();
         }
 
+        public async Task<ICollection<Alarm>> GetAlarmsByIdsAsync(ICollection<int> idSet)
+        {
+            return await _context.Alarms.Where(z => idSet.Contains(z.Id)).ToListAsync();
+        }
+
         public void RemoveAlarm(Alarm alarm)
         {
             _context.Alarms.Remove(alarm);

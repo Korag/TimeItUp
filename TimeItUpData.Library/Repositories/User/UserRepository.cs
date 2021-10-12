@@ -26,6 +26,11 @@ namespace TimeItUpData.Library.Repositories
             return await _context.Users.Where(z => z.Id == id).FirstOrDefaultAsync();
         }
 
+        public async Task<ICollection<User>> GetUsersByIdsAsync(ICollection<string> idSet)
+        {
+            return await _context.Users.Where(z => idSet.Contains(z.Id)).ToListAsync();
+        }
+
         public async Task<User> GetUserByEmailAddress(string email)
         {
             return await _context.Users.Where(z => z.EmailAddress == email).FirstOrDefaultAsync();

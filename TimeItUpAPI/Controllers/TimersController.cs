@@ -103,6 +103,17 @@ namespace TimeItUpAPI.Controllers
             return Ok(timerDto);
         }
 
+        // GET: api/Timers/Multiple
+        [HttpGet("Multiple")]
+        [Authorize]
+        public async Task<ActionResult<ICollection<TimerDto>>> GetSplitsByIds([FromBody] ICollection<int> idSet)
+        {
+            var timers = await _splitRepo.GetSplitsByIdsAsync(idSet);
+            var timersDto = _mapper.Map<ICollection<TimerDto>>(timers);
+
+            return Ok(timersDto);
+        }
+
         // GET: api/Timers/CompleteInfo/5
         [HttpGet("CompleteInfo/{id}")]
         [Authorize]
