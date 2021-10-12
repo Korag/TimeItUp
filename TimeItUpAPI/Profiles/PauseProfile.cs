@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using TimeItUpAPI.Models;
+using TimeItUpData.Library.Models;
 
 namespace TimeItUpAPI.Profiles
 {
@@ -6,7 +8,8 @@ namespace TimeItUpAPI.Profiles
     {
         public PauseProfile()
         {
-
+            CreateMap<Pause, PauseDto>();
+            CreateMap<CreatePauseDto, Pause>();
         }
     }
 }

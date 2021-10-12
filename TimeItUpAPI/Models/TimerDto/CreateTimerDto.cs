@@ -35,7 +35,7 @@ namespace TimeItUpAPI.Models
         public string TotalPausedTime { get; set; } = "0d:0h:0m:0s:0ms";
 
         [Required]
-        public bool Paused { get; set; } = true;
+        public bool Paused { get; set; } = false;
 
         [Required]
         public bool Finished { get; set; } = false;

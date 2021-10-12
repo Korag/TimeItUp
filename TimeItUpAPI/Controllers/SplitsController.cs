@@ -13,6 +13,7 @@ using TimeItUpData.Library.Repositories;
 namespace TimeItUpAPI.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class SplitsController : ControllerBase
     {
@@ -59,6 +60,7 @@ namespace TimeItUpAPI.Controllers
 
             return Ok(splitsDto);
         }
+
         // GET: api/Splits/Past
         [HttpGet("Past")]
         [Authorize]
@@ -73,7 +75,7 @@ namespace TimeItUpAPI.Controllers
         // GET: api/Splits/5
         [HttpGet("{id}")]
         [Authorize]
-        public async Task<ActionResult<SplitDto>> GetSplitsById(int id)
+        public async Task<ActionResult<SplitDto>> GetSplitById(int id)
         {
             var split = await _splitRepo.GetSplitByIdAsync(id);
 
@@ -93,7 +95,7 @@ namespace TimeItUpAPI.Controllers
         public async Task<ActionResult<ICollection<SplitDto>>> GetSplitsByIds([FromBody] ICollection<int> idSet)
         {
             var splits = await _splitRepo.GetSplitsByIdsAsync(idSet);
-            var splitsDto = _mapper.Map<ICollection<AlarmDto>>(splits);
+            var splitsDto = _mapper.Map<ICollection<SplitDto>>(splits);
 
             return Ok(splitsDto);
         }
@@ -164,7 +166,7 @@ namespace TimeItUpAPI.Controllers
                 return NotFound();
             }
 
-            if (split.StartAt == DateTime.MinValue)
+            if (split.StartAt != DateTime.MinValue)
             {
                 return BadRequest();
             }

@@ -22,6 +22,7 @@ using static TimeItUpServices.Library.EmailService.Model.EmailClassifierDictiona
 namespace TimeItUpAPI.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class AccountsController : ControllerBase
     {
@@ -54,9 +55,8 @@ namespace TimeItUpAPI.Controllers
             _generalRepo = generalRepo;
         }
 
-        [HttpPost]
+        [HttpPost("login")]
         [AllowAnonymous]
-        [Route("login")]
         public async Task<ActionResult<JwtTokenDto>> Login(UserLoginDto user)
         {
             if (ModelState.IsValid)
@@ -75,9 +75,8 @@ namespace TimeItUpAPI.Controllers
             return BadRequest(ModelState);
         }
 
-        [HttpPost]
+        [HttpPost("register")]
         [AllowAnonymous]
-        [Route("register")]
         public async Task<ActionResult<UserDto>> RegisterUserAccount(UserRegisterDto user)
         {
             if (ModelState.IsValid)
@@ -133,9 +132,8 @@ namespace TimeItUpAPI.Controllers
         }
 
         // PUT: api/Accounts/Password/{id}
-        [HttpPut]
+        [HttpPut("Password/{id}")]
         [Authorize]
-        [Route("Password/{id}")]
         public async Task<IActionResult> ChangeUserAccountPassword(string id, UpdateUserAccountPasswordDto userAccount)
         {
             if (id != userAccount.Id)
@@ -161,9 +159,8 @@ namespace TimeItUpAPI.Controllers
         }
 
         // PUT: api/Accounts/Email/{email}
-        [HttpPut]
+        [HttpPut("Email/{email}")]
         [Authorize]
-        [Route("Email/{email}")]
         public async Task<IActionResult> ChangeUserAccountEmail(string email, UpdateUserAccountEmailDto userAccount)
         {
             if (email != userAccount.Email)
@@ -190,9 +187,8 @@ namespace TimeItUpAPI.Controllers
         }
 
         // PUT: api/Accounts/TryResetPassword/{email}
-        [HttpPost]
+        [HttpPost("TryResetPassword/{email}")]
         [AllowAnonymous]
-        [Route("TryResetPassword/{email}")]
         public async Task<IActionResult> GetResetPasswordCode(string email)
         {
             var userAccount = await _userManager.FindByEmailAsync(email);

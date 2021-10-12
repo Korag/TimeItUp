@@ -5,6 +5,7 @@ namespace TimeItUpAPI.Models
 {
     public class CreateAlarmDto
     {
+        [Required]
         public int TimerId { get; set; }
 
         [Required]

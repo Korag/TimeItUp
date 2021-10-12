@@ -246,7 +246,7 @@ namespace TimeItUpAPI.Controllers
                 return NotFound();
             }
 
-            if (timer.StartAt == DateTime.MinValue)
+            if (timer.StartAt != DateTime.MinValue)
             {
                 return BadRequest();
             }
@@ -262,6 +262,7 @@ namespace TimeItUpAPI.Controllers
             timer.Splits.Add(initialSplit);
 
             await _generalRepo.ChangeEntryStateToModified(timer);
+            //Necessary?
             await _generalRepo.ChangeEntryStateToModified(initialSplit);
             await _generalRepo.SaveChangesAsync();
 
@@ -287,26 +288,35 @@ namespace TimeItUpAPI.Controllers
 
             if (timer.Paused)
             {
-                var lastPause = timer.Pauses.Where(z => z.EndAt == DateTime.MinValue).FirstOrDefault();
-                lastPause.EndAt = DateTime.UtcNow;
+                var lastPause = timer.Pauses?.Where(z => z.EndAt == DateTime.MinValue).FirstOrDefault();
 
-                //Calculate Duration
-                lastPause.TotalDuration = "INIT DURATION";
+                if (lastPause != null)
+                {
+                    lastPause.EndAt = DateTime.UtcNow;
 
-                await _generalRepo.ChangeEntryStateToModified(lastPause);
+                    //Calculate Duration
+                    lastPause.TotalDuration = "INIT DURATION";
+
+                    await _generalRepo.ChangeEntryStateToModified(lastPause);
+                }
             }
             else
             {
-                var lastSplit = timer.Splits.Where(z => z.EndAt == DateTime.MinValue).FirstOrDefault();
-                lastSplit.EndAt = DateTime.UtcNow;
+                var lastSplit = timer.Splits?.Where(z => z.EndAt == DateTime.MinValue).FirstOrDefault();
 
-                //Calculate Duration
-                lastSplit.TotalDuration = "INIT DURATION";
+                if (lastSplit != null)
+                {
+                    lastSplit.EndAt = DateTime.UtcNow;
 
-                await _generalRepo.ChangeEntryStateToModified(lastSplit);
+                    //Calculate Duration
+                    lastSplit.TotalDuration = "INIT DURATION";
+
+                    await _generalRepo.ChangeEntryStateToModified(lastSplit);
+                }  
             }
 
             timer.EndAt = DateTime.UtcNow;
+
             //Calculate TotalDuration of timer from Adding all TotalDuration from Splits
             timer.TotalDuration = "INIT DURATION";
 
