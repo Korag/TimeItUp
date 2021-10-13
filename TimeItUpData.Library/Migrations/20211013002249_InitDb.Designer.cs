@@ -10,8 +10,8 @@ using TimeItUpData.Library.DataAccess;
 namespace TimeItUpData.Library.Migrations
 {
     [DbContext(typeof(EFDbContext))]
-    [Migration("20211011095632_UpdatedActivationTimeColumnNameInAlarmTable")]
-    partial class UpdatedActivationTimeColumnNameInAlarmTable
+    [Migration("20211013002249_InitDb")]
+    partial class InitDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,7 +24,9 @@ namespace TimeItUpData.Library.Migrations
             modelBuilder.Entity("TimeItUpData.Library.Models.Alarm", b =>
                 {
                     b.Property<int>("Id")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("TimerId")
                         .HasColumnType("int");
@@ -44,9 +46,8 @@ namespace TimeItUpData.Library.Migrations
                     b.Property<int>("TimerId1")
                         .HasColumnType("int");
 
-                    b.Property<string>("TimerUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("TimerUserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id", "TimerId");
 
@@ -58,7 +59,9 @@ namespace TimeItUpData.Library.Migrations
             modelBuilder.Entity("TimeItUpData.Library.Models.Pause", b =>
                 {
                     b.Property<int>("Id")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("TimerId")
                         .HasColumnType("int");
@@ -72,14 +75,16 @@ namespace TimeItUpData.Library.Migrations
                     b.Property<int>("TimerId1")
                         .HasColumnType("int");
 
-                    b.Property<string>("TimerUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("TimerUserId")
+                        .HasColumnType("int");
 
                     b.Property<string>("TotalDuration")
                         .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
+
+                    b.Property<TimeSpan>("TotalDurationTimeSpan")
+                        .HasColumnType("time");
 
                     b.HasKey("Id", "TimerId");
 
@@ -91,7 +96,9 @@ namespace TimeItUpData.Library.Migrations
             modelBuilder.Entity("TimeItUpData.Library.Models.Split", b =>
                 {
                     b.Property<int>("Id")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("TimerId")
                         .HasColumnType("int");
@@ -105,14 +112,16 @@ namespace TimeItUpData.Library.Migrations
                     b.Property<int>("TimerId1")
                         .HasColumnType("int");
 
-                    b.Property<string>("TimerUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("TimerUserId")
+                        .HasColumnType("int");
 
                     b.Property<string>("TotalDuration")
                         .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
+
+                    b.Property<TimeSpan>("TotalDurationTimeSpan")
+                        .HasColumnType("time");
 
                     b.HasKey("Id", "TimerId");
 
@@ -124,12 +133,11 @@ namespace TimeItUpData.Library.Migrations
             modelBuilder.Entity("TimeItUpData.Library.Models.Timer", b =>
                 {
                     b.Property<int>("Id")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("AlarmsNumber")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
@@ -150,21 +158,32 @@ namespace TimeItUpData.Library.Migrations
                     b.Property<bool>("Paused")
                         .HasColumnType("bit");
 
-                    b.Property<int>("SplitsNumber")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("StartAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("TotalCountdownTime")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<TimeSpan>("TotalCountdownTimeSpan")
+                        .HasColumnType("time");
 
                     b.Property<string>("TotalDuration")
                         .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
+                    b.Property<TimeSpan>("TotalDurationTimeSpan")
+                        .HasColumnType("time");
+
                     b.Property<string>("TotalPausedTime")
                         .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
+
+                    b.Property<TimeSpan>("TotalPausedTimeSpan")
+                        .HasColumnType("time");
 
                     b.HasKey("Id", "UserId");
 
@@ -175,8 +194,13 @@ namespace TimeItUpData.Library.Migrations
 
             modelBuilder.Entity("TimeItUpData.Library.Models.User", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AccountId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EmailAddress")
                         .IsRequired()
@@ -212,7 +236,7 @@ namespace TimeItUpData.Library.Migrations
             modelBuilder.Entity("TimeItUpData.Library.Models.Pause", b =>
                 {
                     b.HasOne("TimeItUpData.Library.Models.Timer", "Timer")
-                        .WithMany()
+                        .WithMany("Pauses")
                         .HasForeignKey("TimerId1", "TimerUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -245,6 +269,8 @@ namespace TimeItUpData.Library.Migrations
             modelBuilder.Entity("TimeItUpData.Library.Models.Timer", b =>
                 {
                     b.Navigation("Alarms");
+
+                    b.Navigation("Pauses");
 
                     b.Navigation("Splits");
                 });

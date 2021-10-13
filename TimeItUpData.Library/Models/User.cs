@@ -1,11 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TimeItUpData.Library.Models
 {
     public class User
     {
+        [Key]
         public string Id { get; set; }
+
 
         [Required]
         [StringLength(40, MinimumLength = 2)]
@@ -22,6 +25,11 @@ namespace TimeItUpData.Library.Models
         [DataType(DataType.Text)]
         public string LastName { get; set; }
 
-        public virtual ICollection<Timer> Timers { get; set; }
+        public virtual ICollection<Timer> Timers { get; set; } = new List<Timer>();
+
+        public User()
+        {
+
+        }
     }
 }

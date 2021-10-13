@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace TimeItUpData.Library.Models
@@ -8,6 +9,7 @@ namespace TimeItUpData.Library.Models
     public class Timer
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         public string UserId { get; set; }
@@ -72,8 +74,13 @@ namespace TimeItUpData.Library.Models
         [Required]
         public int PausesNumber { get { return this.Pauses.Count(); } }
 
-        public virtual ICollection<Split> Splits { get; set; }
-        public virtual ICollection<Alarm> Alarms { get; set; }
-        public virtual ICollection<Pause> Pauses { get; set; }
+        public virtual ICollection<Split> Splits { get; set; } = new List<Split>();
+        public virtual ICollection<Alarm> Alarms { get; set; } = new List<Alarm>();
+        public virtual ICollection<Pause> Pauses { get; set; } = new List<Pause>();
+
+        public Timer()
+        {
+
+        }
     }
 }

@@ -22,7 +22,9 @@ namespace TimeItUpData.Library.Migrations
             modelBuilder.Entity("TimeItUpData.Library.Models.Alarm", b =>
                 {
                     b.Property<int>("Id")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("TimerId")
                         .HasColumnType("int");
@@ -42,9 +44,8 @@ namespace TimeItUpData.Library.Migrations
                     b.Property<int>("TimerId1")
                         .HasColumnType("int");
 
-                    b.Property<string>("TimerUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("TimerUserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id", "TimerId");
 
@@ -56,7 +57,9 @@ namespace TimeItUpData.Library.Migrations
             modelBuilder.Entity("TimeItUpData.Library.Models.Pause", b =>
                 {
                     b.Property<int>("Id")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("TimerId")
                         .HasColumnType("int");
@@ -70,9 +73,8 @@ namespace TimeItUpData.Library.Migrations
                     b.Property<int>("TimerId1")
                         .HasColumnType("int");
 
-                    b.Property<string>("TimerUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("TimerUserId")
+                        .HasColumnType("int");
 
                     b.Property<string>("TotalDuration")
                         .IsRequired()
@@ -92,7 +94,9 @@ namespace TimeItUpData.Library.Migrations
             modelBuilder.Entity("TimeItUpData.Library.Models.Split", b =>
                 {
                     b.Property<int>("Id")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("TimerId")
                         .HasColumnType("int");
@@ -106,9 +110,8 @@ namespace TimeItUpData.Library.Migrations
                     b.Property<int>("TimerId1")
                         .HasColumnType("int");
 
-                    b.Property<string>("TimerUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("TimerUserId")
+                        .HasColumnType("int");
 
                     b.Property<string>("TotalDuration")
                         .IsRequired()
@@ -128,10 +131,12 @@ namespace TimeItUpData.Library.Migrations
             modelBuilder.Entity("TimeItUpData.Library.Models.Timer", b =>
                 {
                     b.Property<int>("Id")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .HasMaxLength(255)
@@ -187,8 +192,13 @@ namespace TimeItUpData.Library.Migrations
 
             modelBuilder.Entity("TimeItUpData.Library.Models.User", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AccountId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EmailAddress")
                         .IsRequired()

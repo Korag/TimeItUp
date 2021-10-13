@@ -1,11 +1,13 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TimeItUpData.Library.Models
 {
     public class Split
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         public int TimerId { get; set; }
@@ -27,5 +29,10 @@ namespace TimeItUpData.Library.Models
         [Required]
         [DataType(DataType.Time)]
         public TimeSpan TotalDurationTimeSpan { get; set; } = TimeSpan.Zero;
+
+        public Split()
+        {
+
+        }
     }
 }

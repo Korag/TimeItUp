@@ -19,5 +19,6 @@ namespace TimeItUpAPI.Models
         public bool Finished { get; set; }
         public int SplitsNumber { get; set; }
         public int AlarmsNumber { get; set; }
+        public int PausesNumber { get; set; }
     }
 }

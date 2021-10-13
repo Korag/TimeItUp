@@ -39,7 +39,7 @@ namespace TimeItUpAPI
                                                           options.UseSqlServer(
                                                           Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddDbContext<EFDbContext>();
+            services.AddDbContext<EFDbContext>(b => b.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("EFDatabaseConnectionString")));
 
             #endregion
 

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TimeItUpData.Library.Models
 {
     public class Alarm
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         public int TimerId { get; set; }
@@ -23,5 +25,10 @@ namespace TimeItUpData.Library.Models
         [Required]
         [DataType(DataType.Date)]
         public DateTime ActivationTime { get; set; } = DateTime.UtcNow.AddDays(1);
+
+        public Alarm()
+        {
+
+        }
     }
 }

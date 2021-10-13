@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TimeItUpData.Library.Migrations
 {
-    public partial class RefactoredEntitiesByUsingDataAnnotation : Migration
+    public partial class InitDb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -11,7 +11,9 @@ namespace TimeItUpData.Library.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AccountId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     EmailAddress = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false)
@@ -25,18 +27,21 @@ namespace TimeItUpData.Library.Migrations
                 name: "Timers",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
                     StartAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TotalDurationTimeSpan = table.Column<TimeSpan>(type: "time", nullable: false),
+                    TotalPausedTimeSpan = table.Column<TimeSpan>(type: "time", nullable: false),
+                    TotalCountdownTimeSpan = table.Column<TimeSpan>(type: "time", nullable: false),
                     TotalDuration = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    TotalPausedTime = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TotalPausedTime = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    TotalCountdownTime = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     Paused = table.Column<bool>(type: "bit", nullable: false),
-                    Finished = table.Column<bool>(type: "bit", nullable: false),
-                    SplitsNumber = table.Column<int>(type: "int", nullable: false),
-                    AlarmsNumber = table.Column<int>(type: "int", nullable: false)
+                    Finished = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -53,13 +58,14 @@ namespace TimeItUpData.Library.Migrations
                 name: "Alarms",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     TimerId = table.Column<int>(type: "int", nullable: false),
                     TimerId1 = table.Column<int>(type: "int", nullable: false),
-                    TimerUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    TimerUserId = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    Time = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    ActivationTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -76,13 +82,15 @@ namespace TimeItUpData.Library.Migrations
                 name: "Pauses",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     TimerId = table.Column<int>(type: "int", nullable: false),
                     TimerId1 = table.Column<int>(type: "int", nullable: false),
-                    TimerUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    TimerUserId = table.Column<int>(type: "int", nullable: false),
                     StartAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    TotalDuration = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false)
+                    TotalDuration = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    TotalDurationTimeSpan = table.Column<TimeSpan>(type: "time", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -99,13 +107,15 @@ namespace TimeItUpData.Library.Migrations
                 name: "Splits",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     TimerId = table.Column<int>(type: "int", nullable: false),
                     TimerId1 = table.Column<int>(type: "int", nullable: false),
-                    TimerUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    TimerUserId = table.Column<int>(type: "int", nullable: false),
                     StartAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    TotalDuration = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false)
+                    TotalDuration = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    TotalDurationTimeSpan = table.Column<TimeSpan>(type: "time", nullable: false)
                 },
                 constraints: table =>
                 {
