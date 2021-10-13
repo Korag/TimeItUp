@@ -20,8 +20,7 @@ namespace TimeItUpAPI.Controllers
 
         private readonly IMapper _mapper;
 
-        public UsersController(UserManager<BasicIdentityUser> userManager,
-                               IUserRepository userRepo,
+        public UsersController(IUserRepository userRepo,
                                IGeneralRepository generalRepo,
                                IMapper mapper)
         {

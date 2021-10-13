@@ -11,9 +11,7 @@ namespace TimeItUpData.Library.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AccountId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     EmailAddress = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false)
@@ -29,7 +27,7 @@ namespace TimeItUpData.Library.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
                     StartAt = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -45,13 +43,13 @@ namespace TimeItUpData.Library.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Timers", x => new { x.Id, x.UserId });
+                    table.PrimaryKey("PK_Timers", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Timers_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -61,20 +59,18 @@ namespace TimeItUpData.Library.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TimerId = table.Column<int>(type: "int", nullable: false),
-                    TimerId1 = table.Column<int>(type: "int", nullable: false),
-                    TimerUserId = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
                     ActivationTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Alarms", x => new { x.Id, x.TimerId });
+                    table.PrimaryKey("PK_Alarms", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Alarms_Timers_TimerId1_TimerUserId",
-                        columns: x => new { x.TimerId1, x.TimerUserId },
+                        name: "FK_Alarms_Timers_TimerId",
+                        column: x => x.TimerId,
                         principalTable: "Timers",
-                        principalColumns: new[] { "Id", "UserId" },
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -85,8 +81,6 @@ namespace TimeItUpData.Library.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TimerId = table.Column<int>(type: "int", nullable: false),
-                    TimerId1 = table.Column<int>(type: "int", nullable: false),
-                    TimerUserId = table.Column<int>(type: "int", nullable: false),
                     StartAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TotalDuration = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
@@ -96,10 +90,10 @@ namespace TimeItUpData.Library.Migrations
                 {
                     table.PrimaryKey("PK_Pauses", x => new { x.Id, x.TimerId });
                     table.ForeignKey(
-                        name: "FK_Pauses_Timers_TimerId1_TimerUserId",
-                        columns: x => new { x.TimerId1, x.TimerUserId },
+                        name: "FK_Pauses_Timers_TimerId",
+                        column: x => x.TimerId,
                         principalTable: "Timers",
-                        principalColumns: new[] { "Id", "UserId" },
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -110,8 +104,6 @@ namespace TimeItUpData.Library.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TimerId = table.Column<int>(type: "int", nullable: false),
-                    TimerId1 = table.Column<int>(type: "int", nullable: false),
-                    TimerUserId = table.Column<int>(type: "int", nullable: false),
                     StartAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TotalDuration = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
@@ -121,27 +113,27 @@ namespace TimeItUpData.Library.Migrations
                 {
                     table.PrimaryKey("PK_Splits", x => new { x.Id, x.TimerId });
                     table.ForeignKey(
-                        name: "FK_Splits_Timers_TimerId1_TimerUserId",
-                        columns: x => new { x.TimerId1, x.TimerUserId },
+                        name: "FK_Splits_Timers_TimerId",
+                        column: x => x.TimerId,
                         principalTable: "Timers",
-                        principalColumns: new[] { "Id", "UserId" },
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Alarms_TimerId1_TimerUserId",
+                name: "IX_Alarms_TimerId",
                 table: "Alarms",
-                columns: new[] { "TimerId1", "TimerUserId" });
+                column: "TimerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Pauses_TimerId1_TimerUserId",
+                name: "IX_Pauses_TimerId",
                 table: "Pauses",
-                columns: new[] { "TimerId1", "TimerUserId" });
+                column: "TimerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Splits_TimerId1_TimerUserId",
+                name: "IX_Splits_TimerId",
                 table: "Splits",
-                columns: new[] { "TimerId1", "TimerUserId" });
+                column: "TimerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Timers_UserId",

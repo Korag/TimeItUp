@@ -38,39 +38,6 @@ namespace TimeItUpAPI.Controllers
             _mapper = mapper;
         }
 
-        // PUT: api/Pauses/Active/All/CalculatePeriod
-        [HttpPut("Active/All/CalculatePeriod")]
-        [Authorize]
-        public async Task<IActionResult> CalculateAllActivePausesPeriod()
-        {
-            var pauses = await _pauseRepo.GetAllActivePausesAsync();
-            await CalculatePausePeriod(pauses);
-
-            return NoContent();
-        }
-
-        // PUT: api/Pauses/Multiple/CalculatePeriod
-        [HttpPut("Multiple/CalculatePeriod")]
-        [Authorize]
-        public async Task<IActionResult> CalculateSelectedPausesPeriod(ICollection<int> ids)
-        {
-            var pauses = await _pauseRepo.GetPausesByIdsAsync(ids);
-            await CalculatePausePeriod(pauses);
-
-            return NoContent();
-        }
-
-        // PUT: api/Pauses/CalculatePeriod/{id}
-        [HttpPut("CalculatePeriod/{id}")]
-        [Authorize]
-        public async Task<IActionResult> CalculateSelectedPausePeriod(int id)
-        {
-            var pause = await _pauseRepo.GetPauseByIdAsync(id);
-            await CalculatePausePeriod(new List<Pause> { pause });
-
-            return NoContent();
-        }
-
         // GET: api/Pauses
         [HttpGet]
         [Authorize]
@@ -204,7 +171,6 @@ namespace TimeItUpAPI.Controllers
             }
 
             pause.StartAt = DateTime.UtcNow;
-            //CHECK
             pause.Timer.Paused = true;
 
             var lastSplit = pause.Timer.Splits?.Where(z => z.EndAt == DateTime.MinValue).FirstOrDefault();
@@ -251,9 +217,40 @@ namespace TimeItUpAPI.Controllers
             pause.Timer.Splits.Add(nextSplit);
 
             await _generalRepo.ChangeEntryStateToModified(pause);
-            //Necessary?
-            await _generalRepo.ChangeEntryStateToModified(nextSplit);
             await _generalRepo.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        // PUT: api/Pauses/Active/All/CalculatePeriod
+        [HttpPut("Active/All/CalculatePeriod")]
+        [Authorize]
+        public async Task<IActionResult> CalculateAllActivePausesPeriod()
+        {
+            var pauses = await _pauseRepo.GetAllActivePausesAsync();
+            await CalculatePausePeriod(pauses);
+
+            return NoContent();
+        }
+
+        // PUT: api/Pauses/Multiple/CalculatePeriod
+        [HttpPut("Multiple/CalculatePeriod")]
+        [Authorize]
+        public async Task<IActionResult> CalculateSelectedPausesPeriod(ICollection<int> ids)
+        {
+            var pauses = await _pauseRepo.GetPausesByIdsAsync(ids);
+            await CalculatePausePeriod(pauses);
+
+            return NoContent();
+        }
+
+        // PUT: api/Pauses/CalculatePeriod/{id}
+        [HttpPut("CalculatePeriod/{id}")]
+        [Authorize]
+        public async Task<IActionResult> CalculateSelectedPausePeriod(int id)
+        {
+            var pause = await _pauseRepo.GetPauseByIdAsync(id);
+            await CalculatePausePeriod(new List<Pause> { pause });
 
             return NoContent();
         }
@@ -270,7 +267,7 @@ namespace TimeItUpAPI.Controllers
 
             var createdPause = _mapper.Map<Pause>(pause);
 
-            if (createdPause.Timer == null)
+            if (!_timerRepo.CheckIfTimerExist(pause.TimerId))
             {
                 return NotFound();
             }

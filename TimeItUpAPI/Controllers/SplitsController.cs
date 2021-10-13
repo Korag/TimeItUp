@@ -38,39 +38,6 @@ namespace TimeItUpAPI.Controllers
             _mapper = mapper;
         }
 
-        // PUT: api/Splits/Active/All/CalculatePeriod
-        [HttpPut("Active/All/CalculatePeriod")]
-        [Authorize]
-        public async Task<IActionResult> CalculateAllActiveSplitsPeriod()
-        {
-            var splits = await _splitRepo.GetAllActiveSplitsAsync();
-            await CalculateSplitPeriod(splits);
-
-            return NoContent();
-        }
-
-        // PUT: api/Splits/Multiple/CalculatePeriod
-        [HttpPut("Multiple/CalculatePeriod")]
-        [Authorize]
-        public async Task<IActionResult> CalculateSelectedSplitsPeriod(ICollection<int> ids)
-        {
-            var splits = await _splitRepo.GetSplitsByIdsAsync(ids);
-            await CalculateSplitPeriod(splits);
-
-            return NoContent();
-        }
-
-        // PUT: api/Splits/CalculatePeriod/{id}
-        [HttpPut("CalculatePeriod/{id}")]
-        [Authorize]
-        public async Task<IActionResult> CalculateSelectedSplitPeriod(int id)
-        {
-            var split = await _splitRepo.GetSplitByIdAsync(id);
-            await CalculateSplitPeriod(new List<Split> { split });
-
-            return NoContent();
-        }
-
         // GET: api/Splits
         [HttpGet]
         [Authorize]
@@ -237,6 +204,39 @@ namespace TimeItUpAPI.Controllers
             return NoContent();
         }
 
+        // PUT: api/Splits/Active/All/CalculatePeriod
+        [HttpPut("Active/All/CalculatePeriod")]
+        [Authorize]
+        public async Task<IActionResult> CalculateAllActiveSplitsPeriod()
+        {
+            var splits = await _splitRepo.GetAllActiveSplitsAsync();
+            await CalculateSplitPeriod(splits);
+
+            return NoContent();
+        }
+
+        // PUT: api/Splits/Multiple/CalculatePeriod
+        [HttpPut("Multiple/CalculatePeriod")]
+        [Authorize]
+        public async Task<IActionResult> CalculateSelectedSplitsPeriod(ICollection<int> ids)
+        {
+            var splits = await _splitRepo.GetSplitsByIdsAsync(ids);
+            await CalculateSplitPeriod(splits);
+
+            return NoContent();
+        }
+
+        // PUT: api/Splits/CalculatePeriod/{id}
+        [HttpPut("CalculatePeriod/{id}")]
+        [Authorize]
+        public async Task<IActionResult> CalculateSelectedSplitPeriod(int id)
+        {
+            var split = await _splitRepo.GetSplitByIdAsync(id);
+            await CalculateSplitPeriod(new List<Split> { split });
+
+            return NoContent();
+        }
+
         // POST: api/Splits
         [HttpPost]
         [Authorize]
@@ -249,7 +249,7 @@ namespace TimeItUpAPI.Controllers
 
             var createdSplit = _mapper.Map<Split>(split);
 
-            if (createdSplit.Timer == null)
+            if (!_timerRepo.CheckIfTimerExist(split.TimerId))
             {
                 return NotFound();
             }

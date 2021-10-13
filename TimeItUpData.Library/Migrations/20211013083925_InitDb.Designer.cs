@@ -10,7 +10,7 @@ using TimeItUpData.Library.DataAccess;
 namespace TimeItUpData.Library.Migrations
 {
     [DbContext(typeof(EFDbContext))]
-    [Migration("20211013002249_InitDb")]
+    [Migration("20211013083925_InitDb")]
     partial class InitDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,9 +28,6 @@ namespace TimeItUpData.Library.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("TimerId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("ActivationTime")
                         .HasColumnType("datetime2");
 
@@ -43,15 +40,12 @@ namespace TimeItUpData.Library.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("TimerId1")
+                    b.Property<int>("TimerId")
                         .HasColumnType("int");
 
-                    b.Property<int>("TimerUserId")
-                        .HasColumnType("int");
+                    b.HasKey("Id");
 
-                    b.HasKey("Id", "TimerId");
-
-                    b.HasIndex("TimerId1", "TimerUserId");
+                    b.HasIndex("TimerId");
 
                     b.ToTable("Alarms");
                 });
@@ -72,12 +66,6 @@ namespace TimeItUpData.Library.Migrations
                     b.Property<DateTime>("StartAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("TimerId1")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TimerUserId")
-                        .HasColumnType("int");
-
                     b.Property<string>("TotalDuration")
                         .IsRequired()
                         .HasMaxLength(30)
@@ -88,7 +76,7 @@ namespace TimeItUpData.Library.Migrations
 
                     b.HasKey("Id", "TimerId");
 
-                    b.HasIndex("TimerId1", "TimerUserId");
+                    b.HasIndex("TimerId");
 
                     b.ToTable("Pauses");
                 });
@@ -109,12 +97,6 @@ namespace TimeItUpData.Library.Migrations
                     b.Property<DateTime>("StartAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("TimerId1")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TimerUserId")
-                        .HasColumnType("int");
-
                     b.Property<string>("TotalDuration")
                         .IsRequired()
                         .HasMaxLength(30)
@@ -125,7 +107,7 @@ namespace TimeItUpData.Library.Migrations
 
                     b.HasKey("Id", "TimerId");
 
-                    b.HasIndex("TimerId1", "TimerUserId");
+                    b.HasIndex("TimerId");
 
                     b.ToTable("Splits");
                 });
@@ -136,9 +118,6 @@ namespace TimeItUpData.Library.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .HasMaxLength(255)
@@ -185,7 +164,10 @@ namespace TimeItUpData.Library.Migrations
                     b.Property<TimeSpan>("TotalPausedTimeSpan")
                         .HasColumnType("time");
 
-                    b.HasKey("Id", "UserId");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("UserId");
 
@@ -194,13 +176,8 @@ namespace TimeItUpData.Library.Migrations
 
             modelBuilder.Entity("TimeItUpData.Library.Models.User", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("AccountId")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("EmailAddress")
                         .IsRequired()
@@ -226,7 +203,7 @@ namespace TimeItUpData.Library.Migrations
                 {
                     b.HasOne("TimeItUpData.Library.Models.Timer", "Timer")
                         .WithMany("Alarms")
-                        .HasForeignKey("TimerId1", "TimerUserId")
+                        .HasForeignKey("TimerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -237,7 +214,7 @@ namespace TimeItUpData.Library.Migrations
                 {
                     b.HasOne("TimeItUpData.Library.Models.Timer", "Timer")
                         .WithMany("Pauses")
-                        .HasForeignKey("TimerId1", "TimerUserId")
+                        .HasForeignKey("TimerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -248,7 +225,7 @@ namespace TimeItUpData.Library.Migrations
                 {
                     b.HasOne("TimeItUpData.Library.Models.Timer", "Timer")
                         .WithMany("Splits")
-                        .HasForeignKey("TimerId1", "TimerUserId")
+                        .HasForeignKey("TimerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -259,9 +236,7 @@ namespace TimeItUpData.Library.Migrations
                 {
                     b.HasOne("TimeItUpData.Library.Models.User", "User")
                         .WithMany("Timers")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });

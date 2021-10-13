@@ -89,7 +89,9 @@ namespace TimeItUpAPI.Controllers
             }
 
             var userAlarms = new List<Alarm>();
-            user.Timers?.ToList().ForEach(z => z.Alarms.ToList().ForEach(c => userAlarms.Add(c)));
+            user.Timers?.ToList()
+                        .ForEach(z => z.Alarms.ToList()
+                        .ForEach(c => userAlarms.Add(c)));
 
             var alarmsDto = _mapper.Map<ICollection<AlarmDto>>(userAlarms).ToList();
 
@@ -111,7 +113,7 @@ namespace TimeItUpAPI.Controllers
             var userAlarms = new List<Alarm>();
             user.Timers?.ToList().ForEach(z => z.Alarms
                         .Where(z => z.ActivationTime > DateTime.UtcNow)
-                        .ToList().ForEach(c => userAlarms.Add(c)));
+                        .ToList().ForEach(x => userAlarms.Add(x)));
 
             var alarmsDto = _mapper.Map<ICollection<AlarmDto>>(userAlarms).ToList();
 
@@ -131,7 +133,10 @@ namespace TimeItUpAPI.Controllers
             }
 
             var userAlarms = new List<Alarm>();
-            user.Timers?.ToList().ForEach(z => z.Alarms.Where(z => z.ActivationTime < DateTime.UtcNow).ToList().ForEach(c => userAlarms.Add(c)));
+            user.Timers?.ToList()
+                        .ForEach(z => z.Alarms.Where(z => z.ActivationTime < DateTime.UtcNow)
+                        .ToList()
+                        .ForEach(x => userAlarms.Add(x)));
 
             var alarmsDto = _mapper.Map<ICollection<AlarmDto>>(userAlarms).ToList();
 
@@ -259,6 +264,12 @@ namespace TimeItUpAPI.Controllers
             }
 
             var createdAlarm = _mapper.Map<Alarm>(alarm);
+
+            if (!_timerRepo.CheckIfTimerExist(alarm.TimerId))
+            {
+                return NotFound();
+            }
+
             await _alarmRepo.AddAlarmAsync(createdAlarm);
 
             try

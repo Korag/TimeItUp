@@ -40,39 +40,6 @@ namespace TimeItUpAPI.Controllers
             _mapper = mapper;
         }
 
-        // PUT: api/Timers/Active/All/CalculatePeriods
-        [HttpPut("Active/All/CalculatePeriods")]
-        [Authorize]
-        public async Task<IActionResult> CalculateAllActiveTimersPeriods()
-        {
-            var timers = await _timerRepo.GetAllActiveTimersAsync();
-            await CalculateTimerPeriods(timers);
-
-            return NoContent();
-        }
-
-        // PUT: api/Splits/Multiple/CalculatePeriods
-        [HttpPut("Multiple/CalculatePeriods")]
-        [Authorize]
-        public async Task<IActionResult> CalculateSelectedTimersPeriods(ICollection<int> ids)
-        {
-            var timers = await _timerRepo.GetTimersByIdsAsync(ids);
-            await CalculateTimerPeriods(timers);
-
-            return NoContent();
-        }
-
-        // PUT: api/Timers/CalculatePeriods/{id}
-        [HttpPut("CalculatePeriods/{id}")]
-        [Authorize]
-        public async Task<IActionResult> CalculateSelectedTimerPeriods(int id)
-        {
-            var timer = await _timerRepo.GetTimerByIdAsync(id);
-            await CalculateTimerPeriods(new List<Timer>{ timer });
-
-            return NoContent();
-        }
-
         // GET: api/Timers
         [HttpGet]
         [Authorize]
@@ -293,8 +260,6 @@ namespace TimeItUpAPI.Controllers
             timer.Splits.Add(initialSplit);
 
             await _generalRepo.ChangeEntryStateToModified(timer);
-            //Necessary?
-            await _generalRepo.ChangeEntryStateToModified(initialSplit);
             await _generalRepo.SaveChangesAsync();
 
             return NoContent();
@@ -377,9 +342,40 @@ namespace TimeItUpAPI.Controllers
             timer.Splits.Add(nextSplit);
 
             await _generalRepo.ChangeEntryStateToModified(timer);
-            //Necessary?
-            await _generalRepo.ChangeEntryStateToModified(nextSplit);
             await _generalRepo.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        // PUT: api/Timers/Active/All/CalculatePeriods
+        [HttpPut("Active/All/CalculatePeriods")]
+        [Authorize]
+        public async Task<IActionResult> CalculateAllActiveTimersPeriods()
+        {
+            var timers = await _timerRepo.GetAllActiveTimersAsync();
+            await CalculateTimerPeriods(timers);
+
+            return NoContent();
+        }
+
+        // PUT: api/Splits/Multiple/CalculatePeriods
+        [HttpPut("Multiple/CalculatePeriods")]
+        [Authorize]
+        public async Task<IActionResult> CalculateSelectedTimersPeriods(ICollection<int> ids)
+        {
+            var timers = await _timerRepo.GetTimersByIdsAsync(ids);
+            await CalculateTimerPeriods(timers);
+
+            return NoContent();
+        }
+
+        // PUT: api/Timers/CalculatePeriods/{id}
+        [HttpPut("CalculatePeriods/{id}")]
+        [Authorize]
+        public async Task<IActionResult> CalculateSelectedTimerPeriods(int id)
+        {
+            var timer = await _timerRepo.GetTimerByIdAsync(id);
+            await CalculateTimerPeriods(new List<Timer> { timer });
 
             return NoContent();
         }
@@ -395,8 +391,11 @@ namespace TimeItUpAPI.Controllers
             }
 
             var createdTimer = _mapper.Map<Timer>(timer);
-            //CHECK
-            createdTimer.Splits = new List<Split>();
+
+            if (!_userRepo.CheckIfUserExist(timer.UserId))
+            {
+                return NotFound();
+            }
 
             await _timerRepo.AddTimerAsync(createdTimer);
 
@@ -415,6 +414,7 @@ namespace TimeItUpAPI.Controllers
                     throw;
                 }
             }
+
             var timerDto = _mapper.Map<TimerDto>(createdTimer);
 
             return CreatedAtAction("GetTimerById", new { id = timerDto.Id }, timerDto);
