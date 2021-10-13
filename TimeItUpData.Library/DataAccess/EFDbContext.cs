@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System;
 using TimeItUpData.Library.Models;
 
 namespace TimeItUpData.Library.DataAccess
@@ -23,8 +24,10 @@ namespace TimeItUpData.Library.DataAccess
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseLazyLoadingProxies().UseSqlServer(_configuration.GetConnectionString("EFDatabaseConnectionString"));
-            
+            optionsBuilder.UseLazyLoadingProxies();
+            optionsBuilder.UseSqlServer(_configuration.GetConnectionString("EFDatabaseConnectionString"));
+            optionsBuilder.LogTo(Console.WriteLine);
+
             base.OnConfiguring(optionsBuilder);
         }
 
@@ -47,8 +50,6 @@ namespace TimeItUpData.Library.DataAccess
                                         .WithOne(b => b.Timer);
             modelBuilder.Entity<Timer>().HasMany(p => p.Pauses)
                                         .WithOne(b => b.Timer);
-
-            //Check PK only x.Id
 
             modelBuilder.Entity<Split>().HasKey(x => new { x.Id, x.TimerId });
             modelBuilder.Entity<Split>().HasOne(p => p.Timer)

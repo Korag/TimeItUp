@@ -205,7 +205,7 @@ namespace TimeItUpAPI.Controllers
 
             //TODO: Generate URL to GET UI form -> with passed generated token
 
-            EmailMessageContentDto emailMessage = new EmailMessageContentDto(user.EmailAddress, String.Concat(user.FirstName, " ", user.LastName), 
+            EmailMessageContentDto emailMessage = new EmailMessageContentDto(user.EmailAddress, String.Concat(user.FirstName, " ", user.LastName),
                                                                              EmailClassifierType.ResetAccountPassword.ToString(), resetPasswordActionUrl);
             await _emailProvider.SendEmailMessageAsync(emailMessage);
 
