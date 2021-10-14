@@ -198,6 +198,30 @@ namespace TimeItUpAPI
         public void CheckIfDbHasBeenCreated(EFDbContext context)
         {
             context.Database.EnsureCreated();
+
+            string[] test = new string[4];
+            string output = "";
+
+            switch (test.Length)
+            {
+                case (0):
+                    output = "no one likes this";
+                    break;
+                case (1):
+                    output = $"{test[0]} like this";
+                    break;
+                case (2):
+                    output = $"{test[0]} and {test[1]} like this";
+                    break;
+                case (3):
+                    output = $"{test[0]}, {test[1]} and {test[2]} like this";
+                    break;
+
+                default:      
+                    output = $"{test[0]}, {test[1]} and {test.Length-2} like this";
+                    break;
+
+            }
         }
     }
 }
