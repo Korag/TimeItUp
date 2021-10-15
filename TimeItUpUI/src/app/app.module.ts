@@ -3,6 +3,8 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+
 import { CreateAlarmModalComponent } from './create-alarm-modal/create-alarm-modal.component';
 import { ActiveAlarmNotificationModalComponent } from './active-alarm-notification-modal/active-alarm-notification-modal.component';
 import { RemoveAlarmModalComponent } from './remove-alarm-modal/remove-alarm-modal.component';
@@ -29,6 +31,9 @@ import { TimerDurationSectionComponent } from './timer-duration-section/timer-du
 import { TimerAlarmsListComponent } from './timer-alarms-list/timer-alarms-list.component';
 import { TimerSplitsListComponent } from './timer-splits-list/timer-splits-list.component';
 import { TimerPausesListComponent } from './timer-pauses-list/timer-pauses-list.component';
+
+import { RequestNonAuthorizedErrorInterceptor } from './_helpers/requestNonAuthorizedError.interceptor';
+import { AttachJWTToRequestInterceptor } from './_helpers/attachJWTToRequest.interceptor';
 
 @NgModule({
   declarations: [
@@ -62,9 +67,13 @@ import { TimerPausesListComponent } from './timer-pauses-list/timer-pauses-list.
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AttachJWTToRequestInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: RequestNonAuthorizedErrorInterceptor, multi: true },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
