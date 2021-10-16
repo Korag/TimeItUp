@@ -144,7 +144,10 @@ namespace TimeItUpAPI
                 options.AddPolicy(name: Configuration.GetValue<string>("CORS:Name"),
                                   builder =>
                                   {
-                                      builder.WithOrigins(Configuration.GetSection("CORS").GetSection("AllowedOrigins").Get<string[]>());
+                                      //builder.WithOrigins(Configuration.GetSection("CORS").GetSection("AllowedOrigins").Get<string[]>())
+                                      builder.AllowAnyOrigin()
+                                      .AllowAnyHeader()
+                                      .AllowAnyMethod();
                                   });
             });
 
@@ -154,6 +157,8 @@ namespace TimeItUpAPI
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, EFDbContext context)
         {
+            app.UseCors(Configuration.GetValue<string>("CORS:Name"));
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -189,8 +194,6 @@ namespace TimeItUpAPI
                     c.RoutePrefix = string.Empty;
                 }
             );
-
-            //app.UseCors(Configuration.GetValue<string>("CORS:Name"));
 
             //CheckIfDbHasBeenCreated(context);
         }
