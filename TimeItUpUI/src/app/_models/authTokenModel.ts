@@ -1,7 +1,7 @@
 export class AuthTokenModel {
 
-  constructor(public email: string, public token: string) {
-    this.email = email;
-    this.token = token;
+  constructor(public emailAddress: string, public jwt: string) {
+    this.emailAddress = emailAddress;
+    this.jwt = jwt;
   }
 }

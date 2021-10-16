@@ -19,9 +19,9 @@ export class NonAuthUserGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
-    var loggedUser = this._authService.loggedUser;
+    const loggedUser = this._authService.loggedUserData;
 
-    if (loggedUser) {
+    if (!loggedUser) {
       return true;
     }
 

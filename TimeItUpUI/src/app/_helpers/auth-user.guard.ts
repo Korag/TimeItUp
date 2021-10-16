@@ -10,7 +10,7 @@ export class AuthUserGuard implements CanActivate {
 
   constructor(
     private router: Router,
-    private authenticationService: AuthService
+    private _authService: AuthService
   )
   {
 
@@ -20,7 +20,7 @@ export class AuthUserGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree
   {
-    const loggedUser = this.authenticationService.loggedUser;
+    const loggedUser = this._authService.loggedUserData;
 
     if (loggedUser) {
       return true;
