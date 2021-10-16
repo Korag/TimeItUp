@@ -36,6 +36,7 @@ import { TimerAlarmsListComponent } from './timer-alarms-list';
 import { TimerSplitsListComponent } from './timer-splits-list';
 import { TimerPausesListComponent } from './timer-pauses-list';
 import { ErrorComponent } from './error/error.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [
@@ -72,7 +73,8 @@ import { ErrorComponent } from './error/error.component';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FontAwesomeModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AttachJWTToRequestInterceptor, multi: true },

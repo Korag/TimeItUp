@@ -1,6 +1,73 @@
-<div class="h-100">
+<div class="row" style="height:93%; margin-left:0px; margin-right:0px">
+  <div class="col-md-3 h-100 fixed ">
 
-  <div class="main h-100">
-    <router-outlet class="h-100"></router-outlet>
+    <div class="row" style="height:30%">
+      <div class="col-md-12 col-0 h-100">
+
+        LOGO
+
+      </div>
+    </div>
+
+    <div class="row" style="height:70%">
+      <div class="col-md-12 col-0">
+
+        TIME
+
+      </div>
+    </div>
+
+  </div>
+  <div class="col-md-9 h-100">
+
+    <div class="row backgroundMain" style="height:10%">
+
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+          <div class="container-fluid">
+            <a class="navbar-brand" href="#">Fixed navbar</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+              <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">Link</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                </li>
+              </ul>
+              <form class="d-flex">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+              </form>
+            </div>
+          </div>
+        </nav>
+    </div>
+
+    <div class="row" style="height:90%">
+      <div class="col-md-11">
+
+        <router-outlet></router-outlet>
+
+      </div>
+
+      <div class="col-md-1 bg-dark">
+
+      </div>
+
+    </div>
+
   </div>
 </div>
+
+<div class="row backgroundMain mt-auto sticky-bottom fixed-bottom" style="height:6%; margin-left:0px; margin-right:0px">
+  <div class="col-md-12">
+    <app-footer></app-footer>
+  </div>
+</div>
+
