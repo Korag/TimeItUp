@@ -35,6 +35,7 @@ import { TimerDurationSectionComponent } from './timer-duration-section';
 import { TimerAlarmsListComponent } from './timer-alarms-list';
 import { TimerSplitsListComponent } from './timer-splits-list';
 import { TimerPausesListComponent } from './timer-pauses-list';
+import { ErrorComponent } from './error/error.component';
 
 @NgModule({
   declarations: [
@@ -65,6 +66,7 @@ import { TimerPausesListComponent } from './timer-pauses-list';
     TimerAlarmsListComponent,
     TimerSplitsListComponent,
     TimerPausesListComponent,
+    ErrorComponent,
   ],
   imports: [
     BrowserModule,

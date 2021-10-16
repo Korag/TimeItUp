@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { AccountPasswordResetComponent } from './account-password-reset';
 import { ActiveTimersComponent } from './active-timers';
+import { ErrorComponent } from './error';
 import { LayoutComponent } from './layout';
 import { LoginComponent } from './login';
 import { PastTimersComponent } from './past-timers';
@@ -29,6 +30,11 @@ const routes: Routes = [
   {
     path: 'resetPassword/confirmation',
     canActivate: [NonAuthUserGuard], component: AccountPasswordResetComponent
+  },
+
+  {
+    path: 'error',
+    component: ErrorComponent
   },
 
   //Nested inside Layout which contains sidebar, navbar, footer and content-container
