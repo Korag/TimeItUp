@@ -4,9 +4,22 @@
   background-image: linear-gradient(to top, #09203f 0%, #537895 100%);
 }
 
+.backgroundSecondary {
+  background-image: linear-gradient(to bottom, #09203f 0%, #537895 100%);
+}
+
+.backgroundContent {
+  background-color: rgb(83, 120, 149, 0.1);
+}
+
 @media screen and (max-width: 1000px) {
   div#sidebar {
     display: none;
   }
-
+  div#rightWindowConstraint {
+    display: none;
+  }
+  .mainContent {
+    padding-right: 0px;
+  }
 }
