@@ -3,3 +3,10 @@
 .backgroundMain {
   background-image: linear-gradient(to top, #09203f 0%, #537895 100%);
 }
+
+@media screen and (max-width: 1000px) {
+  div#sidebar {
+    display: none;
+  }
+
+}
