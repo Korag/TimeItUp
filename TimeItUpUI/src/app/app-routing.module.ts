@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { AccountPasswordResetComponent } from './account-password-reset';
+import { AccountPasswordResetGetTokenComponent } from './account-password-reset-get-token';
 import { ActiveTimersComponent } from './active-timers';
 import { ErrorComponent } from './error';
 import { LayoutComponent } from './layout';
@@ -25,7 +26,7 @@ const routes: Routes = [
   },
   {
     path: 'resetPassword',
-    canActivate: [NonAuthUserGuard], component: AccountPasswordResetComponent
+    canActivate: [NonAuthUserGuard], component: AccountPasswordResetGetTokenComponent
   },
   {
     path: 'resetPassword/confirmation',
