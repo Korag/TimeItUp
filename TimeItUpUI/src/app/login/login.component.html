@@ -1,30 +1,76 @@
-<div class="col-md-6 offset-md-3 mt-5">
-  <div class="card">
-    <h4 class="card-header">Angular 8 JWT Login Example</h4>
-    <div class="card-body">
-      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-        <div class="form-group">
-          <label for="email">Emal</label>
-          <input type="text" formControlName="email" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.email.errors }" />
-          <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
-            <div *ngIf="f.email.errors.required">Email is required</div>
-            <div *ngIf="f.email.errors.email">Incorrect format of input</div>
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
-          <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
-            <div *ngIf="f.password.errors.required">Password is required</div>
-            <div *ngIf="f.password.errors.minlength">Password must be at least 6 characters long</div>
-          </div>
-        </div>
-        <button [disabled]="loading" class="btn btn-primary">
-          <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
-          Login
-        </button>
-        <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{error}}</div>
-      </form>
+<nav class="navbar navbar-expand-md navbar-dark fixed-top backgroundMain" style="height:40px">
+</nav>
+
+<div class="container-fluid h-80" style="padding-left:0px">
+
+  <div class="row h-100">
+
+    <div id="rightWindowConstraint" style="position:fixed; padding: 0px 0px; width: 40px; left: 0;">
+      <div class="sticky-top fixed-top backgroundSecondary" style="padding-top:100px; height:100vh"></div>
     </div>
+
+    <div id="mainContent" class="row h-100" style="margin-right: 0px; margin-left:0px; padding-right: 0px">
+
+      <div class="d-flex col-md-6 offset-md-3 backgroundMain text-white" style="margin-top:7%">
+
+        <div class="d-flex" style="margin:auto">
+          <img src="../../assets/clock_time_outline.gif" width="80px" height="80px" />
+          <div style="display:inline; margin-top:10px">
+            <h1 style="font-size:40px">Time It Up!</h1>
+          </div>
+        </div>
+      </div>
+
+        <div class="col-md-6 offset-md-3 mt-5">
+          <div class="card text-center formGradientBackgroundRounded">
+            <h4 class="card-header backgroundSecondary text-white">Login</h4>
+            <div class="card-body">
+              <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+                <div class="form-floating mb-3">
+                  <input type="text" formControlName="email" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.email.errors }" />
+                  <label for="floatingInput">Email</label>
+                  <div *ngIf="submitted && f.email.errors" class="invalid-feedback text-left">
+                    <div *ngIf="f.email.errors.required">Email is required</div>
+                    <div *ngIf="f.email.errors.email">Incorrect format of input</div>
+                  </div>
+                </div>
+                <div class="form-floating">
+                  <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
+                  <label for="floatingInput">Password</label>
+                  <div *ngIf="submitted && f.password.errors" class="invalid-feedback text-left">
+                    <div *ngIf="f.password.errors.required">Password is required</div>
+                    <div *ngIf="f.password.errors.minlength">Password must be at least 6 characters long</div>
+                  </div>
+                </div>
+
+                <button [disabled]="loading" class="w-100 btn btn-grad mt-3" style="margin-left:0px; margin-right:0px">
+                  <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                  Login
+                </button>
+                <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{error}}</div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="d-flex flex-row-reverse col-md-6 offset-md-3">
+          <div class="btn-group" role="group"s>
+            <button type="button" class="btn btn-grad-sec">Register</button>
+            <button type="button" class="btn btn-grad-th">Forgot password</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="rightWindowConstraint" style="position:fixed; padding: 0px 0px; width: 40px; right: 0;">
+        <div class="sticky-top fixed-top backgroundSecondary" style="padding-top:100px; height:100vh"></div>
+      </div>
+
+    </div>
+</div>
+
+<div class="row backgroundMain mt-auto py-3 sticky-bottom fixed-bottom">
+  <div class="col-md-12">
+    <app-footer></app-footer>
   </div>
 </div>

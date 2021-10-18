@@ -45,22 +45,27 @@ const routes: Routes = [
       {
         path: 'user/details',
         component: UserDetailsComponent,
+        canActivate: [AuthUserGuard]
       },
       {
         path: 'timers/active',
         component: ActiveTimersComponent,
+        canActivate: [AuthUserGuard]
       },
       {
         path: 'timers/past',
-        component: PastTimersComponent
+        component: PastTimersComponent,
+        canActivate: [AuthUserGuard]
       },
       {
         path: 'timer/:id',
-        component: TimerDetailsComponent
+        component: TimerDetailsComponent,
+        canActivate: [AuthUserGuard]
       },
       {
         path: '',
         component: ActiveTimersComponent,
+        canActivate: [AuthUserGuard]
       },
     ],
   },

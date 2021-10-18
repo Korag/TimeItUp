@@ -29,6 +29,14 @@ export class AuthService {
   }
 
   public get loggedUserData(): AuthorizedUserModel {
+    this.loggedUser = this.getUserDataFromLocalStorage();
+
+    const jwtHelper = new JwtHelperService();
+
+    if (jwtHelper.isTokenExpired(this.loggedUser?.token)) {
+      this.logout();
+    }
+
     return this.loggedUser;
   }
 

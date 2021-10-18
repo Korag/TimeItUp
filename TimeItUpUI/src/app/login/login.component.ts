@@ -49,7 +49,7 @@ export class LoginComponent implements OnInit {
     var loggedUser = await this.authService.login(this.f.email.value, this.f.password.value);
 
     if (loggedUser) {
-      this.router.navigate([this.returnUrl]);
+      this.router.navigate(["/timers/active"]);
     }
     else {
       this.error = "Incorrect login data";

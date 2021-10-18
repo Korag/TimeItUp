@@ -12,13 +12,95 @@
   background-color: rgb(83, 120, 149, 0.1);
 }
 
+.formGradientBackgroundRounded {
+  border: 4px solid transparent;
+  border-radius: 8px;
+  background: linear-gradient(to top, #09203f 0%, #537895 100%);
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
+}
+
+
+
+.btn-grad {
+  background-image: linear-gradient(to right, #314755 0%, #26a0da 51%, #314755 100%)
+}
+
+.btn-grad {
+  margin: 10px;
+  padding: 15px 45px;
+  text-align: center;
+  text-transform: uppercase;
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: white;
+  border-radius: 10px;
+  display: block;
+}
+
+.btn-grad:hover {
+  background-position: right center; /* change the direction of the change here */
+  color: #fff;
+  text-decoration: none;
+}
+
+
+.btn-grad-sec {
+  background-image: linear-gradient(to right, #4b6cb7 0%, #182848 51%, #4b6cb7 100%)
+}
+
+.btn-grad-sec {
+  margin: 5px;
+  padding: 10px 25px;
+  text-align: center;
+  text-transform: uppercase;
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: white;
+  box-shadow: 0 0 20px #eee;
+  border-radius: 10px;
+  display: block;
+}
+
+.btn-grad-sec:hover {
+  background-position: right center; /* change the direction of the change here */
+  color: #fff;
+  text-decoration: none;
+}
+
+
+.btn-grad-th {
+  background-image: linear-gradient(to right, #DC2424 0%, #4A569D 51%, #DC2424 100%)
+}
+
+.btn-grad-th {
+  margin: 5px;
+  padding: 10px 25px;
+  text-align: center;
+  text-transform: uppercase;
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: white;
+  box-shadow: 0 0 20px #eee;
+  border-radius: 10px;
+  display: block;
+}
+
+.btn-grad-th:hover {
+  background-position: right center; /* change the direction of the change here */
+  color: #fff;
+  text-decoration: none;
+}             
+   
 @media screen and (max-width: 1000px) {
   div#sidebar {
     display: none;
   }
+
   div#rightWindowConstraint {
     display: none;
   }
+
   .mainContent {
     padding-right: 0px;
   }

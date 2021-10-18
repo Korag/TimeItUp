@@ -80,6 +80,6 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     { provide: HTTP_INTERCEPTORS, useClass: AttachJWTToRequestInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: RequestNonAuthorizedErrorInterceptor, multi: true },
   ],
-  bootstrap: [AppComponent, FooterComponent]
+  bootstrap: [AppComponent]
 })
 export class AppModule { }
