@@ -4,7 +4,7 @@ import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment.prod';
 import { JwtHelperService } from "@auth0/angular-jwt";
 
-import { AuthorizedUserModel, AuthTokenModel, UserModel } from '../_models';
+import { AuthorizedUserModel, AuthTokenModel, UserModel, UserRegisterModel } from '../_models';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +23,7 @@ export class AuthService {
     }
   }
 
-  private getUserDataFromLocalStorage(): AuthorizedUserModel{
+  private getUserDataFromLocalStorage(): AuthorizedUserModel {
     var localStorageItem = localStorage.getItem('storedUserData');
     return JSON.parse(localStorageItem!);
   }
@@ -60,6 +60,23 @@ export class AuthService {
       })).toPromise();
 
     return await this.loggedUser;
+  }
+
+  public async register(email: string, firstName: string, lastName: string,
+    password: string, confirmPassword: string): Promise<boolean> {
+    await this.http.post<UserModel>(`${environment.apiUrl}/Accounts/register`,
+                                      { email, firstName, lastName, password, confirmPassword })
+      .pipe(map(result => {
+        if (result.id !== null) {
+          return true;
+        }
+        else {
+          return false;
+        }
+      }))
+      .toPromise();
+
+    return false;
   }
 
   public logout() {

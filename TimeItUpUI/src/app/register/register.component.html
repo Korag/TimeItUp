@@ -1,1 +1,103 @@
-<p>register works!</p>
+<nav class="navbar navbar-expand-md navbar-dark fixed-top backgroundMain" style="height:40px">
+</nav>
+
+<div class="container-fluid h-80" style="padding-left:0px">
+
+  <div class="row h-100">
+
+    <div id="rightWindowConstraint" style="position:fixed; padding: 0px 0px; width: 40px; left: 0;">
+      <div class="sticky-top fixed-top backgroundSecondary" style="padding-top:100px; height:100vh"></div>
+    </div>
+
+    <div id="mainContent" class="row h-100" style="margin-right: 0px; margin-left:0px; padding-right: 0px">
+
+      <div class="d-flex col-md-6 offset-md-3 backgroundMain text-white" style="margin-top:7%">
+
+        <div class="d-flex" style="margin:auto">
+          <img src="../../assets/clock_time_outline.gif" width="80px" height="80px" />
+          <div style="display:inline; margin-top:10px">
+            <h1 style="font-size:40px">Time It Up!</h1>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 offset-md-3" style="margin-top:4%">
+        <div class="card text-center formGradientBackgroundRounded">
+          <h4 class="card-header backgroundSecondary text-white">Register</h4>
+          <div class="card-body">
+            <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+              <div class="form-floating mb-3">
+                <input type="text" formControlName="email" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.email.errors }" />
+                <label for="floatingInput">Email</label>
+                <div *ngIf="submitted && f.email.errors" class="invalid-feedback text-left">
+                  <div *ngIf="f.email.errors.required">Email is required</div>
+                  <div *ngIf="f.email.errors.email">Incorrect format of input</div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="form-floating col-6 mb-3">
+                  <input type="text" formControlName="firstName" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }" />
+                  <label for="floatingInput" style="margin-left:12px">First Name</label>
+                  <div *ngIf="submitted && f.firstName.errors" class="invalid-feedback text-left">
+                    <div *ngIf="f.firstName.errors.required">First Name is required</div>
+                    <div *ngIf="f.firstName.errors.minlength || f.firstName.errors.maxlength">First Name must be between 4 and 40 characters long</div>
+                  </div>
+                </div>
+                <div class="form-floating col-6 mb-3">
+                  <input type="text" formControlName="lastName" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }" />
+                  <label for="floatingInput" style="margin-left:12px">Last Name</label>
+                  <div *ngIf="submitted && f.lastName.errors" class="invalid-feedback text-left">
+                    <div *ngIf="f.lastName.errors.required">Last Name is required</div>
+                    <div *ngIf="f.lastName.errors.minlength || f.lastName.errors.maxlength">Last Name must be between 4 and 40 characters long</div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="form-floating col-6 mb-3">
+                  <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
+                  <label for="floatingInput" style="margin-left:12px">Password</label>
+                  <div *ngIf="submitted && f.password.errors" class="invalid-feedback text-left">
+                    <div *ngIf="f.password.errors.required">Password is required</div>
+                    <div *ngIf="f.password.errors.pattern">Password must contain at least 6 characters: at least one upper case letter, one lower case letter, a number and a special character</div>
+                  </div>
+                </div>
+                <div class="form-floating col-6 mb-3">
+                  <input type="password" formControlName="confirmPassword" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }" />
+                  <label for="floatingInput" style="margin-left:12px">Confirm Password</label>
+                  <div *ngIf="submitted && f.confirmPassword.errors" class="invalid-feedback text-left">
+                    <div *ngIf="f.confirmPassword.errors.required">Confirm Password is required</div>
+                    <div *ngIf="f.confirmPassword.errors.pattern">Confirm Password must contain at least 6 characters: at least one upper case letter, one lower case letter, a number and a special character</div>
+                    <div *ngIf="f.confirmPassword.errors.mustMatch">Passwords must match</div>
+                  </div>
+                </div>
+              </div>
+
+                <button [disabled]="loading" class="w-100 btn btn-grad mt-3" style="margin-left:0px; margin-right:0px">
+                  <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                  Register
+                </button>
+                <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{error}}</div>
+            </form>
+          </div>
+        </div>
+
+        <div class="d-flex flex-row-reverse col-md-6 offset-md-6">
+          <div class="btn-group" role="group">
+            <a class="btn btn-grad-sec" [routerLink]="['/login']">Login</a>
+          </div>
+        </div>
+      </div>
+
+      <div id="rightWindowConstraint" style="position:fixed; padding: 0px 0px; width: 40px; right: 0;">
+        <div class="sticky-top fixed-top backgroundSecondary" style="padding-top:100px; height:100vh"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="row backgroundMain mt-auto py-3 sticky-bottom fixed-bottom">
+    <div class="col-md-12">
+      <app-footer></app-footer>
+    </div>
+  </div>
+

@@ -21,7 +21,7 @@ namespace TimeItUpAPI.Models
 
         [Required]
         [StringLength(40, MinimumLength = 2)]
-        [DataType(DataType.EmailAddress)]
+        [DataType(DataType.Text)]
         public string FirstName { get; set; }
 
         [Required]

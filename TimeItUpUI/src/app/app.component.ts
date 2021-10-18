@@ -8,6 +8,4 @@ import { faGithub, faLinkedinIn } from '@fortawesome/free-brands-svg-icons';
 })
 export class AppComponent {
   title = 'TimeItUpUI';
-  faLinkedin = faLinkedinIn;
-  faGithub = faGithub;
 }
