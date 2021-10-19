@@ -18,9 +18,13 @@ export class RequestNonAuthorizedErrorInterceptor implements HttpInterceptor {
         location.reload(true);
       }
 
-      this.router.navigate(["/error"]);
-      const error = err.error.message || err.statusText;
-      return throwError(error);
-    }))
+      if (err.status !== 400) {
+        this.router.navigate(["/error"]);
+        var error = err.error.message || err.statusText;
+        return throwError(error);
+      }
+
+      return throwError(err);
+    }));
   }
 }

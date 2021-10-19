@@ -1,16 +1,19 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../environments/environment.prod';
 import { JwtHelperService } from "@auth0/angular-jwt";
 
 import { AuthorizedUserModel, AuthTokenModel, UserModel, UserRegisterModel } from '../_models';
+import { error } from '@angular/compiler/src/util';
+import { throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private loggedUser: AuthorizedUserModel;
+  public reqErrors: string[] = [];
 
   constructor(private http: HttpClient) {
     this.loggedUser = this.getUserDataFromLocalStorage();
@@ -41,14 +44,13 @@ export class AuthService {
   }
 
   public async login(email: string, password: string): Promise<AuthorizedUserModel> {
-    await this.http.post<AuthTokenModel>(`${environment.apiUrl}/Accounts/login`, { email, password })
+    await this.http.post<AuthTokenModel>(`${environment.apiUrl}/Accounts/login`, {  })
       .pipe(map(result => {
         this.loggedUser = new AuthorizedUserModel();
         this.loggedUser.email = result.emailAddress;
         this.loggedUser.token = result.jwt;
         localStorage.setItem('storedUserData', JSON.stringify(this.loggedUser));
-      }))
-      .toPromise();
+      })).toPromise();
 
     await this.http.get<UserModel>(`${environment.apiUrl}/Users/Email/${this.loggedUser.email}`)
       .pipe(map(result => {
@@ -57,6 +59,9 @@ export class AuthService {
         this.loggedUser.lastName = result.lastName;
 
         localStorage.setItem('storedUserData', JSON.stringify(this.loggedUser));
+      }), catchError((err, caught) => {
+        console.log(JSON.stringify(err.error.ModelState[""]["0"]));
+        return throwError(err);
       })).toPromise();
 
     return await this.loggedUser;
@@ -72,8 +77,10 @@ export class AuthService {
         if (result.id !== null) {
           userCreated = true;
         }
-      }))
-      .toPromise();
+      }),catchError((err, caught) => {
+        console.log(JSON.stringify(err.error.ModelState[""]["0"]));
+        return throwError(err);
+      })).toPromise();
 
     return await userCreated;
   }

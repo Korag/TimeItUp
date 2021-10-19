@@ -49,10 +49,6 @@ export class RegisterComponent implements OnInit {
       this.f.lastName.value, this.f.password.value,
       this.f.confirmPassword.value);
 
-    //works but throws error -> check return in register method
-    //adjust body height because there is no buttons in register on low resolution
-    //add footer size to h-80 of register form body
-
     if (userAccountCreated) {
       this.router.navigate(["/login"]);
     }

@@ -16,7 +16,7 @@ export class LoginComponent implements OnInit {
   loading = false;
   submitted = false;
   returnUrl: string = "";
-  error = '';
+  reqErrors: any[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -45,14 +45,24 @@ export class LoginComponent implements OnInit {
     }
 
     this.loading = true;
+    this.reqErrors = [];
+    var loggedUser = null;
 
-    var loggedUser = await this.authService.login(this.f.email.value, this.f.password.value);
+    try {
+      loggedUser = await this.authService.login(this.f.email.value, this.f.password.value);
+      if (loggedUser) {
+        this.router.navigate(["/timers/active"]);
+      }
+    } catch (err) {
 
-    if (loggedUser) {
-      this.router.navigate(["/timers/active"]);
-    }
-    else {
-      this.error = "Incorrect login data";
+      let validationErrorDictionary = err.error.errors;
+
+      for (var fieldName in err.error.errors) {
+        if (!this.reqErrors.hasOwnProperty(fieldName)) {
+          this.reqErrors.push(validationErrorDictionary[fieldName]);
+        }
+      }
+
       this.loading = false;
     }
   }
