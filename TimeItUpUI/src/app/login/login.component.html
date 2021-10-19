@@ -47,7 +47,7 @@
                 <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
                 Login
               </button>
-              <div *ngIf="reqErrors!.length > 0" class="alert alert-danger mt-3 mb-0">  
+              <div *ngIf="reqErrors!.length > 0" class="alert alert-danger mt-3 mb-0">
                 <p *ngFor="let error of reqErrors!" style="margin-bottom: 0px">{{error}}</p>
               </div>
             </form>

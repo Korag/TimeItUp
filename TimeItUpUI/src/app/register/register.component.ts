@@ -14,7 +14,7 @@ export class RegisterComponent implements OnInit {
   registerForm!: FormGroup;
   loading = false;
   submitted = false;
-  error = '';
+  reqErrors: any[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -45,15 +45,25 @@ export class RegisterComponent implements OnInit {
     }
 
     this.loading = true;
-    var userAccountCreated = await this.authService.register(this.f.email.value, this.f.firstName.value,
-      this.f.lastName.value, this.f.password.value,
-      this.f.confirmPassword.value);
 
-    if (userAccountCreated) {
-      this.router.navigate(["/login"]);
-    }
-    else {
-      this.error = "Incorrect register data";
+    try {
+      var userAccountCreated = await this.authService.register(this.f.email.value, this.f.firstName.value,
+        this.f.lastName.value, this.f.password.value,
+        this.f.confirmPassword.value);
+
+      if (userAccountCreated) {
+        this.router.navigate(["/login"]);
+      }
+    } catch (err) {
+
+      let validationErrorDictionary = err.error.errors;
+
+      for (var fieldName in err.error.errors) {
+        if (!this.reqErrors.hasOwnProperty(fieldName)) {
+          this.reqErrors.push(validationErrorDictionary[fieldName]);
+        }
+      }
+
       this.loading = false;
     }
   }

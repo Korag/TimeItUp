@@ -44,7 +44,7 @@ export class AuthService {
   }
 
   public async login(email: string, password: string): Promise<AuthorizedUserModel> {
-    await this.http.post<AuthTokenModel>(`${environment.apiUrl}/Accounts/login`, {  })
+    await this.http.post<AuthTokenModel>(`${environment.apiUrl}/Accounts/login`, { email, password })
       .pipe(map(result => {
         this.loggedUser = new AuthorizedUserModel();
         this.loggedUser.email = result.emailAddress;
@@ -59,9 +59,6 @@ export class AuthService {
         this.loggedUser.lastName = result.lastName;
 
         localStorage.setItem('storedUserData', JSON.stringify(this.loggedUser));
-      }), catchError((err, caught) => {
-        console.log(JSON.stringify(err.error.ModelState[""]["0"]));
-        return throwError(err);
       })).toPromise();
 
     return await this.loggedUser;
@@ -77,9 +74,6 @@ export class AuthService {
         if (result.id !== null) {
           userCreated = true;
         }
-      }),catchError((err, caught) => {
-        console.log(JSON.stringify(err.error.ModelState[""]["0"]));
-        return throwError(err);
       })).toPromise();
 
     return await userCreated;
