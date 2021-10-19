@@ -29,8 +29,8 @@ export class RegisterComponent implements OnInit {
       firstName: ['', Validators.compose([Validators.required, Validators.minLength(4), Validators.maxLength(40)])],
       lastName: ['', Validators.compose([Validators.required, , Validators.minLength(4), Validators.maxLength(40)])],
 
-      password: ['', Validators.compose([Validators.required, Validators.pattern(`^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{6,}$`)])],
-      confirmPassword: ['', Validators.compose([Validators.required, Validators.pattern(`^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{6,}$`)])],
+      password: ['', Validators.compose([Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{6,}$/)])],
+      confirmPassword: ['', Validators.compose([Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{6,}$/)])],
     },
       { validator: MustMatch('password', 'confirmPassword') });
   }
@@ -48,6 +48,10 @@ export class RegisterComponent implements OnInit {
     var userAccountCreated = await this.authService.register(this.f.email.value, this.f.firstName.value,
       this.f.lastName.value, this.f.password.value,
       this.f.confirmPassword.value);
+
+    //works but throws error -> check return in register method
+    //adjust body height because there is no buttons in register on low resolution
+    //add footer size to h-80 of register form body
 
     if (userAccountCreated) {
       this.router.navigate(["/login"]);

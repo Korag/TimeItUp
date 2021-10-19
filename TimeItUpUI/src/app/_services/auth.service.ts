@@ -64,19 +64,18 @@ export class AuthService {
 
   public async register(email: string, firstName: string, lastName: string,
     password: string, confirmPassword: string): Promise<boolean> {
+
+    var userCreated = false;
     await this.http.post<UserModel>(`${environment.apiUrl}/Accounts/register`,
                                       { email, firstName, lastName, password, confirmPassword })
       .pipe(map(result => {
         if (result.id !== null) {
-          return true;
-        }
-        else {
-          return false;
+          userCreated = true;
         }
       }))
       .toPromise();
 
-    return false;
+    return await userCreated;
   }
 
   public logout() {
