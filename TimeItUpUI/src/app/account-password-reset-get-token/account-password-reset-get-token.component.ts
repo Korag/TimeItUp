@@ -40,11 +40,11 @@ export class AccountPasswordResetGetTokenComponent implements OnInit {
     }
 
     this.reqErrors = [];
+    this.getTokenButtonBlocked = true;
     this.loading = true;
 
     try {
       await this.userService.getResetPasswordToken(this.f.email.value);
-      this.getTokenButtonBlocked = true;
       this.info = "Guidelines have been provided to your email address to reset your account password.";
     } catch (err) {
 
@@ -55,9 +55,9 @@ export class AccountPasswordResetGetTokenComponent implements OnInit {
           this.reqErrors.push(validationErrorDictionary[fieldName]);
         }
       }
-
-      this.loading = false;
+      this.getTokenButtonBlocked = false;
     }
+    this.loading = false;
   }
 }
 

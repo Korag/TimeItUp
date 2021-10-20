@@ -15,13 +15,12 @@ namespace TimeItUpAPI.Models
         [Required]
         [DataType(DataType.Password)]
         [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{6,}$")]
-        [CustomValidation(typeof(UpdateUserAccountPasswordDto), "ArePropertiesEqual")]
         public string Password { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
         [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{6,}$")]
-        [Compare("NewPassword")]
+        [Compare("Password")]
         public string ConfirmPassword { get; set; }
     }
 }

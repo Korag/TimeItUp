@@ -24,7 +24,7 @@ namespace TimeItUpAPI.Models
         [Compare("NewPassword")]
         public string ConfirmPassword { get; set; }
 
-        private static ValidationResult ArePropertiesEqual(UpdateUserAccountPasswordDto myEntity, ValidationContext validationContext)
+        public static ValidationResult ArePropertiesEqual(UpdateUserAccountPasswordDto myEntity, ValidationContext validationContext)
         {
             if (myEntity.OldPassword != myEntity.NewPassword)
             {

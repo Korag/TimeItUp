@@ -27,15 +27,16 @@ export class AccountPasswordResetComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.route.queryParams
-      .subscribe(params => {
-        this.email = params.email;
-        this.token = params.token;
-      });
+    const routeParams = this.route.snapshot.paramMap;
+
+
+    this.email = String(routeParams.get('email'));
+    this.token = atob(String(routeParams.get('token')));
+
+    console.log(this.email);
+    console.log(this.token);
 
     this.resetPasswordForm = this.formBuilder.group({
-      email: ['', Validators.compose([Validators.required, Validators.email])],
-
       password: ['', Validators.compose([Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{6,}$/)])],
       confirmPassword: ['', Validators.compose([Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{6,}$/)])],
     },
@@ -55,10 +56,14 @@ export class AccountPasswordResetComponent implements OnInit {
     this.loading = true;
 
     try {
-       await this.userService.resetPassword(this.f.email.value, this.f.token.value,
+      console.log(this.f.password.value);
+      console.log(this.f.confirmPassword.value);
+
+       await this.userService.resetPassword(this.email, this.token,
         this.f.password.value, this.f.confirmPassword.value);
         this.router.navigate(["/login"]);
     } catch (err) {
+      console.log(err);
 
       let validationErrorDictionary = err.error.errors;
 
@@ -67,8 +72,7 @@ export class AccountPasswordResetComponent implements OnInit {
           this.reqErrors.push(validationErrorDictionary[fieldName]);
         }
       }
-
-      this.loading = false;
     }
+    this.loading = false;
   }
 }

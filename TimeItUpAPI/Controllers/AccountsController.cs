@@ -201,9 +201,9 @@ namespace TimeItUpAPI.Controllers
 
             var user = await _userRepo.GetUserByIdAsync(userAccount.Id);
             var token = await GenerateResetPasswordCode(userAccount);
-            var resetPasswordActionUrl = @$"http://localhost:4200/resetPassword/email/{user.EmailAddress}/token/{token}";
+            var encodedToken = Convert.ToBase64String(Encoding.Unicode.GetBytes(token));
 
-            //TODO: Generate URL to GET UI form -> with passed generated token
+            var resetPasswordActionUrl = @$"http://localhost:4200/resetPassword/email/{user.EmailAddress}/token/{encodedToken}";
 
             EmailMessageContentDto emailMessage = new EmailMessageContentDto(user.EmailAddress, String.Concat(user.FirstName, " ", user.LastName),
                                                                              EmailClassifierType.ResetAccountPassword.ToString(), resetPasswordActionUrl);
