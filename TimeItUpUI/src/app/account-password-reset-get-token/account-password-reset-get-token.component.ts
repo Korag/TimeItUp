@@ -50,13 +50,21 @@ export class AccountPasswordResetGetTokenComponent implements OnInit {
 
       let validationErrorDictionary = err.error.errors;
 
-      for (var fieldName in err.error.errors) {
-        if (!this.reqErrors.hasOwnProperty(fieldName)) {
-          this.reqErrors.push(validationErrorDictionary[fieldName]);
+      if (err.error.errors !== null) {
+        for (var fieldName in err.error.errors) {
+          if (!this.reqErrors.hasOwnProperty(fieldName)) {
+            this.reqErrors.push(validationErrorDictionary[fieldName]);
+          }
         }
       }
+
+      if (err.error.status === 404) {
+        this.reqErrors.push("No user with the specified email address and password was found.");
+      }
+
       this.getTokenButtonBlocked = false;
     }
+
     this.loading = false;
   }
 }

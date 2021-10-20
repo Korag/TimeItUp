@@ -3,7 +3,7 @@ import { FormGroup, Validators } from '@angular/forms';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MustMatch } from '../_helpers';
-import { AuthService, UserService } from '../_services';
+import { UserService } from '../_services';
 
 @Component({
   selector: 'app-account-password-reset',
@@ -29,12 +29,8 @@ export class AccountPasswordResetComponent implements OnInit {
 
     const routeParams = this.route.snapshot.paramMap;
 
-
     this.email = String(routeParams.get('email'));
     this.token = atob(String(routeParams.get('token')));
-
-    console.log(this.email);
-    console.log(this.token);
 
     this.resetPasswordForm = this.formBuilder.group({
       password: ['', Validators.compose([Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{6,}$/)])],
@@ -67,12 +63,19 @@ export class AccountPasswordResetComponent implements OnInit {
 
       let validationErrorDictionary = err.error.errors;
 
-      for (var fieldName in err.error.errors) {
-        if (!this.reqErrors.hasOwnProperty(fieldName)) {
-          this.reqErrors.push(validationErrorDictionary[fieldName]);
+      if (err.error.errors !== null) {
+        for (var fieldName in err.error.errors) {
+          if (!this.reqErrors.hasOwnProperty(fieldName)) {
+            this.reqErrors.push(validationErrorDictionary[fieldName]);
+          }
         }
       }
+
+      if (err.error.status === 404) {
+        this.reqErrors.push("No user with the specified email address and password was found.");
+      }
     }
+
     this.loading = false;
   }
 }

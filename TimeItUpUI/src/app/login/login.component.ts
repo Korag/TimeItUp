@@ -23,7 +23,7 @@ export class LoginComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService) {
-    }
+  }
 
 
   ngOnInit(): void {
@@ -54,16 +54,24 @@ export class LoginComponent implements OnInit {
         this.router.navigate(["/timers/active"]);
       }
     } catch (err) {
+      this.reqErrors.push("");
 
       let validationErrorDictionary = err.error.errors;
+      console.log(err);
 
-      for (var fieldName in err.error.errors) {
-        if (!this.reqErrors.hasOwnProperty(fieldName)) {
-          this.reqErrors.push(validationErrorDictionary[fieldName]);
+      if (err.error.errors !== null) {
+        for (var fieldName in err.error.errors) {
+          if (!this.reqErrors.hasOwnProperty(fieldName)) {
+            this.reqErrors.push(validationErrorDictionary[fieldName]);
+          }
         }
       }
 
-      this.loading = false;
+      if (err.error.status === 404) {
+        this.reqErrors.push("No user with the specified email address and password was found.");
+      }
     }
+
+    this.loading = false;
   }
 }

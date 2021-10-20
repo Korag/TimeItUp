@@ -69,6 +69,8 @@ namespace TimeItUpAPI.Controllers
 
                     return Ok(token);
                 }
+
+                return NotFound();
             }
 
             return BadRequest(ModelState);
@@ -201,7 +203,7 @@ namespace TimeItUpAPI.Controllers
 
             var user = await _userRepo.GetUserByIdAsync(userAccount.Id);
             var token = await GenerateResetPasswordCode(userAccount);
-            var encodedToken = Convert.ToBase64String(Encoding.Unicode.GetBytes(token));
+            var encodedToken = Convert.ToBase64String(Encoding.ASCII.GetBytes(token));
 
             var resetPasswordActionUrl = @$"http://localhost:4200/resetPassword/email/{user.EmailAddress}/token/{encodedToken}";
 

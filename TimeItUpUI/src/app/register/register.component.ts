@@ -59,13 +59,20 @@ export class RegisterComponent implements OnInit {
 
       let validationErrorDictionary = err.error.errors;
 
-      for (var fieldName in err.error.errors) {
-        if (!this.reqErrors.hasOwnProperty(fieldName)) {
-          this.reqErrors.push(validationErrorDictionary[fieldName]);
+      if (err.error.errors !== null) {
+        for (var fieldName in err.error.errors) {
+          if (!this.reqErrors.hasOwnProperty(fieldName)) {
+            this.reqErrors.push(validationErrorDictionary[fieldName]);
+          }
         }
       }
 
-      this.loading = false;
+      if (err.error.status === 409) {
+        this.reqErrors.push("The user account associated with the email address entered already exists in the system.");
+      }
+
     }
+
+    this.loading = false;
   }
 }
