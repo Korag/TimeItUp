@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthorizedUserModel } from '../_models';
+import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../_services';
 
 @Component({
@@ -22,7 +22,8 @@ export class LoginComponent implements OnInit {
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private authService: AuthService) {
+    private authService: AuthService,
+    private toastr: ToastrService) {
   }
 
 
@@ -41,6 +42,7 @@ export class LoginComponent implements OnInit {
     this.submitted = true;
 
     if (this.loginForm.invalid) {
+      this.toastr.error('The form contains incorrectly entered data');
       return;
     }
 
@@ -51,6 +53,7 @@ export class LoginComponent implements OnInit {
     try {
       loggedUser = await this.authService.login(this.f.email.value, this.f.password.value);
       if (loggedUser) {
+        this.toastr.success('You have logged into your account');
         this.router.navigate(["/timers/active"]);
       }
     } catch (err) {
@@ -65,10 +68,13 @@ export class LoginComponent implements OnInit {
             this.reqErrors.push(validationErrorDictionary[fieldName]);
           }
         }
+
+        this.toastr.warning('The form contains incorrectly entered data');
       }
 
       if (err.error.status === 404) {
         this.reqErrors.push("No user with the specified email address and password was found.");
+        this.toastr.warning("Specific user account doesn't exist");
       }
     }
 

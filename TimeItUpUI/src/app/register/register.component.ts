@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { MustMatch } from '../_helpers';
 import { AuthService } from '../_services';
 
@@ -20,7 +21,8 @@ export class RegisterComponent implements OnInit {
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private authService: AuthService) {
+    private authService: AuthService,
+    private toastr: ToastrService) {
   }
 
   ngOnInit(): void {
@@ -41,6 +43,7 @@ export class RegisterComponent implements OnInit {
     this.submitted = true;
 
     if (this.registerForm.invalid) {
+      this.toastr.error('The form contains incorrectly entered data');
       return;
     }
 
@@ -53,6 +56,7 @@ export class RegisterComponent implements OnInit {
         this.f.confirmPassword.value);
 
       if (userAccountCreated) {
+        this.toastr.success('Your new user account has been created');
         this.router.navigate(["/login"]);
       }
     } catch (err) {
@@ -65,12 +69,14 @@ export class RegisterComponent implements OnInit {
             this.reqErrors.push(validationErrorDictionary[fieldName]);
           }
         }
+
+        this.toastr.warning('The form contains incorrectly entered data');
       }
 
       if (err.error.status === 409) {
         this.reqErrors.push("The user account associated with the email address entered already exists in the system.");
+        this.toastr.warning("An existing account in the system is linked to the email address you enter");
       }
-
     }
 
     this.loading = false;

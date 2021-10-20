@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { MustMatch } from '../_helpers';
 import { UserService } from '../_services';
 
@@ -22,7 +23,8 @@ export class AccountPasswordResetComponent implements OnInit {
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private userService: UserService) {
+    private userService: UserService,
+    private toastr: ToastrService) {
   }
 
   ngOnInit(): void {
@@ -45,6 +47,7 @@ export class AccountPasswordResetComponent implements OnInit {
     this.submitted = true;
 
     if (this.resetPasswordForm.invalid) {
+      this.toastr.error('The form contains incorrectly entered data');
       return;
     }
 
@@ -56,7 +59,9 @@ export class AccountPasswordResetComponent implements OnInit {
       console.log(this.f.confirmPassword.value);
 
        await this.userService.resetPassword(this.email, this.token,
-        this.f.password.value, this.f.confirmPassword.value);
+         this.f.password.value, this.f.confirmPassword.value);
+
+      this.toastr.success('Your user account password has been changed successfully');
         this.router.navigate(["/login"]);
     } catch (err) {
       console.log(err);
@@ -69,10 +74,13 @@ export class AccountPasswordResetComponent implements OnInit {
             this.reqErrors.push(validationErrorDictionary[fieldName]);
           }
         }
+
+        this.toastr.warning('The form contains incorrectly entered data');
       }
 
       if (err.error.status === 404) {
         this.reqErrors.push("No user with the specified email address and password was found.");
+        this.toastr.warning("Specific user account doesn't exist");
       }
     }
 

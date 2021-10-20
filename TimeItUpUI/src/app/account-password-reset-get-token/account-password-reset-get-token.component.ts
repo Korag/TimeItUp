@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { UserService } from '../_services';
 
 @Component({
@@ -21,7 +22,8 @@ export class AccountPasswordResetGetTokenComponent implements OnInit {
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private userService: UserService) {
+    private userService: UserService,
+    private toastr: ToastrService) {
   }
 
   ngOnInit(): void {
@@ -36,6 +38,7 @@ export class AccountPasswordResetGetTokenComponent implements OnInit {
     this.submitted = true;
 
     if (this.getResetPasswordTokenForm.invalid) {
+      this.toastr.error('The form contains incorrectly entered data');
       return;
     }
 
@@ -45,6 +48,7 @@ export class AccountPasswordResetGetTokenComponent implements OnInit {
 
     try {
       await this.userService.getResetPasswordToken(this.f.email.value);
+      this.toastr.info('A link to the actual password reset action has been sent to your email address');
       this.info = "Guidelines have been provided to your email address to reset your account password.";
     } catch (err) {
 
@@ -56,10 +60,13 @@ export class AccountPasswordResetGetTokenComponent implements OnInit {
             this.reqErrors.push(validationErrorDictionary[fieldName]);
           }
         }
+
+        this.toastr.warning('The form contains incorrectly entered data');
       }
 
       if (err.error.status === 404) {
         this.reqErrors.push("No user with the specified email address and password was found.");
+        this.toastr.warning("Specific user account doesn't exist");
       }
 
       this.getTokenButtonBlocked = false;
