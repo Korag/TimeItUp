@@ -25,11 +25,11 @@ const routes: Routes = [
     canActivate: [NonAuthUserGuard], component: LoginComponent
   },
   {
-    path: 'resetPassword',
+    path: 'getResetPasswordToken',
     canActivate: [NonAuthUserGuard], component: AccountPasswordResetGetTokenComponent
   },
   {
-    path: 'resetPassword/confirmation',
+    path: 'resetPassword/:token',
     canActivate: [NonAuthUserGuard], component: AccountPasswordResetComponent
   },
 

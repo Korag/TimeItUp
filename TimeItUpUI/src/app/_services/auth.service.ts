@@ -1,19 +1,16 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../environments/environment.prod';
 import { JwtHelperService } from "@auth0/angular-jwt";
 
-import { AuthorizedUserModel, AuthTokenModel, UserModel, UserRegisterModel } from '../_models';
-import { error } from '@angular/compiler/src/util';
-import { throwError } from 'rxjs';
+import { AuthorizedUserModel, AuthTokenModel, UserModel } from '../_models';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private loggedUser: AuthorizedUserModel;
-  public reqErrors: string[] = [];
 
   constructor(private http: HttpClient) {
     this.loggedUser = this.getUserDataFromLocalStorage();

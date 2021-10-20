@@ -44,6 +44,7 @@ export class RegisterComponent implements OnInit {
       return;
     }
 
+    this.reqErrors = [];
     this.loading = true;
 
     try {

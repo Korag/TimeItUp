@@ -201,7 +201,7 @@ namespace TimeItUpAPI.Controllers
 
             var user = await _userRepo.GetUserByIdAsync(userAccount.Id);
             var token = await GenerateResetPasswordCode(userAccount);
-            var resetPasswordActionUrl = @$"https://localcommunityvotingplatform.azurewebsites.net/resetpassword?token={token}";
+            var resetPasswordActionUrl = @$"http://localhost:4200/resetPassword/email/{user.EmailAddress}/token/{token}";
 
             //TODO: Generate URL to GET UI form -> with passed generated token
 
