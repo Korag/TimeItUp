@@ -229,7 +229,7 @@ namespace TimeItUpAPI.Controllers
                 return BadRequest();
             }
 
-            var result = await _userManager.ResetPasswordAsync(userAccount, userAccountData.Token, userAccountData.NewPassword);
+            var result = await _userManager.ResetPasswordAsync(userAccount, userAccountData.Token, userAccountData.Password);
 
             if (result.Succeeded)
             {

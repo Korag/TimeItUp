@@ -29,7 +29,7 @@ const routes: Routes = [
     canActivate: [NonAuthUserGuard], component: AccountPasswordResetGetTokenComponent
   },
   {
-    path: 'resetPassword/:token',
+    path: 'resetPassword/email/:email/token/:token',
     canActivate: [NonAuthUserGuard], component: AccountPasswordResetComponent
   },
 

@@ -16,7 +16,7 @@ namespace TimeItUpAPI.Models
         [DataType(DataType.Password)]
         [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{6,}$")]
         [CustomValidation(typeof(UpdateUserAccountPasswordDto), "ArePropertiesEqual")]
-        public string NewPassword { get; set; }
+        public string Password { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
