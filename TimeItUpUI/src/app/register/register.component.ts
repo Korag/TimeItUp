@@ -4,7 +4,7 @@ import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { MustMatch } from '../_helpers';
-import { AuthService } from '../_services';
+import { AuthService, ValidationErrorPopulatorService } from '../_services';
 
 @Component({
   selector: 'app-register',
@@ -22,7 +22,8 @@ export class RegisterComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
-    private toastr: ToastrService) {
+    private toastr: ToastrService,
+    private validHelp: ValidationErrorPopulatorService) {
   }
 
   ngOnInit(): void {
@@ -60,18 +61,7 @@ export class RegisterComponent implements OnInit {
         this.router.navigate(["/login"]);
       }
     } catch (err) {
-
-      let validationErrorDictionary = err.error.errors;
-
-      if (err.error.errors !== null) {
-        for (var fieldName in err.error.errors) {
-          if (!this.reqErrors.hasOwnProperty(fieldName)) {
-            this.reqErrors.push(validationErrorDictionary[fieldName]);
-          }
-        }
-
-        this.toastr.warning('The form contains incorrectly entered data');
-      }
+      this.reqErrors = await this.validHelp.populateValidationErrorArray(err, this.reqErrors);
 
       if (err.error.status === 409) {
         this.reqErrors.push("The user account associated with the email address entered already exists in the system.");

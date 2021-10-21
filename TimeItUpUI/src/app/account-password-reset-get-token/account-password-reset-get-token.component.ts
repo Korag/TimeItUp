@@ -3,7 +3,7 @@ import { FormGroup, Validators } from '@angular/forms';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { UserService } from '../_services';
+import { UserService, ValidationErrorPopulatorService } from '../_services';
 
 @Component({
   selector: 'app-account-password-reset-get-token',
@@ -23,7 +23,8 @@ export class AccountPasswordResetGetTokenComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private userService: UserService,
-    private toastr: ToastrService) {
+    private toastr: ToastrService,
+    private validHelp: ValidationErrorPopulatorService) {
   }
 
   ngOnInit(): void {
@@ -51,18 +52,7 @@ export class AccountPasswordResetGetTokenComponent implements OnInit {
       this.toastr.info('A link to the actual password reset action has been sent to your email address');
       this.info = "Guidelines have been provided to your email address to reset your account password.";
     } catch (err) {
-
-      let validationErrorDictionary = err.error.errors;
-
-      if (err.error.errors !== null) {
-        for (var fieldName in err.error.errors) {
-          if (!this.reqErrors.hasOwnProperty(fieldName)) {
-            this.reqErrors.push(validationErrorDictionary[fieldName]);
-          }
-        }
-
-        this.toastr.warning('The form contains incorrectly entered data');
-      }
+      this.reqErrors = await this.validHelp.populateValidationErrorArray(err, this.reqErrors);
 
       if (err.error.status === 404) {
         this.reqErrors.push("No user with the specified email address and password was found.");

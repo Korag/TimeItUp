@@ -4,7 +4,7 @@ import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { MustMatch } from '../_helpers';
-import { UserService } from '../_services';
+import { UserService, ValidationErrorPopulatorService } from '../_services';
 
 @Component({
   selector: 'app-account-password-reset',
@@ -24,7 +24,8 @@ export class AccountPasswordResetComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private userService: UserService,
-    private toastr: ToastrService) {
+    private toastr: ToastrService,
+    private validHelp: ValidationErrorPopulatorService) {
   }
 
   ngOnInit(): void {
@@ -55,28 +56,13 @@ export class AccountPasswordResetComponent implements OnInit {
     this.loading = true;
 
     try {
-      console.log(this.f.password.value);
-      console.log(this.f.confirmPassword.value);
-
-       await this.userService.resetPassword(this.email, this.token,
-         this.f.password.value, this.f.confirmPassword.value);
+      await this.userService.resetPassword(this.email, this.token,
+        this.f.password.value, this.f.confirmPassword.value);
 
       this.toastr.success('Your user account password has been changed successfully');
-        this.router.navigate(["/login"]);
+      this.router.navigate(["/login"]);
     } catch (err) {
-      console.log(err);
-
-      let validationErrorDictionary = err.error.errors;
-
-      if (err.error.errors !== null) {
-        for (var fieldName in err.error.errors) {
-          if (!this.reqErrors.hasOwnProperty(fieldName)) {
-            this.reqErrors.push(validationErrorDictionary[fieldName]);
-          }
-        }
-
-        this.toastr.warning('The form contains incorrectly entered data');
-      }
+      this.reqErrors = await this.validHelp.populateValidationErrorArray(err, this.reqErrors);
 
       if (err.error.status === 404) {
         this.reqErrors.push("No user with the specified email address and password was found.");

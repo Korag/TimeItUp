@@ -3,8 +3,9 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { async } from 'rxjs';
 import { AuthorizedUserModel } from '../_models';
-import { AuthService, UserService } from '../_services';
+import { AuthService, UserService, ValidationErrorPopulatorService } from '../_services';
 
 @Component({
   selector: 'app-user-details',
@@ -26,14 +27,15 @@ export class UserDetailsComponent implements OnInit {
     private router: Router,
     private userService: UserService,
     private authService: AuthService,
-    private toastr: ToastrService) {
+    private toastr: ToastrService,
+    private validHelp: ValidationErrorPopulatorService) {
   }
 
   ngOnInit(): void {
     this.loggedUserData = this.authService.loggedUserData;
 
     this.changeUserDataForm = this.formBuilder.group({
-      email: [{ value: this.loggedUserData.email, disabled: false}, Validators.compose([Validators.required, Validators.email])],
+      email: [{ value: this.loggedUserData.email, disabled: false }, Validators.compose([Validators.required, Validators.email])],
       firstName: [{ value: this.loggedUserData.firstName, disabled: false }, Validators.compose([Validators.required, Validators.minLength(4), Validators.maxLength(40)])],
       lastName: [{ value: this.loggedUserData.lastName, disabled: false }, Validators.compose([Validators.required, , Validators.minLength(4), Validators.maxLength(40)])],
     })
@@ -60,68 +62,14 @@ export class UserDetailsComponent implements OnInit {
 
       console.log("wykryto zmiane danych osobowych");
 
-      try {
-        console.log("leci request z osobówkami");
-
-        await this.userService.updateUserData(this.loggedUserData.id!,
-          this.f.firstName.value, this.f.lastName.value);
-
-        this.toastr.success('Updated user data');
-        this.changeMade = true;
-
-      } catch (err) {
-        console.log("osobówki error");
-
-        let validationErrorDictionary = err.error.errors;
-
-        if (err.error.errors !== null) {
-          for (var fieldName in err.error.errors) {
-            if (!this.reqErrors.hasOwnProperty(fieldName)) {
-              this.reqErrors.push(validationErrorDictionary[fieldName]);
-            }
-          }
-
-          this.toastr.warning('The form contains incorrectly entered data');
-        }
-
-        if (err.error.status === 404) {
-          this.reqErrors.push("The indicated user account does not exist.");
-        }
-      }
+      await this.updateUserData();
     }
+
     console.log("jestem przed 2 warunkiem");
 
     if (this.f.email.value !== this.loggedUserData.email) {
-      try {
-        let newEmail = this.f.email.value;
 
-        console.log("zmieniono emaila");
-
-        await this.userService.changeUserEmail(this.loggedUserData.email!,
-          this.loggedUserData.id!, newEmail);
-
-        this.toastr.success('Updated user email');
-        this.changeMade = true;
-      } catch (err) {
-
-        console.log("błąd dla emaila");
-
-        let validationErrorDictionary = err.error.errors;
-
-        if (err.error.errors !== null) {
-          for (var fieldName in err.error.errors) {
-            if (!this.reqErrors.hasOwnProperty(fieldName)) {
-              this.reqErrors.push(validationErrorDictionary[fieldName]);
-            }
-          }
-
-          this.toastr.warning('The form contains incorrectly entered data');
-        }
-
-        if (err.error.status === 404) {
-          this.reqErrors.push("The indicated user account does not exist.");
-        }
-      }
+      await this.updateUserEmail();
     }
     console.log("finish");
 
@@ -131,5 +79,47 @@ export class UserDetailsComponent implements OnInit {
     }
 
     this.loading = false;
+  }
+
+  private async updateUserData() {
+    try {
+      console.log("leci request z osobówkami");
+
+      await this.userService.updateUserData(this.loggedUserData.id!,
+        this.f.firstName.value, this.f.lastName.value);
+
+      this.toastr.success('Updated user data');
+      this.changeMade = true;
+
+    } catch (err) {
+      console.log("osobówki error");
+
+      this.reqErrors = await this.validHelp.populateValidationErrorArray(err, this.reqErrors);
+
+      if (err.error.status === 404) {
+        this.reqErrors.push("The indicated user account does not exist.");
+      }
+    }
+  }
+
+  private async updateUserEmail() {
+    try {
+      let newEmail = this.f.email.value;
+
+      console.log("zmieniono emaila");
+
+      await this.userService.changeUserEmail(this.loggedUserData.email!,
+        this.loggedUserData.id!, newEmail);
+
+      this.toastr.success('Updated user email');
+      this.changeMade = true;
+    } catch (err) {
+      console.log("błąd dla emaila");
+      this.reqErrors = await this.validHelp.populateValidationErrorArray(err, this.reqErrors);
+
+      if (err.error.status === 404) {
+        this.reqErrors.push("The indicated user account does not exist.");
+      }
+    }
   }
 }
