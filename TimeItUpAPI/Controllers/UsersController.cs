@@ -88,14 +88,14 @@ namespace TimeItUpAPI.Controllers
         // PUT: api/Users/5
         [HttpPut("{id}")]
         [Authorize]
-        public async Task<IActionResult> UpdateUser(string userId, UpdateUserDto user)
+        public async Task<IActionResult> UpdateUser(string id, UpdateUserDto user)
         {
-            if (userId != user.Id || !ModelState.IsValid)
+            if (id != user.Id || !ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var existingUser = await _userRepo.GetUserByIdAsync(userId);
+            var existingUser = await _userRepo.GetUserByIdAsync(id);
 
             if (existingUser == null)
             {
