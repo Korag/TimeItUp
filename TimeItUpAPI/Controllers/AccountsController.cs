@@ -181,6 +181,18 @@ namespace TimeItUpAPI.Controllers
 
             if (result.Succeeded)
             {
+                var updatedUserAccount = await _userManager.FindByNameAsync(email);
+                updatedUserAccount.UserName = updatedUserAccount.Email;
+                await _userManager.UpdateAsync(updatedUserAccount);
+                await _userManager.UpdateNormalizedEmailAsync(updatedUserAccount);
+                await _userManager.UpdateNormalizedUserNameAsync(updatedUserAccount);
+
+                var updatedUser = await _userRepo.GetUserByEmailAddress(email);
+                updatedUser.EmailAddress = userAccount.NewEmail;
+                
+                await _generalRepo.ChangeEntryStateToModified(updatedUser);
+                await _generalRepo.SaveChangesAsync();
+
                 return NoContent();
             }
             else

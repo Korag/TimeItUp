@@ -19,4 +19,14 @@ export class UserService {
     await this.http.put(`${environment.apiUrl}/Accounts/ResetPassword`, { email, token, password, confirmPassword })
       .toPromise();
   }
+
+  public async updateUserData(id: string, firstName: string, lastName: string): Promise<void> {
+    await this.http.put(`${environment.apiUrl}/Users/${id}`, { id, firstName, lastName })
+      .toPromise();
+  }
+
+  public async changeUserEmail(email: string, id: string, newEmail: string): Promise<void> {
+    await this.http.put(`${environment.apiUrl}/Accounts/Email/${email}`, { id, email, newEmail })
+      .toPromise();
+  }
 }

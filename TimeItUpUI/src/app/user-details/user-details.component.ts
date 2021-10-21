@@ -3,6 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { AuthorizedUserModel } from '../_models';
 import { AuthService, UserService } from '../_services';
 
 @Component({
@@ -16,6 +17,8 @@ export class UserDetailsComponent implements OnInit {
   formBlocked = true;
   submitted = false;
   reqErrors: any[] = [];
+  changeMade: boolean = false;
+  loggedUserData: AuthorizedUserModel = new AuthorizedUserModel();
 
   constructor(
     private formBuilder: FormBuilder,
@@ -27,12 +30,12 @@ export class UserDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    var loggedUserData = this.authService.loggedUserData;
+    this.loggedUserData = this.authService.loggedUserData;
 
     this.changeUserDataForm = this.formBuilder.group({
-      email: [{ value: loggedUserData.email, disabled: false}, Validators.compose([Validators.required, Validators.email])],
-      firstName: [{ value: loggedUserData.firstName, disabled: false }, Validators.compose([Validators.required, Validators.minLength(4), Validators.maxLength(40)])],
-      lastName: [{ value: loggedUserData.lastName, disabled: false }, Validators.compose([Validators.required, , Validators.minLength(4), Validators.maxLength(40)])],
+      email: [{ value: this.loggedUserData.email, disabled: false}, Validators.compose([Validators.required, Validators.email])],
+      firstName: [{ value: this.loggedUserData.firstName, disabled: false }, Validators.compose([Validators.required, Validators.minLength(4), Validators.maxLength(40)])],
+      lastName: [{ value: this.loggedUserData.lastName, disabled: false }, Validators.compose([Validators.required, , Validators.minLength(4), Validators.maxLength(40)])],
     })
   }
 
@@ -50,33 +53,81 @@ export class UserDetailsComponent implements OnInit {
     this.formBlocked = true;
     this.loading = true;
 
-    try {
-      var userAccountCreated = await this.authService.register(this.f.email.value, this.f.firstName.value,
-        this.f.lastName.value, this.f.password.value,
-        this.f.confirmPassword.value);
+    console.log("jestem w funkcji");
 
-      if (userAccountCreated) {
-        this.toastr.success('Your new user account has been created');
-        this.router.navigate(["/login"]);
-      }
-    } catch (err) {
+    if ((this.f.firstName.value !== this.loggedUserData.firstName)
+      || (this.f.lastName.value !== this.loggedUserData.lastName)) {
 
-      let validationErrorDictionary = err.error.errors;
+      console.log("wykryto zmiane danych osobowych");
 
-      if (err.error.errors !== null) {
-        for (var fieldName in err.error.errors) {
-          if (!this.reqErrors.hasOwnProperty(fieldName)) {
-            this.reqErrors.push(validationErrorDictionary[fieldName]);
+      try {
+        console.log("leci request z osobówkami");
+
+        await this.userService.updateUserData(this.loggedUserData.id!,
+          this.f.firstName.value, this.f.lastName.value);
+
+        this.toastr.success('Updated user data');
+        this.changeMade = true;
+
+      } catch (err) {
+        console.log("osobówki error");
+
+        let validationErrorDictionary = err.error.errors;
+
+        if (err.error.errors !== null) {
+          for (var fieldName in err.error.errors) {
+            if (!this.reqErrors.hasOwnProperty(fieldName)) {
+              this.reqErrors.push(validationErrorDictionary[fieldName]);
+            }
           }
+
+          this.toastr.warning('The form contains incorrectly entered data');
         }
 
-        this.toastr.warning('The form contains incorrectly entered data');
+        if (err.error.status === 404) {
+          this.reqErrors.push("The indicated user account does not exist.");
+        }
       }
+    }
+    console.log("jestem przed 2 warunkiem");
 
-      if (err.error.status === 409) {
-        this.reqErrors.push("The user account associated with the email address entered already exists in the system.");
-        this.toastr.warning("An existing account in the system is linked to the email address you enter");
+    if (this.f.email.value !== this.loggedUserData.email) {
+      try {
+        let newEmail = this.f.email.value;
+
+        console.log("zmieniono emaila");
+
+        await this.userService.changeUserEmail(this.loggedUserData.email!,
+          this.loggedUserData.id!, newEmail);
+
+        this.toastr.success('Updated user email');
+        this.changeMade = true;
+      } catch (err) {
+
+        console.log("błąd dla emaila");
+
+        let validationErrorDictionary = err.error.errors;
+
+        if (err.error.errors !== null) {
+          for (var fieldName in err.error.errors) {
+            if (!this.reqErrors.hasOwnProperty(fieldName)) {
+              this.reqErrors.push(validationErrorDictionary[fieldName]);
+            }
+          }
+
+          this.toastr.warning('The form contains incorrectly entered data');
+        }
+
+        if (err.error.status === 404) {
+          this.reqErrors.push("The indicated user account does not exist.");
+        }
       }
+    }
+    console.log("finish");
+
+    if (this.changeMade) {
+      this.authService.logout();
+      this.router.navigate(["/login"]);
     }
 
     this.loading = false;
