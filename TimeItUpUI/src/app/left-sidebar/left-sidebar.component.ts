@@ -8,8 +8,6 @@ import { map, share } from 'rxjs/operators';
   styleUrls: ['./left-sidebar.component.scss']
 })
 export class LeftSidebarComponent implements OnInit {
-
-  time = new Date();
   rxTime = new Date();
   intervalId!: any;
   subscription!: any;
@@ -17,11 +15,6 @@ export class LeftSidebarComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    // Using Basic Interval
-    this.intervalId = setInterval(() => {
-      this.time = new Date();
-    }, 1000);
-
     // Using RxJS Timer
     this.subscription = timer(0, 1000)
       .pipe(
