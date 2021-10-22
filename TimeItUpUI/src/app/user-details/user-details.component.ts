@@ -3,7 +3,6 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { async } from 'rxjs';
 import { AuthorizedUserModel } from '../_models';
 import { AuthService, UserService, ValidationErrorPopulatorService } from '../_services';
 
@@ -55,23 +54,16 @@ export class UserDetailsComponent implements OnInit {
     this.formBlocked = true;
     this.loading = true;
 
-    console.log("jestem w funkcji");
-
     if ((this.f.firstName.value !== this.loggedUserData.firstName)
       || (this.f.lastName.value !== this.loggedUserData.lastName)) {
 
-      console.log("wykryto zmiane danych osobowych");
-
       await this.updateUserData();
     }
-
-    console.log("jestem przed 2 warunkiem");
 
     if (this.f.email.value !== this.loggedUserData.email) {
 
       await this.updateUserEmail();
     }
-    console.log("finish");
 
     if (this.changeMade) {
       this.authService.logout();
@@ -83,8 +75,6 @@ export class UserDetailsComponent implements OnInit {
 
   private async updateUserData() {
     try {
-      console.log("leci request z osobówkami");
-
       await this.userService.updateUserData(this.loggedUserData.id!,
         this.f.firstName.value, this.f.lastName.value);
 
@@ -92,12 +82,11 @@ export class UserDetailsComponent implements OnInit {
       this.changeMade = true;
 
     } catch (err) {
-      console.log("osobówki error");
-
       this.reqErrors = await this.validHelp.populateValidationErrorArray(err, this.reqErrors);
 
       if (err.error.status === 404) {
         this.reqErrors.push("The indicated user account does not exist.");
+        this.toastr.warning("User account doesn't exist");
       }
     }
   }
@@ -106,15 +95,12 @@ export class UserDetailsComponent implements OnInit {
     try {
       let newEmail = this.f.email.value;
 
-      console.log("zmieniono emaila");
-
       await this.userService.changeUserEmail(this.loggedUserData.email!,
         this.loggedUserData.id!, newEmail);
 
       this.toastr.success('Updated user email');
       this.changeMade = true;
     } catch (err) {
-      console.log("błąd dla emaila");
       this.reqErrors = await this.validHelp.populateValidationErrorArray(err, this.reqErrors);
 
       if (err.error.status === 404) {

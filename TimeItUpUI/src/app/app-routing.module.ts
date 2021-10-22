@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AccountPasswordResetComponent } from './account-password-reset';
 import { AccountPasswordResetGetTokenComponent } from './account-password-reset-get-token';
 import { ActiveTimersComponent } from './active-timers';
+import { CreateTimerComponent } from './create-timer';
 import { ErrorComponent } from './error';
 import { LayoutComponent } from './layout';
 import { LoginComponent } from './login';
@@ -55,6 +56,11 @@ const routes: Routes = [
       {
         path: 'timers/past',
         component: PastTimersComponent,
+        canActivate: [AuthUserGuard]
+      },
+      {
+        path: 'timers/add',
+        component: CreateTimerComponent,
         canActivate: [AuthUserGuard]
       },
       {

@@ -30,7 +30,7 @@
           </div>
         </div>
 
-        <button [disabled]="loading" class="w-100 btn btn-grad-sec mt-3" type='button' [ngClass]="{ 'btn-grad-sec': formBlocked, 'btn-grad-th': !formBlocked }" (click)="formBlocked = !formBlocked" style="margin-left:0px; margin-right:0px">
+        <button [disabled]="loading" class="w-100 btn btn-grad-sec mt-3" type='button' [ngClass]="{'btn-grad-sec': formBlocked, 'btn-grad-th': !formBlocked }" (click)="formBlocked = !formBlocked" style="margin-left:0px; margin-right:0px">
           <span *ngIf="formBlocked">Unblock form</span>
           <span *ngIf="!formBlocked">Block form</span>
         </button>

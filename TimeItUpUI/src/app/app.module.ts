@@ -13,7 +13,6 @@ import { ActiveAlarmNotificationModalComponent } from './active-alarm-notificati
 import { RemoveAlarmModalComponent } from './remove-alarm-modal';
 import { CreateAlarmModalComponent } from './create-alarm-modal';
 import { UpdateAlarmModalComponent } from './update-alarm-modal';
-import { CreateTimerModalComponent } from './create-timer-modal';
 import { RemoveTimerModalComponent } from './remove-timer-modal';
 import { UpdateTimerModalComponent } from './update-timer-modal';
 import { TimerDetailsComponent } from './timer-details';
@@ -40,7 +39,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LogoutUserModalComponent } from './logout-user-modal/logout-user-modal.component';
-import { NgbActiveModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { CreateTimerComponent } from './create-timer';
 
 
 @NgModule({
@@ -50,7 +50,7 @@ import { NgbActiveModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
     ActiveAlarmNotificationModalComponent,
     RemoveAlarmModalComponent,
     UpdateAlarmModalComponent,
-    CreateTimerModalComponent,
+    CreateTimerComponent,
     RemoveTimerModalComponent,
     UpdateTimerModalComponent,
     TimerDetailsComponent,
@@ -74,6 +74,7 @@ import { NgbActiveModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
     TimerPausesListComponent,
     ErrorComponent,
     LogoutUserModalComponent,
+    CreateTimerComponent,
   ],
   imports: [
     BrowserModule,

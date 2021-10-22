@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CreateTimerModalComponent } from './create-timer-modal.component';
+import { CreateTimerComponent } from './create-timer.component';
 
-describe('CreateTimerModalComponent', () => {
-  let component: CreateTimerModalComponent;
-  let fixture: ComponentFixture<CreateTimerModalComponent>;
+describe('CreateTimerComponent', () => {
+  let component: CreateTimerComponent;
+  let fixture: ComponentFixture<CreateTimerComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CreateTimerModalComponent ]
+      declarations: [ CreateTimerComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CreateTimerModalComponent);
+    fixture = TestBed.createComponent(CreateTimerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
