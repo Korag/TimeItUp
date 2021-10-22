@@ -39,6 +39,8 @@ import { ErrorComponent } from './error/error.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { LogoutUserModalComponent } from './logout-user-modal/logout-user-modal.component';
+import { NgbActiveModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
@@ -71,6 +73,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     TimerSplitsListComponent,
     TimerPausesListComponent,
     ErrorComponent,
+    LogoutUserModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -80,6 +83,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     FontAwesomeModule,
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
+    NgbModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AttachJWTToRequestInterceptor, multi: true },
