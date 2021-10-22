@@ -88,8 +88,12 @@
   background-position: right center; /* change the direction of the change here */
   color: #fff;
   text-decoration: none;
-}             
-   
+}
+
+.modal-content {
+  border: 0px;
+}
+
 @media screen and (max-width: 1000px) {
   div#sidebar {
     display: none;
@@ -109,7 +113,6 @@
     padding-right: 60px !important;
   }
 }
-
 /*#region Toasts CSS
 /* based on angular-toastr css https://github.com/Foxandxss/angular-toastr/blob/cb508fe6801d6b288d3afc525bb40fee1b101650/dist/angular-toastr.css */
 /* position */
@@ -162,7 +165,6 @@
   bottom: 12px;
   left: 12px;
 }
-
 /* toast styles */
 .toast-title {
   font-weight: bold;

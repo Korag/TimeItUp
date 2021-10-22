@@ -2,7 +2,9 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { faPlusCircle, faUserEdit, faWindowClose } from '@fortawesome/free-solid-svg-icons';
 import { LogoutUserModalComponent } from '../logout-user-modal';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-
+import { AuthService } from '../_services';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
@@ -13,35 +15,34 @@ export class NavbarComponent implements OnInit {
   faWindowClose = faWindowClose;
   faUserEdit = faUserEdit;
 
-  @ViewChild(LogoutUserModalComponent)
-  logoutUserModalComponent!: LogoutUserModalComponent;
-
   constructor(
+    private authService: AuthService,
     private modalService: NgbModal,
-  ) {}
+    private router: Router,
+    private toastr: ToastrService) {}
 
   ngOnInit(): void {
   }
 
+  logoutUser() {
+    this.authService.logout();
+    this.toastr.success("You have been logged out");
+    this.router.navigate(["/login"]);
+  }
+
   openLogoutModal() {
+
     const modalRef = this.modalService.open(LogoutUserModalComponent,
       {
         scrollable: true,
         windowClass: 'myCustomModalClass',
         keyboard: false,
-        backdrop: 'static'
+        backdrop: 'static',
+        centered: false,
+        size: "modal-lg"
       });
-
-    let data = {
-      prop1: 'Some Data',
-      prop2: 'From Parent Component',
-      prop3: 'This Can be anything'
-    }
-
-    modalRef.componentInstance.fromParent = data;
-    modalRef.result.then((result) => {
-      console.log(result);
-    }, (reason) => {
+    modalRef.componentInstance.logoutUserEvent.subscribe(($e: any) => {
+      this.logoutUser();
     });
   }
 }

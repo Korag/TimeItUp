@@ -1,30 +1,14 @@
-<!--<div class="modal modal-alert position-static d-block bg-secondary py-5" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" id="exampleModal" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content rounded-4 shadow">
+<div class="modal modal-alert d-block py-5"  tabindex="-1" role="dialog" id="logoutModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered " role="document">
+    <div class="modal-content rounded-4">
       <div class="modal-body p-4 text-center">
-        <h5 class="mb-0">Enable this setting?</h5>
-        <p class="mb-0">You can always change your mind in your account settings.</p>
+        <h5 class="mb-0">Logout?</h5>
+        <p class="mb-0">Are you sure you want to log out?</p>
       </div>
       <div class="modal-footer flex-nowrap p-0">
-        <button type="button" (click)="modal.close('Save click')" class="btn btn-lg btn-link fs-6 text-decoration-none col-6 m-0 rounded-0 border-right"><strong>Yes, enable</strong></button>
-        <button type="button" class="btn btn-lg btn-link fs-6 text-decoration-none col-6 m-0 rounded-0" (click)="modal.dismiss('Cross click')">No thanks</button>
+        <a class="btn btn-lg btn-grad-sec fs-6 text-decoration-none col-6 m-0 rounded-0" (click)="logoutUser()"><strong>Logout</strong></a>
+        <a class="btn btn-lg btn-grad-th fs-6 text-decoration-none col-6 m-0 rounded-0" (click)="closeModal()"><strong>Cancel</strong></a>
       </div>
     </div>
   </div>
-</div>-->
-<!--(click)="clickLogoutUser($event)"-->
-
-<div class="modal-header">
-  <h5 class="modal-title">Modal title</h5>
-  <button type="button" class="close" data-dismiss="modal" (click)="closeModal('dismiss')">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-<div class="modal-body">
-  <p>Modal body text goes here.</p>
-  <p>{{ fromParent | json }}</p>
-</div>
-<div class="modal-footer">
-  <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="closeModal('close')">Close</button>
-  <button type="button" class="btn btn-primary" (click)="closeModal('changes saved!')">Save changes</button>
 </div>

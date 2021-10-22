@@ -5,6 +5,8 @@ import { JwtHelperService } from "@auth0/angular-jwt";
 
 import { AuthorizedUserModel, AuthTokenModel, UserModel } from '../_models';
 import { map } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root'
@@ -66,7 +68,7 @@ export class AuthService {
 
     var userCreated = false;
     await this.http.post<UserModel>(`${environment.apiUrl}/Accounts/register`,
-                                      { email, firstName, lastName, password, confirmPassword })
+      { email, firstName, lastName, password, confirmPassword })
       .pipe(map(result => {
         if (result.id !== null) {
           userCreated = true;
