@@ -47,17 +47,17 @@ namespace TimeItUpData.Library.Models
         [Required]
         [StringLength(30, MinimumLength = 2)]
         [DataType(DataType.Text)]
-        public string TotalDuration { get; set; } = "0d:0h:0m:0s:0ms";
+        public string TotalDuration { get; set; } = "0:0:0:0";
 
         [Required]
         [StringLength(30, MinimumLength = 2)]
         [DataType(DataType.Text)]
-        public string TotalPausedTime { get; set; } = "0d:0h:0m:0s:0ms";
+        public string TotalPausedTime { get; set; } = "0:0:0:0";
 
         [Required]
         [StringLength(30, MinimumLength = 2)]
         [DataType(DataType.Text)]
-        public string TotalCountdownTime { get; set; } = "0d:0h:0m:0s:0ms";
+        public string TotalCountdownTime { get; set; } = "0:0:0:0";
 
         [Required]
         public bool Paused { get; set; } = false;

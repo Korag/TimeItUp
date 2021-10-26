@@ -60,7 +60,7 @@ namespace TimeItUpAPI.Controllers
         // GET: api/Users/Multiple
         [HttpGet("Multiple")]
         [Authorize]
-        public async Task<ActionResult<ICollection<UserDto>>> GetUsersByIds([FromBody] ICollection<string> idSet)
+        public async Task<ActionResult<ICollection<UserDto>>> GetUsersByIds([FromBody]ICollection<string> idSet)
         {
             var users = await _userRepo.GetUsersByIdsAsync(idSet);
             var usersDto = _mapper.Map<ICollection<TimerDto>>(users);
@@ -68,7 +68,7 @@ namespace TimeItUpAPI.Controllers
             return Ok(usersDto);
         }
 
-        // GET: api/Users/Email/test@contoso.com
+        // GET: api/Users/Email/{email}
         [HttpGet("Email/{email}")]
         [Authorize]
         public async Task<ActionResult<UserDto>> GetUserByEmail(string email)

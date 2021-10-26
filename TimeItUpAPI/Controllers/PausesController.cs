@@ -91,7 +91,7 @@ namespace TimeItUpAPI.Controllers
         // GET: api/Pauses/Multiple
         [HttpGet("Multiple")]
         [Authorize]
-        public async Task<ActionResult<ICollection<PauseDto>>> GetPausesByIds([FromBody] ICollection<int> idSet)
+        public async Task<ActionResult<ICollection<PauseDto>>> GetPausesByIds([FromBody]ICollection<int> idSet)
         {
             var pauses = await _pauseRepo.GetPausesByIdsAsync(idSet);
             var pausesDto = _mapper.Map<ICollection<PauseDto>>(pauses);

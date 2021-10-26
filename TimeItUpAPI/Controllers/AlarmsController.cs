@@ -206,14 +206,14 @@ namespace TimeItUpAPI.Controllers
         // PUT: api/Alarms/5
         [HttpPut("{id}")]
         [Authorize]
-        public async Task<IActionResult> UpdateAlarm(int alarmId, UpdateAlarmDto alarm)
+        public async Task<IActionResult> UpdateAlarm(int id, UpdateAlarmDto alarm)
         {
-            if (alarmId != alarm.Id || !ModelState.IsValid)
+            if (id != alarm.Id || !ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var existingAlarm = await _alarmRepo.GetAlarmByIdAsync(alarmId);
+            var existingAlarm = await _alarmRepo.GetAlarmByIdAsync(id);
 
             if (existingAlarm == null)
             {
@@ -231,14 +231,14 @@ namespace TimeItUpAPI.Controllers
         // PUT: api/Alarms/Postpone/5
         [HttpPut("Postpone/{id}")]
         [Authorize]
-        public async Task<IActionResult> PostponeAlarm(int alarmId, DateTime newAlarmActivationTime)
+        public async Task<IActionResult> PostponeAlarm(int id, DateTime newAlarmActivationTime)
         {
             if (newAlarmActivationTime < DateTime.UtcNow)
             {
                 return BadRequest();
             }
 
-            var existingAlarm = await _alarmRepo.GetAlarmByIdAsync(alarmId);
+            var existingAlarm = await _alarmRepo.GetAlarmByIdAsync(id);
 
             if (existingAlarm == null)
             {

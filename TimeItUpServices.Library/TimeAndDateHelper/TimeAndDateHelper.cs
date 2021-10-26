@@ -9,11 +9,10 @@ namespace TimeItUpServices.Library
         private string GenerateMagicStringOfElapsedTime(TimeSpan timePeriod)
         {
             StringBuilder result = new StringBuilder();
-            result.Append(timePeriod.TotalDays).Append("d");
-            result.Append(timePeriod.TotalHours).Append("h");
-            result.Append(timePeriod.TotalMinutes).Append("m");
-            result.Append(timePeriod.TotalSeconds).Append("s");
-            result.Append(timePeriod.TotalMilliseconds).Append("ms");
+            result.Append(timePeriod.Hours).Append(":");
+            result.Append(timePeriod.Minutes).Append(":");
+            result.Append(timePeriod.Seconds).Append(":");
+            result.Append(timePeriod.Milliseconds);
 
             return result.ToString();
         }

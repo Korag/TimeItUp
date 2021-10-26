@@ -104,7 +104,7 @@ namespace TimeItUpAPI.Controllers
         // GET: api/Timers/Multiple
         [HttpGet("Multiple")]
         [Authorize]
-        public async Task<ActionResult<ICollection<TimerDto>>> GetTimersByIds([FromBody] ICollection<int> idSet)
+        public async Task<ActionResult<ICollection<TimerDto>>> GetTimersByIds([FromBody]ICollection<int> idSet)
         {
             var timers = await _timerRepo.GetTimersByIdsAsync(idSet);
             var timersDto = _mapper.Map<ICollection<TimerDto>>(timers);
@@ -268,9 +268,9 @@ namespace TimeItUpAPI.Controllers
         // PUT: api/Timer/Finish/5
         [HttpPut("Finish/{id}")]
         [Authorize]
-        public async Task<IActionResult> FinishTimer(int timerId)
+        public async Task<IActionResult> FinishTimer(int id)
         {
-            var timer = await _timerRepo.GetTimerByIdAsync(timerId);
+            var timer = await _timerRepo.GetTimerByIdAsync(id);
 
             if (timer == null)
             {
@@ -317,9 +317,9 @@ namespace TimeItUpAPI.Controllers
         // PUT: api/Timer/Reinstate/5
         [HttpPut("Reinstate/{id}")]
         [Authorize]
-        public async Task<IActionResult> ReinstateTimer(int timerId)
+        public async Task<IActionResult> ReinstateTimer(int id)
         {
-            var timer = await _timerRepo.GetTimerByIdAsync(timerId);
+            var timer = await _timerRepo.GetTimerByIdAsync(id);
 
             if (timer == null)
             {

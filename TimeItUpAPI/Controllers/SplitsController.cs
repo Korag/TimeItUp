@@ -91,7 +91,7 @@ namespace TimeItUpAPI.Controllers
         // GET: api/Splits/Multiple
         [HttpGet("Multiple")]
         [Authorize]
-        public async Task<ActionResult<ICollection<SplitDto>>> GetSplitsByIds([FromBody] ICollection<int> idSet)
+        public async Task<ActionResult<ICollection<SplitDto>>> GetSplitsByIds([FromBody]ICollection<int> idSet)
         {
             var splits = await _splitRepo.GetSplitsByIdsAsync(idSet);
             var splitsDto = _mapper.Map<ICollection<SplitDto>>(splits);
@@ -156,9 +156,9 @@ namespace TimeItUpAPI.Controllers
         // PUT: api/Split/Start/5
         [HttpPut("Start/{id}")]
         [Authorize]
-        public async Task<IActionResult> StartSplit(int splitId)
+        public async Task<IActionResult> StartSplit(int id)
         {
-            var split = await _splitRepo.GetSplitByIdAsync(splitId);
+            var split = await _splitRepo.GetSplitByIdAsync(id);
 
             if (split == null)
             {
@@ -181,9 +181,9 @@ namespace TimeItUpAPI.Controllers
         // PUT: api/Split/Finish/5
         [HttpPut("Finish/{id}")]
         [Authorize]
-        public async Task<IActionResult> FinishSplit(int splitId)
+        public async Task<IActionResult> FinishSplit(int id)
         {
-            var split = await _splitRepo.GetSplitByIdAsync(splitId);
+            var split = await _splitRepo.GetSplitByIdAsync(id);
 
             if (split == null)
             {
