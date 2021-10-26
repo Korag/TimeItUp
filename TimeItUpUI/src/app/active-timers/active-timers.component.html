@@ -1,18 +1,20 @@
 <div class="col-md-12" style="margin-top:4%">
 
-  <div *ngIf="listLoading" class="spinner-border text-primary" role="status">
-    <span class="sr-only">Loading...</span>
+  <div class="d-flex justify-content-center" style="margin-top:20%; margin-left: auto; margin-right: auto">
+    <div *ngIf="listLoading" class="spinner-border" style="width: 7rem; height: 7rem; color:#537895" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
   </div>
 
-  <ng-template [ngIf]="!listLoading">
+    <ng-template [ngIf]="!listLoading">
 
-    <div *ngIf="timers.length === 0" class="alert alert-info w-100" style="font-size:22px" role="alert">
-      <h4 class="alert-heading" style="font-size:28px">Info</h4>
-      <p>You currently have no active timers</p>
-    </div>
+      <div *ngIf="timers.length === 0" class="alert alert-info w-100" style="font-size:22px" role="alert">
+        <h4 class="alert-heading" style="font-size:28px">Info</h4>
+        <p>You currently have no active timers</p>
+      </div>
 
-    <ng-template [ngIf]="timers.length > 0">
-      <app-active-timer-unit *ngFor="let timer of timers" [timer]="timer" (finishTimerEvent)="finishTimer($event)"></app-active-timer-unit>
+      <ng-template [ngIf]="timers.length > 0">
+        <app-active-timer-unit *ngFor="let timer of timers" [timer]="timer" (finishTimerEvent)="finishTimer($event)"></app-active-timer-unit>
+      </ng-template>
     </ng-template>
-  </ng-template>
-</div>
+  </div>
