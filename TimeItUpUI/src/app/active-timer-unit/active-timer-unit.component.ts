@@ -1,9 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Subscription, timer as rxTimer } from 'rxjs';
-import { map, share } from 'rxjs/operators';
-import { PauseModel, SplitModel, TimerModel } from '../_models';
+import { CountdownTimeModel, PauseModel, SplitModel, TimerModel } from '../_models';
 import { AuthService, PauseService, SplitService, TimerService } from '../_services';
 
 @Component({
@@ -15,9 +13,8 @@ export class ActiveTimerUnitComponent implements OnInit {
   @Input() timer!: TimerModel;
   @Output() finishTimerEvent = new EventEmitter<TimerModel>();
 
-  countDownTime = new Date();
+  countdownTime: CountdownTimeModel = new CountdownTimeModel();
   intervalId!: any;
-  subscription!: any;
 
   isPaused!: boolean;
   isStarted!: boolean;
@@ -33,18 +30,21 @@ export class ActiveTimerUnitComponent implements OnInit {
     private toastr: ToastrService) { }
 
   async ngOnInit(): Promise<void> {
-    //if (this.timer.totalCountdownTimer !== "0d:0h:0m:0s:0ms") {
-    //  this.subscription = rxTimer(0, 1)
-    //    .pipe(
-    //      map(() => new Date()),
-    //      share()
-    //    )
-    //    .subscribe(time => {
-    //      this.countDownTime = time;
-    //    });
-    //}
+    console.log(this.timer);
 
-    //set isStarted variable based on countdown and startAt value
+    if (this.timer.startAt?.toString() === "0001-01-01T00:00:00") {
+      this.isStarted = false;
+    }
+    else {
+      this.isStarted = true;
+    }
+
+    var countdownTimeSplitted = this.timer.totalCountdownTime?.split(":");
+    this.countdownTime.hours = parseInt(countdownTimeSplitted![0]);
+    this.countdownTime.minutes = parseInt(countdownTimeSplitted![1]);
+    this.countdownTime.seconds = parseInt(countdownTimeSplitted![2]);
+    this.countdownTime.miliseconds = parseInt(countdownTimeSplitted![3]);
+
     this.isPaused = this.timer.paused!;
 
     if (this.isPaused) {
@@ -52,10 +52,46 @@ export class ActiveTimerUnitComponent implements OnInit {
     }
     if (this.isStarted && !this.isPaused) {
       this.split = await this.splitService.getTimerActiveSplit(this.timer.id!);
-    }
 
-    //this.isStarted = true;
-    console.log(this.timer);
+      await this.startTimerCountdown();
+    }
+  }
+
+  async runningCountdown() {
+    if (this.countdownTime.miliseconds !== 999) {
+      this.countdownTime.miliseconds!++;
+      return;
+    }
+    else {
+      if (this.countdownTime.seconds !== 59) {
+        this.countdownTime.seconds!++;
+        this.countdownTime.miliseconds! = 0;
+        return;
+      }
+      else {
+        if (this.countdownTime.minutes !== 59) {
+          this.countdownTime.minutes!++;
+          this.countdownTime.seconds! = 0;
+          this.countdownTime.miliseconds! = 0;
+          return;
+        }
+        else {
+          this.countdownTime.hours!++;
+          this.countdownTime.minutes! = 0;
+          this.countdownTime.seconds! = 0;
+          this.countdownTime.miliseconds! = 0;
+          return;
+        }
+      }
+    }
+  }
+
+  async startTimerCountdown() {
+    this.intervalId = setInterval(this.runningCountdown, 1);
+  }
+
+  async pauseTimerCountdown() {
+    clearInterval(this.intervalId);
   }
 
   async startTimer() {
@@ -63,7 +99,7 @@ export class ActiveTimerUnitComponent implements OnInit {
     this.split = await this.splitService.getTimerActiveSplit(this.timer.id!);
     this.toastr.success('The timer has been started');
 
-    //start time count
+    await this.startTimerCountdown();
   }
 
   async finishTimer() {
@@ -76,7 +112,7 @@ export class ActiveTimerUnitComponent implements OnInit {
     this.isPaused = true;
     this.toastr.warning('The timer has been paused');
 
-    //stop subscription on countdown
+    await this.pauseTimerCountdown();
   }
 
   async resumeTimer() {
@@ -84,7 +120,7 @@ export class ActiveTimerUnitComponent implements OnInit {
     this.isPaused = false;
     this.toastr.info('The timer has been resumed');
 
-    //resume countdown
+    await this.startTimerCountdown();
   }
 
   async createSplit() {
@@ -92,13 +128,7 @@ export class ActiveTimerUnitComponent implements OnInit {
     this.split = await this.splitService.createSplit(this.timer.id!);
     await this.splitService.startSplit(this.split.id!);
     this.toastr.info('New split has been created');
-
-    //nothing happens with countdown time
   }
 }
 
 //Add name to split
-//Check controller api methods
-//Handle time measurement by own function
-
-//Past Timers

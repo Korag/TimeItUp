@@ -6,7 +6,7 @@ export class TimerModel {
   endAt?: Date;
   totalDuration?: string;
   totalPausedTime?: string;
-  totalCountdownTimer?: string;
+  totalCountdownTime?: string;
   paused?: boolean;
   finished?: boolean;
   splitsNumber?: number;

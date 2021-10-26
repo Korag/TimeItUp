@@ -10,8 +10,29 @@
 
       <div class="row">
         <div class="col-md-8" style="font-size: 70px">
-          00:00:00.000
+          <ng-template [ngIf]="countdownTime.hours! < 10">
+            <span>0{{countdownTime.hours}}:</span>
+          </ng-template>
+          <ng-template [ngIf]="countdownTime.hours! >= 10">
+            <span>{{countdownTime.hours}}:</span>
+          </ng-template>
+
+          <ng-template [ngIf]="countdownTime.minutes! < 10">
+            <span>0{{countdownTime.minutes}}:</span>
+          </ng-template>
+          <ng-template [ngIf]="countdownTime.minutes! >= 10">
+            <span>{{countdownTime.minutes}}:</span>
+          </ng-template>
+
+          <ng-template [ngIf]="countdownTime.seconds! < 10">
+            <span>0{{countdownTime.seconds}}::</span>
+          </ng-template>
+          <ng-template [ngIf]="countdownTime.seconds! >= 10">
+            <span>{{countdownTime.seconds}}::</span>
+          </ng-template>
+          <span>{{countdownTime.miliseconds}}</span>
         </div>
+
         <div class="col-md-4">
           <a [routerLink]="['/timer/details/{{timer.id}}']" class="btn btn-grad-sec" style="max-width:200px; margin-left:auto; margin-right:0px">
             Details

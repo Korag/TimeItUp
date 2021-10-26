@@ -6,3 +6,4 @@ export * from './userRegisterModel';
 export * from './timerModel';
 export * from './splitModel';
 export * from './pauseModel';
+export * from './countdownTimeModel';
