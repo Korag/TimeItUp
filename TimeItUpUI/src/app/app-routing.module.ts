@@ -64,7 +64,7 @@ const routes: Routes = [
         canActivate: [AuthUserGuard]
       },
       {
-        path: 'timer/:id',
+        path: 'timer/details/:id',
         component: TimerDetailsComponent,
         canActivate: [AuthUserGuard]
       },

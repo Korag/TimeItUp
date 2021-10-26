@@ -1,2 +1,52 @@
-<p>active-timer-unit works!</p>
-<p>{{timer.name}}</p>
+<div class="col-md-10 offset-md-1" style="margin-top:20px">
+  <div class="card formGradientBackgroundRounded text-light">
+    <div class="card-body">
+
+      <div class="row">
+        <div class="col-md-4" style="font-size: 20px">
+          {{timer.name}}
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-8" style="font-size: 70px">
+          00:00:00.000
+        </div>
+        <div class="col-md-4">
+          <a [routerLink]="['/timer/details/{{timer.id}}']" class="btn btn-grad-sec" style="max-width:200px; margin-left:auto; margin-right:0px">
+            Details
+          </a>
+        </div>
+      </div>
+
+      <div class="col-md-12">
+
+        <div class="row">
+          <ng-template [ngIf]="!isStarted">
+            <button (click)="startTimer()" class="btn btn-grad w-50" style="margin-left:auto; margin-right:auto">
+              Start
+            </button>
+          </ng-template>
+          <ng-template [ngIf]="isStarted">
+
+            <button *ngIf="!isPaused" [disabled]="isPaused" (click)="pauseTimer()" class="btn btn-grad" style="padding:10px; width:100px; margin-right: 5px; border-radius: 20px">
+              Pause
+            </button>
+            <button *ngIf="isPaused" [disabled]="!isPaused" (click)="resumeTimer()" class="btn btn-grad" style="padding: 10px; width: 100px; margin-right: 5px; border-radius: 20px">
+              Resume
+            </button>
+
+            <button [disabled]="isPaused" (click)="createSplit()" class="btn btn-grad" style="padding: 10px; width: 100px; margin-right: 5px; border-radius: 20px">
+              Split
+            </button>
+
+            <button (click)="finishTimer()" class="btn btn-grad-th" style="padding: 10px; width: 100px; margin-right: 5px; border-radius: 20px">
+              Finish
+            </button>
+
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

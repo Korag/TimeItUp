@@ -10,7 +10,7 @@ import { AuthService, TimerService } from '../_services';
   styleUrls: ['./active-timers.component.scss']
 })
 export class ActiveTimersComponent implements OnInit {
-  timers!: any[];
+  timers: TimerModel[] = [];
   listLoading: boolean = true;
 
   constructor(private router: Router,

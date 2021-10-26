@@ -1,12 +1,16 @@
-<div class="col-md-6 offset-md-3" style="margin-top:4%">
-
-  <p>active-timers works!</p>
+<div class="col-md-12" style="margin-top:4%">
 
   <div *ngIf="listLoading" class="spinner-border text-primary" role="status">
     <span class="sr-only">Loading...</span>
   </div>
 
   <ng-template [ngIf]="!listLoading">
+
+    <div *ngIf="timers.length === 0" class="alert alert-info w-100" style="font-size:22px" role="alert">
+      <h4 class="alert-heading" style="font-size:28px">Info</h4>
+      <p>You currently have no active timers</p>
+    </div>
+
     <app-active-timer-unit *ngFor="let timer of timers" [timer]="timer" (finishTimerEvent)="finishTimer($event)"></app-active-timer-unit>
   </ng-template>
 </div>

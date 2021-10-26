@@ -54,6 +54,7 @@ export class ActiveTimerUnitComponent implements OnInit {
       this.split = await this.splitService.getTimerActiveSplit(this.timer.id!);
     }
 
+    //this.isStarted = true;
     console.log(this.timer);
   }
 
