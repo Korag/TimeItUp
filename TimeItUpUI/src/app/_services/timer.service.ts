@@ -42,6 +42,17 @@ export class TimerService {
     return await activeTimers;
   }
 
+  public async getUserPastTimers(id: string): Promise<TimerModel[]> {
+    var pastTimers: TimerModel[] = [];
+
+    await this.http.get<TimerModel[]>(`${environment.apiUrl}/Timers/Finished/User/${id}`, {})
+      .pipe(map(result => {
+        pastTimers = result;
+      })).toPromise();
+
+    return await pastTimers;
+  }
+
   public async calculateUserActiveTimersPeriods(id: string): Promise<void> {
 
     await this.http.put<TimerModel[]>(`${environment.apiUrl}/Timers/Active/User/CalculatePeriods/${id}`, {}).toPromise();

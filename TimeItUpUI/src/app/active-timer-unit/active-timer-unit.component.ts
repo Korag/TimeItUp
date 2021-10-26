@@ -96,3 +96,9 @@ export class ActiveTimerUnitComponent implements OnInit {
     //nothing happens with countdown time
   }
 }
+
+//Add name to split
+//Check controller api methods
+//Handle time measurement by own function
+
+//Past Timers

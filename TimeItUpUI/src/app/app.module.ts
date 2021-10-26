@@ -42,6 +42,7 @@ import { LogoutUserModalComponent } from './logout-user-modal/logout-user-modal.
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CreateTimerComponent } from './create-timer';
 
+import { DataTablesModule } from "angular-datatables";
 
 @NgModule({
   declarations: [
@@ -84,7 +85,8 @@ import { CreateTimerComponent } from './create-timer';
     FontAwesomeModule,
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
-    NgbModule
+    NgbModule,
+    DataTablesModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AttachJWTToRequestInterceptor, multi: true },

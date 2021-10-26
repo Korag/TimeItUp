@@ -11,6 +11,8 @@
       <p>You currently have no active timers</p>
     </div>
 
-    <app-active-timer-unit *ngFor="let timer of timers" [timer]="timer" (finishTimerEvent)="finishTimer($event)"></app-active-timer-unit>
+    <ng-template [ngIf]="timers.length > 0">
+      <app-active-timer-unit *ngFor="let timer of timers" [timer]="timer" (finishTimerEvent)="finishTimer($event)"></app-active-timer-unit>
+    </ng-template>
   </ng-template>
 </div>

@@ -20,8 +20,6 @@
   background-origin: padding-box, border-box;
 }
 
-
-
 .btn-grad {
   background-image: linear-gradient(to right, #314755 0%, #26a0da 51%, #314755 100%)
 }
@@ -92,6 +90,11 @@
 
 .modal-content {
   border: 0px;
+}
+
+.page-item.active .page-link {
+  background-image: linear-gradient(to right, #314755 0%, #26a0da 51%, #314755 100%);
+  border-color: white;
 }
 
 @media screen and (max-width: 1000px) {

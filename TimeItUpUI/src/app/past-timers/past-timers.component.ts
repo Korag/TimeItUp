@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { TimerModel } from '../_models';
+import { AuthService, TimerService } from '../_services';
 
 @Component({
   selector: 'app-past-timers',
@@ -6,10 +9,16 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./past-timers.component.scss']
 })
 export class PastTimersComponent implements OnInit {
+  timers: TimerModel[] = [];
+  listLoading: boolean = true;
 
-  constructor() { }
+  constructor(private router: Router,
+    private authService: AuthService,
+    private timerService: TimerService) { }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    this.timers = await this.timerService.getUserPastTimers(this.authService.loggedUserData.id!);
+    this.listLoading = false;
   }
-
 }
+
