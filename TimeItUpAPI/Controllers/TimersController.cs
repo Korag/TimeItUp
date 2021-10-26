@@ -210,14 +210,14 @@ namespace TimeItUpAPI.Controllers
         // PUT: api/Timer/5
         [HttpPut("{id}")]
         [Authorize]
-        public async Task<IActionResult> UpdateTimer(int timerId, UpdateTimerDto timer)
+        public async Task<IActionResult> UpdateTimer(int id, UpdateTimerDto timer)
         {
-            if (timerId != timer.Id || !ModelState.IsValid)
+            if (id != timer.Id || !ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var existingTimer = await _timerRepo.GetTimerByIdAsync(timerId);
+            var existingTimer = await _timerRepo.GetTimerByIdAsync(id);
 
             if (existingTimer == null)
             {
@@ -232,12 +232,12 @@ namespace TimeItUpAPI.Controllers
             return NoContent();
         }
 
-        // PUT: api/Timer/Start/5
+        // PUT: api/Timers/Start/5
         [HttpPut("Start/{id}")]
         [Authorize]
-        public async Task<IActionResult> StartTimer(int timerId)
+        public async Task<IActionResult> StartTimer(int id)
         {
-            var timer = await _timerRepo.GetTimerByIdAsync(timerId);
+            var timer = await _timerRepo.GetTimerByIdAsync(id);
 
             if (timer == null)
             {
@@ -331,7 +331,7 @@ namespace TimeItUpAPI.Controllers
                 return BadRequest();
             }
 
-            timer.EndAt = DateTime.UtcNow;
+            timer.EndAt = DateTime.MinValue;
             timer.Paused = false;
 
             var nextSplit = new Split()
@@ -358,13 +358,30 @@ namespace TimeItUpAPI.Controllers
             return NoContent();
         }
 
-        // PUT: api/Splits/Multiple/CalculatePeriods
+        // PUT: api/Timers/Multiple/CalculatePeriods
         [HttpPut("Multiple/CalculatePeriods")]
         [Authorize]
         public async Task<IActionResult> CalculateSelectedTimersPeriods(ICollection<int> ids)
         {
             var timers = await _timerRepo.GetTimersByIdsAsync(ids);
             await CalculateTimerPeriods(timers);
+
+            return NoContent();
+        }
+
+        [HttpPut("Active/User/CalculatePeriods/{id}")]
+        [Authorize]
+        public async Task<IActionResult> CalculateUserActiveTimersPeriods(string id)
+        {
+            var user = await _userRepo.GetUserByIdAsync(id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var userActiveTimers = user.Timers?.Where(z => !z.Finished && !z.Paused).ToList();
+            await CalculateTimerPeriods(userActiveTimers);
 
             return NoContent();
         }

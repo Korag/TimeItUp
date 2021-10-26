@@ -1,3 +1,12 @@
-<div class="h-100">
+<div class="col-md-6 offset-md-3" style="margin-top:4%">
+
   <p>active-timers works!</p>
+
+  <div *ngIf="listLoading" class="spinner-border text-primary" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>
+
+  <ng-template [ngIf]="!listLoading">
+    <app-active-timer-unit *ngFor="let timer of timers" [timer]="timer" (finishTimerEvent)="finishTimer($event)"></app-active-timer-unit>
+  </ng-template>
 </div>

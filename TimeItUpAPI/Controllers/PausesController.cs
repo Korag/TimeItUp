@@ -71,7 +71,7 @@ namespace TimeItUpAPI.Controllers
             return Ok(pausesDto);
         }
 
-        // GET: api/Splits/5
+        // GET: api/Pauses/5
         [HttpGet("{id}")]
         [Authorize]
         public async Task<ActionResult<SplitDto>> GetPauseById(int id)
@@ -120,7 +120,7 @@ namespace TimeItUpAPI.Controllers
         // GET: api/Pauses/Active/Timer/{timerId}
         [HttpGet("Active/Timer/{timerId}")]
         [Authorize]
-        public async Task<ActionResult<ICollection<PauseDto>>> GetTimerActivePauses(int timerId)
+        public async Task<ActionResult<PauseDto>> GetTimerActivePause(int timerId)
         {
             var timer = await _timerRepo.GetTimerByIdAsync(timerId);
 
@@ -129,10 +129,10 @@ namespace TimeItUpAPI.Controllers
                 return NotFound();
             }
 
-            var timerPauses = timer.Pauses?.Where(z => z.StartAt != DateTime.MinValue && z.EndAt == DateTime.MinValue).ToList();
-            var pausesDto = _mapper.Map<ICollection<PauseDto>>(timerPauses).ToList();
+            var timerActivePause = timer.Pauses?.Where(z => z.StartAt != DateTime.MinValue && z.EndAt == DateTime.MinValue).FirstOrDefault();
+            var pauseDto = _mapper.Map<PauseDto>(timerActivePause);
 
-            return Ok(pausesDto);
+            return Ok(pauseDto);
         }
 
         // GET: api/Pauses/Past/Timer/{timerId}
@@ -153,7 +153,7 @@ namespace TimeItUpAPI.Controllers
             return Ok(pausesDto);
         }
 
-        // PUT: api/Pause/Start/5
+        // PUT: api/Pauses/Start/5
         [HttpPut("Start/{id}")]
         [Authorize]
         public async Task<IActionResult> StartPause(int pauseId)
@@ -188,8 +188,8 @@ namespace TimeItUpAPI.Controllers
             return NoContent();
         }
 
-        // PUT: api/Pause/Finish/5
-        [HttpPut("Pause/{id}")]
+        // PUT: api/Pauses/Finish/5
+        [HttpPut("Finish/{id}")]
         [Authorize]
         public async Task<IActionResult> FinishPause(int pauseId)
         {

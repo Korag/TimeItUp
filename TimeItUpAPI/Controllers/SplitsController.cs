@@ -120,7 +120,7 @@ namespace TimeItUpAPI.Controllers
         // GET: api/Splits/Active/Timer/{timerId}
         [HttpGet("Active/Timer/{timerId}")]
         [Authorize]
-        public async Task<ActionResult<ICollection<SplitDto>>> GetTimerActiveSplits(int timerId)
+        public async Task<ActionResult<SplitDto>> GetTimerActiveSplit(int timerId)
         {
             var timer = await _timerRepo.GetTimerByIdAsync(timerId);
 
@@ -129,10 +129,10 @@ namespace TimeItUpAPI.Controllers
                 return NotFound();
             }
 
-            var timerSplits = timer.Splits?.Where(z => z.StartAt != DateTime.MinValue && z.EndAt == DateTime.MinValue).ToList();
-            var splitsDto = _mapper.Map<ICollection<SplitDto>>(timerSplits).ToList();
+            var timerActiveSplit = timer.Splits?.Where(z => z.StartAt != DateTime.MinValue && z.EndAt == DateTime.MinValue).FirstOrDefault();
+            var splitDto = _mapper.Map<SplitDto>(timerActiveSplit);
 
-            return Ok(splitsDto);
+            return Ok(splitDto);
         }
 
         // GET: api/Splits/Past/Timer/{timerId}
@@ -179,7 +179,7 @@ namespace TimeItUpAPI.Controllers
         }
 
         // PUT: api/Split/Finish/5
-        [HttpPut("Split/{id}")]
+        [HttpPut("Finish/{id}")]
         [Authorize]
         public async Task<IActionResult> FinishSplit(int splitId)
         {
