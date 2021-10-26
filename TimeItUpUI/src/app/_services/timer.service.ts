@@ -17,21 +17,33 @@ export class TimerService {
 
     await this.http.post<TimerModel>(`${environment.apiUrl}/Timers`, { userId, name, description })
       .pipe(map(result => {
-        createdTimer.id = result.id;
-        createdTimer.name = result.name;
-        createdTimer.description = result.description;
-        createdTimer.startAt = result.startAt;
-        createdTimer.endAt = result.endAt;
-        createdTimer.totalDuration = result.totalDuration;
-        createdTimer.totalPausedTime = result.totalPausedTime;
-        createdTimer.totalCountdownTimer = result.totalCountdownTimer;
-        createdTimer.paused = result.paused;
-        createdTimer.finished = result.finished;
-        createdTimer.splitsNumber = result.splitsNumber;
-        createdTimer.alarmsNumber = result.alarmsNumber;
-        createdTimer.pausesNumber = result.pausesNumber;
+        createdTimer = result;
       })).toPromise();
 
     return await createdTimer;
+  }
+
+  public async finishTimer(id: number): Promise<void> {
+    await this.http.put(`${environment.apiUrl}/Timers/Finish/${id}`, { }).toPromise();
+  }
+
+  public async startTimer(id: number): Promise<void> {
+    await this.http.put(`${environment.apiUrl}/Timers/Start/${id}`, { }).toPromise();
+  }
+
+  public async getUserActiveTimers(id: string): Promise<TimerModel[]> {
+    var activeTimers: TimerModel[] = [];
+
+    await this.http.get<TimerModel[]>(`${environment.apiUrl}/Timers/Active/User/${id}`, {})
+      .pipe(map(result => {
+        activeTimers = result;
+      })).toPromise();
+
+    return await activeTimers;
+  }
+
+  public async calculateUserActiveTimersPeriods(id: string): Promise<void> {
+
+    await this.http.put<TimerModel[]>(`${environment.apiUrl}/Timers/Active/User/CalculatePeriods/${id}`, {}).toPromise();
   }
 }

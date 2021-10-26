@@ -1,5 +1,5 @@
 export class TimerModel {
-  id?: string;
+  id?: number;
   name?: string;
   description?: string;
   startAt?: Date;
