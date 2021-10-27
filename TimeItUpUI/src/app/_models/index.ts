@@ -7,3 +7,5 @@ export * from './timerModel';
 export * from './splitModel';
 export * from './pauseModel';
 export * from './countdownTimeModel';
+export * from './alarmModel';
+

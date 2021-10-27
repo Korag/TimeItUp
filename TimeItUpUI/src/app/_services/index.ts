@@ -3,5 +3,6 @@ export * from './user.service';
 export * from './timer.service';
 export * from './pause.service';
 export * from './split.service';
+export * from './alarm.service';
 export * from './validation-error-populator.service';
 

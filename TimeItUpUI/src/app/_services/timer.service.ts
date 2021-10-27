@@ -52,10 +52,10 @@ export class TimerService {
     await this.http.put(`${environment.apiUrl}/Timers/Start/${id}`, {}).toPromise();
   }
 
-  public async getUserActiveTimers(id: string): Promise<TimerModel[]> {
+  public async getUserActiveTimers(userId: string): Promise<TimerModel[]> {
     var activeTimers: TimerModel[] = [];
 
-    await this.http.get<TimerModel[]>(`${environment.apiUrl}/Timers/Active/User/${id}`, {})
+    await this.http.get<TimerModel[]>(`${environment.apiUrl}/Timers/Active/User/${userId}`, {})
       .pipe(map(result => {
         activeTimers = result;
       })).toPromise();
