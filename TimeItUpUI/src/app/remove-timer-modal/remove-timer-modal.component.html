@@ -1,1 +1,14 @@
-<p>remove-timer-modal works!</p>
+<div class="modal modal-alert d-block py-5" tabindex="-1" role="dialog" id="logoutModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered " role="document">
+    <div class="modal-content rounded-4">
+      <div class="modal-body p-4 text-center">
+        <h5 class="mb-0">Logout?</h5>
+        <p class="mb-0">Are you sure you want to remove this timer?</p>
+      </div>
+      <div class="modal-footer flex-nowrap p-0">
+        <a class="btn btn-lg btn-grad-sec fs-6 text-decoration-none col-6 m-0 rounded-0" (click)="removeTimer()"><strong>Remove</strong></a>
+        <a class="btn btn-lg btn-grad-th fs-6 text-decoration-none col-6 m-0 rounded-0" (click)="closeModal()"><strong>Cancel</strong></a>
+      </div>
+    </div>
+  </div>
+</div>

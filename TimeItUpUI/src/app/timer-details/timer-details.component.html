@@ -1,1 +1,15 @@
-<p>timer-details works!</p>
+<div class="col-md-12" style="margin-top:4%">
+
+  <app-timer-with-controls [timer]="timer" (finishTimerEvent)="finishTimer($event)"></app-timer-with-controls>
+
+  <app-timer-info [timer]="timer"></app-timer-info>
+
+  <!--<app-timer-duration-section [timer]="timer"></app-timer-duration-section>
+
+  <app-timer-alarms-list [timer]="timer"></app-timer-alarms-list>
+
+  <app-timer-splits-list [timer]="timer"></app-timer-splits-list>
+
+  <app-timer-pauses-list [timer]="timer"></app-timer-pauses-list>-->
+
+</div>

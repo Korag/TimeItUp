@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-remove-timer-modal',
@@ -6,10 +7,20 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./remove-timer-modal.component.scss']
 })
 export class RemoveTimerModalComponent implements OnInit {
+  @Output() deleteTimerEvent = new EventEmitter<string>();
 
-  constructor() { }
+  constructor(private modalService: NgbModal,
+    public activeModal: NgbActiveModal) { }
 
   ngOnInit(): void {
   }
 
+  closeModal() {
+    this.activeModal.close();
+  }
+
+  removeTimer() {
+    this.deleteTimerEvent.emit("");
+    this.closeModal();
+  }
 }

@@ -29,9 +29,9 @@
             <td>{{timer.startAt}}</td>
             <td>{{timer.endAt}}</td>
             <td>{{timer.name}}</td>
-            <td>{{timer.totalCountdownTimer}}</td>
+            <td>{{timer.totalCountdownTime}}</td>
             <td>
-              <a [routerLink]="['/timer/details/{{timer.id}}']" class="btn btn-grad-sec" style="max-width:200px; margin-left:auto; margin-right:0px">
+              <a [routerLink]="['/timer/details/', timer.id]" class="btn btn-grad-sec" style="max-width:200px; margin-left:auto; margin-right:0px">
                 Details
               </a>
             </td>

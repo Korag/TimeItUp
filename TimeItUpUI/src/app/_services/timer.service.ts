@@ -23,12 +23,33 @@ export class TimerService {
     return await createdTimer;
   }
 
+  public async getTimerById(id: number): Promise<TimerModel> {
+    var timer = new TimerModel();
+
+    await this.http.get<TimerModel>(`${environment.apiUrl}/Timers/${id}`, {})
+      .pipe(map(result => {
+        timer = result;
+      })).toPromise();
+
+    return await timer;
+  }
+
+  public async updateTimerData(id: number, name: string, description: string): Promise<void> {
+    await this.http.put(`${environment.apiUrl}/Timers/${id}`, { id, name, description })
+      .toPromise();
+  }
+
+  public async removeTimer(id: number): Promise<void> {
+    await this.http.delete(`${environment.apiUrl}/Timers/${id}`, { })
+      .toPromise();
+  }
+
   public async finishTimer(id: number): Promise<void> {
-    await this.http.put(`${environment.apiUrl}/Timers/Finish/${id}`, { }).toPromise();
+    await this.http.put(`${environment.apiUrl}/Timers/Finish/${id}`, {}).toPromise();
   }
 
   public async startTimer(id: number): Promise<void> {
-    await this.http.put(`${environment.apiUrl}/Timers/Start/${id}`, { }).toPromise();
+    await this.http.put(`${environment.apiUrl}/Timers/Start/${id}`, {}).toPromise();
   }
 
   public async getUserActiveTimers(id: string): Promise<TimerModel[]> {
