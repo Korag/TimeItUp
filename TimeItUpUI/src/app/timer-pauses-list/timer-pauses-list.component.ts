@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { PauseModel, TimerModel } from '../_models';
+import { PauseService } from '../_services';
 
 @Component({
   selector: 'app-timer-pauses-list',
@@ -6,10 +8,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./timer-pauses-list.component.scss']
 })
 export class TimerPausesListComponent implements OnInit {
+  @Input() timer!: TimerModel;
+  pauses: PauseModel[] = [];
+  listLoading: boolean = true;
 
-  constructor() { }
+  constructor(private pauseService: PauseService,) { }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    this.pauses = await this.pauseService.getTimerPauses(this.timer.id!);
+    this.listLoading = false;
   }
-
 }

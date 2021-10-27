@@ -5,7 +5,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { RemoveTimerModalComponent } from '../remove-timer-modal';
 import { TimerModel } from '../_models';
-import { AuthService, TimerService, ValidationErrorPopulatorService } from '../_services';
+import { TimerService, ValidationErrorPopulatorService } from '../_services';
 
 @Component({
   selector: 'app-timer-info',
@@ -25,7 +25,6 @@ export class TimerInfoComponent implements OnInit {
     private modalService: NgbModal,
     private router: Router,
     private timerService: TimerService,
-    private authService: AuthService,
     private toastr: ToastrService,
     private validHelp: ValidationErrorPopulatorService) {
   }

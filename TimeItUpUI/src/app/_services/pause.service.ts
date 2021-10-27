@@ -41,4 +41,15 @@ export class PauseService {
 
     return await activePause;
   }
+
+  public async getTimerPauses(timerId: number): Promise<PauseModel[]> {
+    var timerPauses: PauseModel[] = [];
+
+    await this.http.get<PauseModel[]>(`${environment.apiUrl}/Pauses/Timer/${timerId}`, {})
+      .pipe(map(result => {
+        timerPauses = result;
+      })).toPromise();
+
+    return await timerPauses;
+  }
 }
