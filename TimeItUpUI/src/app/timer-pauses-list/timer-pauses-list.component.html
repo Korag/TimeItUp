@@ -4,6 +4,11 @@
   </div>
 </div>
 
+<div *ngIf="pauses.length === 0" class="alert alert-info w-100" style="font-size:22px; margin-top:20px" role="alert">
+  <h4 class="alert-heading" style="font-size:28px">Info</h4>
+  <p>This timer currently have no pauses</p>
+</div>
+
 <ng-template [ngIf]="!listLoading && pauses.length > 0">
 
   <div class="col-12 table-responsive text-white formGradientBackgroundRounded" style="padding: 5px 5px 5px 5px; margin-top:20px">

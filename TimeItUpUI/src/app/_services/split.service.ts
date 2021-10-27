@@ -41,4 +41,15 @@ export class SplitService {
 
     return await activeSplit;
   }
+
+  public async getTimerSplits(timerId: number): Promise<SplitModel[]> {
+    var timerSplits: SplitModel[] = [];
+
+    await this.http.get<SplitModel[]>(`${environment.apiUrl}/Splits/Timer/${timerId}`, {})
+      .pipe(map(result => {
+        timerSplits = result;
+      })).toPromise();
+
+    return await timerSplits;
+  }
 }

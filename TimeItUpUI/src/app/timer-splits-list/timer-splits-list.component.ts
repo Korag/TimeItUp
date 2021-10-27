@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { SplitModel, TimerModel } from '../_models';
+import { SplitService } from '../_services';
 
 @Component({
   selector: 'app-timer-splits-list',
@@ -6,10 +8,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./timer-splits-list.component.scss']
 })
 export class TimerSplitsListComponent implements OnInit {
+  @Input() timer!: TimerModel;
+  splits: SplitModel[] = [];
+  listLoading: boolean = true;
 
-  constructor() { }
+  constructor(private splitService: SplitService,) { }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    this.splits = await this.splitService.getTimerSplits(this.timer.id!);
+    this.listLoading = false;
   }
-
 }

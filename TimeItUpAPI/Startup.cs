@@ -49,6 +49,7 @@ namespace TimeItUpAPI
             services.AddTransient<ISplitRepository, SplitRepository>();
             services.AddTransient<ITimerRepository, TimerRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IPauseRepository, PauseRepository>();
             services.AddTransient<IGeneralRepository, GeneralRepository>();
 
             services.AddTransient<IEmailServiceProvider, EmailServiceProvider>();
