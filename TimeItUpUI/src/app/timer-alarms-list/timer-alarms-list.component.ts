@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { AlarmModel, TimerModel } from '../_models';
+import { AlarmService } from '../_services';
 
 @Component({
   selector: 'app-timer-alarms-list',
@@ -6,10 +8,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./timer-alarms-list.component.scss']
 })
 export class TimerAlarmsListComponent implements OnInit {
+  @Input() timer!: TimerModel;
+  alarms: AlarmModel[] = [];
+  listLoading: boolean = true;
 
-  constructor() { }
+  constructor(private alarmService: AlarmService) { }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    this.alarms = await this.alarmService.getTimerAlarms(this.timer.id!);
+    this.listLoading = false;
   }
-
 }

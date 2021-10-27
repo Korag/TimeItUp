@@ -1,1 +1,38 @@
-<p>timer-alarms-list works!</p>
+<div *ngIf="listLoading" class="d-flex justify-content-center" style="margin-top:20px; margin-left: auto; margin-right: auto">
+  <div class="spinner-border" style="width: 7rem; height: 7rem; color:#537895" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>
+</div>
+
+<div *ngIf="alarms.length === 0" class="alert alert-info w-100" style="font-size:22px; margin-top:20px" role="alert">
+  <h4 class="alert-heading" style="font-size:28px">Info</h4>
+  <p>This timer currently have no alarms</p>
+</div>
+
+<ng-template [ngIf]="!listLoading && alarms.length > 0">
+
+  <div class="col-12 table-responsive text-white formGradientBackgroundRounded" style="padding: 5px 5px 5px 5px; margin-top:20px">
+    <h3>Alarms</h3>
+    <table id="timerAlarmsTable" datatable class="table table-bordered display text-white" style="width: 100%;" role="grid">
+      <thead class="text-white text-center" style="font-weight:bold;">
+        <tr style="font-size: 20px">
+          <td>Name</td>
+          <td>Description</td>
+          <td>Activation time</td>
+          <td>Operations</td>
+        </tr>
+      </thead>
+      <tbody class="text-white">
+        <tr *ngFor="let alarm of alarms">
+          <td>{{alarm.name}}</td>
+          <td>{{alarm.description}}</td>
+          <td>{{alarm.activationTime}}</td>
+          <td>
+
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</ng-template>

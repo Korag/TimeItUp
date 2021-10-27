@@ -12,7 +12,7 @@ export class TimerPausesListComponent implements OnInit {
   pauses: PauseModel[] = [];
   listLoading: boolean = true;
 
-  constructor(private pauseService: PauseService,) { }
+  constructor(private pauseService: PauseService) { }
 
   async ngOnInit(): Promise<void> {
     this.pauses = await this.pauseService.getTimerPauses(this.timer.id!);
