@@ -1,1 +1,50 @@
-<p>timer-info works!</p>
+<div class="col-md-12" style="margin-top:10px">
+  <div class="card formGradientBackgroundRounded text-light">
+    <div class="card-body">
+      <form [formGroup]="updateTimerForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-floating mb-3">
+              <textarea type="text" formControlName="name" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.name.errors }"></textarea>
+              <label for="floatingInput">Name</label>
+              <div *ngIf="submitted && f.name.errors" class="invalid-feedback text-left">
+                <div *ngIf="f.name.errors.required">Name is required</div>
+                <div *ngIf="f.name.errors.minlength || f.name.errors.maxlength">Name must be between 2 and 100 characters long</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="form-floating mb-3">
+              <textarea type="text" formControlName="description" class="form-control" style="min-height: 250px" [ngClass]="{ 'is-invalid': submitted && f.description.errors }"></textarea>
+              <label for="floatingInput" style="margin-left:12px">Description</label>
+              <div *ngIf="submitted && f.description.errors" class="invalid-feedback text-left">
+                <div *ngIf="f.description.errors.minlength || f.description.errors.maxlength">Description must be between 2 and 255 characters long</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 offset-md-6">
+            <button [disabled]="loading" class="btn btn-grad-sec mt-3" type='button' [ngClass]="{'btn-grad-sec': formBlocked, 'btn-grad-th': !formBlocked }" (click)="formBlocked = !formBlocked" style="width:150px; margin-right:5px">
+              <span *ngIf="formBlocked">Unblock form</span>
+              <span *ngIf="!formBlocked">Block form</span>
+            </button>
+            <button [disabled]="formBlocked" class="btn btn-grad" style="width:150px; margin-right:5px">
+              <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+              Update
+            </button>
+            <button type='button' [disabled]="formBlocked" (click)="openRemoveTimerModal()" class="btn btn-grad-th" style="width:150px;">
+              <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+              Delete
+            </button>
+          </div>
+          <div *ngIf="reqErrors!.length > 0" class="alert alert-danger mt-3 mb-0">
+            <p *ngFor="let error of reqErrors!" style="margin-bottom: 0px">{{error}}</p>
+          </div>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
