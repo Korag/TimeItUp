@@ -39,12 +39,7 @@ export class ActiveTimerUnitComponent implements OnInit {
       this.isStarted = true;
     }
 
-    var countdownTimeSplitted = this.timer.totalCountdownTime?.split(":");
-    this.countdownTime.hours = parseInt(countdownTimeSplitted![0]);
-    this.countdownTime.minutes = parseInt(countdownTimeSplitted![1]);
-    this.countdownTime.seconds = parseInt(countdownTimeSplitted![2]);
-    this.countdownTime.miliseconds = parseInt(countdownTimeSplitted![3]);
-
+    await this.calculateCountdownTime();
     this.isPaused = this.timer.paused!;
 
     if (this.isPaused) {
@@ -55,6 +50,15 @@ export class ActiveTimerUnitComponent implements OnInit {
 
       await this.startTimerCountdown();
     }
+  }
+
+  async calculateCountdownTime() {
+    var countdownTimeSplitted = this.timer.totalCountdownTime?.split(":");
+
+    this.countdownTime.hours = parseInt(countdownTimeSplitted![0]);
+    this.countdownTime.minutes = parseInt(countdownTimeSplitted![1]);
+    this.countdownTime.seconds = parseInt(countdownTimeSplitted![2]);
+    this.countdownTime.miliseconds = parseInt(countdownTimeSplitted![3]);
   }
 
   async runningCountdown() {
@@ -87,7 +91,7 @@ export class ActiveTimerUnitComponent implements OnInit {
   }
 
   async startTimerCountdown() {
-    this.intervalId = setInterval(this.runningCountdown, 1);
+    this.intervalId = setInterval(this.runningCountdown.bind(this), 1);
   }
 
   async pauseTimerCountdown() {
@@ -97,6 +101,7 @@ export class ActiveTimerUnitComponent implements OnInit {
   async startTimer() {
     await this.timerService.startTimer(this.timer.id!);
     this.split = await this.splitService.getTimerActiveSplit(this.timer.id!);
+    this.isStarted = true;
     this.toastr.success('The timer has been started');
 
     await this.startTimerCountdown();
@@ -108,6 +113,7 @@ export class ActiveTimerUnitComponent implements OnInit {
 
   async pauseTimer() {
     this.pause = await this.pauseService.createPause(this.timer.id!);
+    console.log(this.pause);
     await this.pauseService.startPause(this.pause.id!);
     this.isPaused = true;
     this.toastr.warning('The timer has been paused');
@@ -130,5 +136,3 @@ export class ActiveTimerUnitComponent implements OnInit {
     this.toastr.info('New split has been created');
   }
 }
-
-//Add name to split

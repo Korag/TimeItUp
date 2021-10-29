@@ -18,6 +18,7 @@ export class TimerWithControlsComponent implements OnInit {
 
   isPaused!: boolean;
   isStarted!: boolean;
+  isFinished!: boolean;
 
   pause!: PauseModel;
   split!: SplitModel;
@@ -38,13 +39,9 @@ export class TimerWithControlsComponent implements OnInit {
       this.isStarted = true;
     }
 
-    var countdownTimeSplitted = this.timer.totalCountdownTime?.split(":");
-    this.countdownTime.hours = parseInt(countdownTimeSplitted![0]);
-    this.countdownTime.minutes = parseInt(countdownTimeSplitted![1]);
-    this.countdownTime.seconds = parseInt(countdownTimeSplitted![2]);
-    this.countdownTime.miliseconds = parseInt(countdownTimeSplitted![3]);
-
+    await this.calculateCountdownTime();
     this.isPaused = this.timer.paused!;
+    this.isFinished = this.timer.finished!;
 
     if (this.isPaused) {
       this.pause = await this.pauseService.getTimerActivePause(this.timer.id!);
@@ -54,6 +51,15 @@ export class TimerWithControlsComponent implements OnInit {
 
       await this.startTimerCountdown();
     }
+  }
+
+  async calculateCountdownTime() {
+    var countdownTimeSplitted = this.timer.totalCountdownTime?.split(":");
+
+    this.countdownTime.hours = parseInt(countdownTimeSplitted![0]);
+    this.countdownTime.minutes = parseInt(countdownTimeSplitted![1]);
+    this.countdownTime.seconds = parseInt(countdownTimeSplitted![2]);
+    this.countdownTime.miliseconds = parseInt(countdownTimeSplitted![3]);
   }
 
   async runningCountdown() {
@@ -86,7 +92,7 @@ export class TimerWithControlsComponent implements OnInit {
   }
 
   async startTimerCountdown() {
-    this.intervalId = setInterval(this.runningCountdown, 1);
+    this.intervalId = setInterval(this.runningCountdown.bind(this), 1);
   }
 
   async pauseTimerCountdown() {
@@ -96,6 +102,7 @@ export class TimerWithControlsComponent implements OnInit {
   async startTimer() {
     await this.timerService.startTimer(this.timer.id!);
     this.split = await this.splitService.getTimerActiveSplit(this.timer.id!);
+    this.isStarted = true;
     this.toastr.success('The timer has been started');
 
     await this.startTimerCountdown();
@@ -103,6 +110,10 @@ export class TimerWithControlsComponent implements OnInit {
 
   async finishTimer() {
     this.finishTimerEvent.emit(this.timer);
+  }
+
+  async reinstateTimer() {
+    //TODO
   }
 
   async pauseTimer() {
