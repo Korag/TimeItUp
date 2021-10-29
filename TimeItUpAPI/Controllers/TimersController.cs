@@ -135,12 +135,12 @@ namespace TimeItUpAPI.Controllers
             return Ok(completeTimerInfo);
         }
 
-        // GET: api/Timers/User/{userId}
-        [HttpGet("User/{userId}")]
+        // GET: api/Timers/User/{id}
+        [HttpGet("User/{id}")]
         [Authorize]
-        public async Task<ActionResult<ICollection<TimerDto>>> GetUserTimers(string userId)
+        public async Task<ActionResult<ICollection<TimerDto>>> GetUserTimers(string id)
         {
-            var user = await _userRepo.GetUserByIdAsync(userId);
+            var user = await _userRepo.GetUserByIdAsync(id);
 
             if (user == null)
             {
@@ -153,30 +153,30 @@ namespace TimeItUpAPI.Controllers
             return Ok(timersDto);
         }
 
-        // GET: api/Timers/Active/User/{userId}
-        [HttpGet("Active/User/{userId}")]
+        // GET: api/Timers/Active/User/{id}
+        [HttpGet("Active/User/{id}")]
         [Authorize]
-        public async Task<ActionResult<ICollection<TimerDto>>> GetActiveUserTimers(string userId)
+        public async Task<ActionResult<ICollection<TimerDto>>> GetActiveUserTimers(string id)
         {
-            var user = await _userRepo.GetUserByIdAsync(userId);
+            var user = await _userRepo.GetUserByIdAsync(id);
 
             if (user == null)
             {
                 return NotFound();
             }
 
-            var userTimers = user.Timers?.Where(z => !z.Finished && !z.Paused).ToList();
+            var userTimers = user.Timers?.Where(z => !z.Finished).ToList();
             var timersDto = _mapper.Map<ICollection<TimerDto>>(userTimers).ToList();
 
             return Ok(timersDto);
         }
 
-        // GET: api/Timers/Finished/User/{userId}
-        [HttpGet("Finished/User/{userId}")]
+        // GET: api/Timers/Finished/User/{id}
+        [HttpGet("Finished/User/{id}")]
         [Authorize]
-        public async Task<ActionResult<ICollection<TimerDto>>> GetFinishedUserTimers(string userId)
+        public async Task<ActionResult<ICollection<TimerDto>>> GetFinishedUserTimers(string id)
         {
-            var user = await _userRepo.GetUserByIdAsync(userId);
+            var user = await _userRepo.GetUserByIdAsync(id);
 
             if (user == null)
             {
@@ -189,12 +189,12 @@ namespace TimeItUpAPI.Controllers
             return Ok(timersDto);
         }
 
-        // GET: api/Timers/Paused/User/{userId}
-        [HttpGet("Paused/User/{userId}")]
+        // GET: api/Timers/Paused/User/{id}
+        [HttpGet("Paused/User/{id}")]
         [Authorize]
-        public async Task<ActionResult<ICollection<TimerDto>>> GetPausedUserTimers(string userId)
+        public async Task<ActionResult<ICollection<TimerDto>>> GetPausedUserTimers(string id)
         {
-            var user = await _userRepo.GetUserByIdAsync(userId);
+            var user = await _userRepo.GetUserByIdAsync(id);
 
             if (user == null)
             {
@@ -306,6 +306,7 @@ namespace TimeItUpAPI.Controllers
             }
 
             timer.EndAt = DateTime.UtcNow;
+            timer.Finished = true;
             timer = _timeCalc.CalculateTimerTimePeriods(timer);
 
             await _generalRepo.ChangeEntryStateToModified(timer);
@@ -461,6 +462,21 @@ namespace TimeItUpAPI.Controllers
 
             for (int i = 0; i < timersList.Count; i++)
             {
+                var splitsList = timersList[i].Splits.ToList();
+                var pausesList = timersList[i].Pauses.ToList();
+
+                for (int j = 0; j < splitsList.Count; j++)
+                {
+                    splitsList[j] = _timeCalc.CalculateSplitTimePeriod(splitsList[j]);
+                    await _generalRepo.ChangeEntryStateToModified(splitsList[j]);
+                }
+                for (int j = 0; j < pausesList.Count; j++)
+                {
+                    pausesList[j] = _timeCalc.CalculatePauseTimePeriod(pausesList[j]);
+                    await _generalRepo.ChangeEntryStateToModified(pausesList[j]);
+                }
+                await _generalRepo.SaveChangesAsync();
+
                 timersList[i] = _timeCalc.CalculateTimerTimePeriods(timersList[i]);
                 await _generalRepo.ChangeEntryStateToModified(timersList[i]);
             }

@@ -99,12 +99,12 @@ namespace TimeItUpAPI.Controllers
             return Ok(pausesDto);
         }
 
-        // GET: api/Pauses/Timer/{timerId}
-        [HttpGet("Timer/{timerId}")]
+        // GET: api/Pauses/Timer/{id}
+        [HttpGet("Timer/{id}")]
         [Authorize]
-        public async Task<ActionResult<ICollection<PauseDto>>> GetTimerPauses(int timerId)
+        public async Task<ActionResult<ICollection<PauseDto>>> GetTimerPauses(int id)
         {
-            var timer = await _timerRepo.GetTimerByIdAsync(timerId);
+            var timer = await _timerRepo.GetTimerByIdAsync(id);
 
             if (timer == null)
             {
@@ -117,12 +117,12 @@ namespace TimeItUpAPI.Controllers
             return Ok(pausesDto);
         }
 
-        // GET: api/Pauses/Active/Timer/{timerId}
-        [HttpGet("Active/Timer/{timerId}")]
+        // GET: api/Pauses/Active/Timer/{id}
+        [HttpGet("Active/Timer/{id}")]
         [Authorize]
-        public async Task<ActionResult<PauseDto>> GetTimerActivePause(int timerId)
+        public async Task<ActionResult<PauseDto>> GetTimerActivePause(int id)
         {
-            var timer = await _timerRepo.GetTimerByIdAsync(timerId);
+            var timer = await _timerRepo.GetTimerByIdAsync(id);
 
             if (timer == null)
             {
@@ -135,12 +135,12 @@ namespace TimeItUpAPI.Controllers
             return Ok(pauseDto);
         }
 
-        // GET: api/Pauses/Past/Timer/{timerId}
-        [HttpGet("Past/Timer/{timerId}")]
+        // GET: api/Pauses/Past/Timer/{id}
+        [HttpGet("Past/Timer/{id}")]
         [Authorize]
-        public async Task<ActionResult<ICollection<PauseDto>>> GetTimerPastPauses(int timerId)
+        public async Task<ActionResult<ICollection<PauseDto>>> GetTimerPastPauses(int id)
         {
-            var timer = await _timerRepo.GetTimerByIdAsync(timerId);
+            var timer = await _timerRepo.GetTimerByIdAsync(id);
 
             if (timer == null)
             {
@@ -156,9 +156,9 @@ namespace TimeItUpAPI.Controllers
         // PUT: api/Pauses/Start/5
         [HttpPut("Start/{id}")]
         [Authorize]
-        public async Task<IActionResult> StartPause(int pauseId)
+        public async Task<IActionResult> StartPause(int id)
         {
-            var pause = await _pauseRepo.GetPauseByIdAsync(pauseId);
+            var pause = await _pauseRepo.GetPauseByIdAsync(id);
 
             if (pause == null)
             {
@@ -191,9 +191,9 @@ namespace TimeItUpAPI.Controllers
         // PUT: api/Pauses/Finish/5
         [HttpPut("Finish/{id}")]
         [Authorize]
-        public async Task<IActionResult> FinishPause(int pauseId)
+        public async Task<IActionResult> FinishPause(int id)
         {
-            var pause = await _pauseRepo.GetPauseByIdAsync(pauseId);
+            var pause = await _pauseRepo.GetPauseByIdAsync(id);
 
             if (pause == null)
             {

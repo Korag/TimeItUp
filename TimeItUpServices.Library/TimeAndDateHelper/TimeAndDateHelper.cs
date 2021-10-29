@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace TimeItUpServices.Library
 {
@@ -19,6 +22,11 @@ namespace TimeItUpServices.Library
 
         public string CalculateDateTimePeriodAsString(DateTime startDate, DateTime endDate)
         {
+            if (endDate == DateTime.MinValue)
+            {
+                endDate = DateTime.UtcNow;
+            }
+
             var timePeriod = endDate.Subtract(startDate);
 
             return GenerateMagicStringOfElapsedTime(timePeriod);
@@ -31,6 +39,11 @@ namespace TimeItUpServices.Library
 
         public TimeSpan CalculateDateTimePeriodAsTimeSpan(DateTime startDate, DateTime endDate)
         {
+            if (endDate == DateTime.MinValue)
+            {
+                endDate = DateTime.UtcNow;
+            }
+
             return endDate.TimeOfDay - startDate.TimeOfDay;
         }
 

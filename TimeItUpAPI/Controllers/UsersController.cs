@@ -43,9 +43,9 @@ namespace TimeItUpAPI.Controllers
         // GET: api/Users/5
         [HttpGet("{id}")]
         [Authorize]
-        public async Task<ActionResult<UserDto>> GetUserById(string userId)
+        public async Task<ActionResult<UserDto>> GetUserById(string id)
         {
-            var user = await _userRepo.GetUserByIdAsync(userId);
+            var user = await _userRepo.GetUserByIdAsync(id);
 
             if (user == null)
             {

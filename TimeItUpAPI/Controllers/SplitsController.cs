@@ -99,12 +99,12 @@ namespace TimeItUpAPI.Controllers
             return Ok(splitsDto);
         }
 
-        // GET: api/Splits/Timer/{timerId}
-        [HttpGet("Timer/{timerId}")]
+        // GET: api/Splits/Timer/{id}
+        [HttpGet("Timer/{id}")]
         [Authorize]
-        public async Task<ActionResult<ICollection<SplitDto>>> GetTimerSplits(int timerId)
+        public async Task<ActionResult<ICollection<SplitDto>>> GetTimerSplits(int id)
         {
-            var timer = await _timerRepo.GetTimerByIdAsync(timerId);
+            var timer = await _timerRepo.GetTimerByIdAsync(id);
 
             if (timer == null)
             {
@@ -117,12 +117,12 @@ namespace TimeItUpAPI.Controllers
             return Ok(splitsDto);
         }
 
-        // GET: api/Splits/Active/Timer/{timerId}
-        [HttpGet("Active/Timer/{timerId}")]
+        // GET: api/Splits/Active/Timer/{id}
+        [HttpGet("Active/Timer/{id}")]
         [Authorize]
-        public async Task<ActionResult<SplitDto>> GetTimerActiveSplit(int timerId)
+        public async Task<ActionResult<SplitDto>> GetTimerActiveSplit(int id)
         {
-            var timer = await _timerRepo.GetTimerByIdAsync(timerId);
+            var timer = await _timerRepo.GetTimerByIdAsync(id);
 
             if (timer == null)
             {
@@ -135,12 +135,12 @@ namespace TimeItUpAPI.Controllers
             return Ok(splitDto);
         }
 
-        // GET: api/Splits/Past/Timer/{timerId}
-        [HttpGet("Past/Timer/{timerId}")]
+        // GET: api/Splits/Past/Timer/{id}
+        [HttpGet("Past/Timer/{id}")]
         [Authorize]
-        public async Task<ActionResult<ICollection<SplitDto>>> GetTimerPastSplits(int timerId)
+        public async Task<ActionResult<ICollection<SplitDto>>> GetTimerPastSplits(int id)
         {
-            var timer = await _timerRepo.GetTimerByIdAsync(timerId);
+            var timer = await _timerRepo.GetTimerByIdAsync(id);
 
             if (timer == null)
             {

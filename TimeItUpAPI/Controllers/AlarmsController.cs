@@ -76,12 +76,12 @@ namespace TimeItUpAPI.Controllers
             return Ok(alarmsDto);
         }
 
-        // GET: api/Alarms/User/{userId}
-        [HttpGet("User/{userId}")]
+        // GET: api/Alarms/User/{id}
+        [HttpGet("User/{id}")]
         [Authorize]
-        public async Task<ActionResult<ICollection<AlarmDto>>> GetUserAlarms(string userId)
+        public async Task<ActionResult<ICollection<AlarmDto>>> GetUserAlarms(string id)
         {
-            var user = await _userRepo.GetUserByIdAsync(userId);
+            var user = await _userRepo.GetUserByIdAsync(id);
 
             if (user == null)
             {
@@ -98,12 +98,12 @@ namespace TimeItUpAPI.Controllers
             return Ok(alarmsDto);
         }
 
-        // GET: api/Alarms/Active/User/{userId}
-        [HttpGet("Active/User/{userId}")]
+        // GET: api/Alarms/Active/User/{id}
+        [HttpGet("Active/User/{id}")]
         [Authorize]
-        public async Task<ActionResult<ICollection<AlarmDto>>> GetOnlyActiveUserAlarms(string userId)
+        public async Task<ActionResult<ICollection<AlarmDto>>> GetOnlyActiveUserAlarms(string id)
         {
-            var user = await _userRepo.GetUserByIdAsync(userId);
+            var user = await _userRepo.GetUserByIdAsync(id);
 
             if (user == null)
             {
@@ -120,12 +120,12 @@ namespace TimeItUpAPI.Controllers
             return Ok(alarmsDto);
         }
 
-        // GET: api/Alarms/Past/User/{userId}
-        [HttpGet("Past/User/{userId}")]
+        // GET: api/Alarms/Past/User/{id}
+        [HttpGet("Past/User/{id}")]
         [Authorize]
-        public async Task<ActionResult<ICollection<AlarmDto>>> GetOnlyPastUserAlarms(string userId)
+        public async Task<ActionResult<ICollection<AlarmDto>>> GetOnlyPastUserAlarms(string id)
         {
-            var user = await _userRepo.GetUserByIdAsync(userId);
+            var user = await _userRepo.GetUserByIdAsync(id);
 
             if (user == null)
             {
@@ -143,12 +143,12 @@ namespace TimeItUpAPI.Controllers
             return Ok(alarmsDto);
         }
 
-        // GET: api/Alarms/Timer/{timerId}
-        [HttpGet("Timer/{timerId}")]
+        // GET: api/Alarms/Timer/{id}
+        [HttpGet("Timer/{id}")]
         [Authorize]
-        public async Task<ActionResult<ICollection<AlarmDto>>> GetTimerAlarms(int timerId)
+        public async Task<ActionResult<ICollection<AlarmDto>>> GetTimerAlarms(int id)
         {
-            var timer = await _timerRepo.GetTimerByIdAsync(timerId);
+            var timer = await _timerRepo.GetTimerByIdAsync(id);
 
             if (timer == null)
             {
@@ -163,12 +163,12 @@ namespace TimeItUpAPI.Controllers
             return Ok(alarmsDto);
         }
 
-        // GET: api/Alarms/Active/Timer/{timerId}
-        [HttpGet("Active/Timer/{timerId}")]
+        // GET: api/Alarms/Active/Timer/{id}
+        [HttpGet("Active/Timer/{id}")]
         [Authorize]
-        public async Task<ActionResult<ICollection<AlarmDto>>> GetTimerActiveAlarms(int timerId)
+        public async Task<ActionResult<ICollection<AlarmDto>>> GetTimerActiveAlarms(int id)
         {
-            var timer = await _timerRepo.GetTimerByIdAsync(timerId);
+            var timer = await _timerRepo.GetTimerByIdAsync(id);
 
             if (timer == null)
             {
@@ -183,12 +183,12 @@ namespace TimeItUpAPI.Controllers
             return Ok(alarmsDto);
         }
 
-        // GET: api/Alarms/Past/Timer/{timerId}
-        [HttpGet("Past/Timer/{timerId}")]
+        // GET: api/Alarms/Past/Timer/{id}
+        [HttpGet("Past/Timer/{id}")]
         [Authorize]
-        public async Task<ActionResult<ICollection<AlarmDto>>> GetTimerPastAlarms(int timerId)
+        public async Task<ActionResult<ICollection<AlarmDto>>> GetTimerPastAlarms(int id)
         {
-            var timer = await _timerRepo.GetTimerByIdAsync(timerId);
+            var timer = await _timerRepo.GetTimerByIdAsync(id);
 
             if (timer == null)
             {
