@@ -52,6 +52,10 @@ export class TimerService {
     await this.http.put(`${environment.apiUrl}/Timers/Start/${id}`, {}).toPromise();
   }
 
+  public async reinstateTimer(id: number): Promise<void> {
+    await this.http.put(`${environment.apiUrl}/Timers/Reinstate/${id}`, {}).toPromise();
+  }
+
   public async getUserActiveTimers(userId: string): Promise<TimerModel[]> {
     var activeTimers: TimerModel[] = [];
 

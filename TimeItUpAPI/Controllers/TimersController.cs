@@ -333,6 +333,7 @@ namespace TimeItUpAPI.Controllers
             }
 
             timer.EndAt = DateTime.MinValue;
+            timer.Finished = false;
             timer.Paused = false;
 
             var nextSplit = new Split()

@@ -48,7 +48,7 @@ export class TimerWithControlsComponent implements OnInit {
     if (this.isPaused) {
       this.pause = await this.pauseService.getTimerActivePause(this.timer.id!);
     }
-    if (this.isStarted && !this.isPaused) {
+    if (this.isStarted && !this.isPaused && !this.isFinished) {
       this.split = await this.splitService.getTimerActiveSplit(this.timer.id!);
 
       await this.startTimerCountdown();
@@ -111,11 +111,17 @@ export class TimerWithControlsComponent implements OnInit {
   }
 
   async finishTimer() {
+    this.isFinished = true;
+    this.pauseTimerCountdown();
     this.finishTimerEvent.emit(this.timer);
   }
 
   async reinstateTimer() {
-    //TODO
+    await this.timerService.reinstateTimer(this.timer.id!);
+    this.toastr.success('The timer has been reinstated');
+    this.isFinished = false;
+
+    await this.startTimerCountdown()
   }
 
   async pauseTimer() {

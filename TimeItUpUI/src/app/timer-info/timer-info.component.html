@@ -36,7 +36,7 @@
             </button>
             <button type='button' [disabled]="formBlocked" (click)="openRemoveTimerModal()" class="btn btn-grad-th" style="width: 150px; height: 80px; margin-right: 15px">
               <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
-              Delete
+              Remove
             </button>
           </div>
           <div *ngIf="reqErrors!.length > 0" class="alert alert-danger mt-3 mb-0">

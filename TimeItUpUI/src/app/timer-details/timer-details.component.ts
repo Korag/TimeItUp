@@ -25,6 +25,5 @@ export class TimerDetailsComponent implements OnInit {
   async finishTimer(timer: TimerModel): Promise<void> {
     await this.timerService.finishTimer(timer.id!);
     this.toastr.success('The timer has been terminated');
-    this.router.navigate(["timers/active"]);
   }
 }
