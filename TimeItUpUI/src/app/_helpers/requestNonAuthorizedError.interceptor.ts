@@ -18,7 +18,7 @@ export class RequestNonAuthorizedErrorInterceptor implements HttpInterceptor {
         location.reload(true);
       }
 
-      if (err.status !== 404 && 400 && 409) {
+      if (err.status !== 404 && err.status !== 400 && err.status !== 409) {
         this.router.navigate(["/error"]);
         var error = err.error.message || err.statusText;
         return throwError(error);

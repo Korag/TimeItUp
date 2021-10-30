@@ -27,7 +27,7 @@ export class CreateTimerComponent implements OnInit {
   ngOnInit(): void {
     this.createTimerForm = this.formBuilder.group({
       name: [{ value: "", disabled: false }, Validators.compose([Validators.required, Validators.minLength(2), Validators.maxLength(100)])],
-      description: [{ value: "", disabled: false }, Validators.compose([Validators.minLength(2), Validators.maxLength(255)])],
+      description: [{ value: "", disabled: false }, Validators.compose([Validators.maxLength(255)])],
     })
   }
 
@@ -52,6 +52,7 @@ export class CreateTimerComponent implements OnInit {
         this.router.navigate(["/timers/active"]);
       }
     } catch (err) {
+      console.log(err);
       this.reqErrors = await this.validHelp.populateValidationErrorArray(err, this.reqErrors);
 
       if (err.error.status === 409) {

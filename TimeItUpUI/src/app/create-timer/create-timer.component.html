@@ -16,7 +16,7 @@
             <textarea type="text" formControlName="description" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.description.errors }"></textarea>
             <label for="floatingInput" style="margin-left:12px">Description</label>
             <div *ngIf="submitted && f.description.errors" class="invalid-feedback text-left">
-            <div *ngIf="f.description.errors.minlength || f.description.errors.maxlength">Description must be between 2 and 255 characters long</div>
+              <div *ngIf="f.description.errors.maxlength">Description must not be longer than 255 characters</div>
             </div>
           </div>
         </div>
