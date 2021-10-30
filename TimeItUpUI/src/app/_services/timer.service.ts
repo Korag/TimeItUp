@@ -74,8 +74,13 @@ export class TimerService {
     return await pastTimers;
   }
 
+  public async calculateSelectedTimerPeriods(id: number): Promise<void> {
+
+    await this.http.put(`${environment.apiUrl}/Timers/CalculatePeriods/${id}`, {}).toPromise();
+  }
+
   public async calculateUserActiveTimersPeriods(id: string): Promise<void> {
 
-    await this.http.put<TimerModel[]>(`${environment.apiUrl}/Timers/Active/User/CalculatePeriods/${id}`, {}).toPromise();
+    await this.http.put(`${environment.apiUrl}/Timers/Active/User/CalculatePeriods/${id}`, {}).toPromise();
   }
 }

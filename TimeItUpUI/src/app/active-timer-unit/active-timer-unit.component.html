@@ -30,7 +30,15 @@
           <ng-template [ngIf]="countdownTime.seconds! >= 10">
             <span>{{countdownTime.seconds}}::</span>
           </ng-template>
-          <span>{{countdownTime.miliseconds}}</span>
+          <ng-template [ngIf]="countdownTime.miliseconds! < 10">
+            <span>00{{countdownTime.miliseconds}}</span>
+          </ng-template>
+          <ng-template [ngIf]="countdownTime.miliseconds! > 10 && countdownTime.miliseconds! < 100">
+            <span>0{{countdownTime.miliseconds}}</span>
+          </ng-template>
+          <ng-template [ngIf]="countdownTime.miliseconds! >= 100">
+            <span>{{countdownTime.miliseconds}}</span>
+          </ng-template>
         </div>
 
         <div class="col-md-4">
@@ -71,3 +79,17 @@
     </div>
   </div>
 </div>
+
+            //ADD DELETE AND EDIT BUTTON -> ALARMS DATATABLE
+            //ADD MODALS
+            //ADD CREATE BUTTON
+            //MERGE 2 DATABASES -> SOMEE -> AZURE
+            //ACTIVE ALARM ACTIVATION NOTIFICATION
+            //ADD NAME TO SPLIT AND EDIT SPLIT OPTION
+            //ADD TOTAL CALCULATION SEGMENT INSIDE TIMER DETAILS
+            //MANAGE CORRECT DATA FLOW IN TIMER DETAILS
+
+            //REINSTATE TIMER METHOD IN TIMER_WITH_CONTROLS
+
+            //DATE AND TIME FORMAT (UTC TO LOCAL) IN VIEW
+            //DURATION FORMAT FROM BACKEND

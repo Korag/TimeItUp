@@ -24,7 +24,16 @@
           <ng-template [ngIf]="countdownTime.seconds! >= 10">
             <span>{{countdownTime.seconds}}::</span>
           </ng-template>
-          <span>{{countdownTime.miliseconds}}</span>
+
+          <ng-template [ngIf]="countdownTime.miliseconds! < 10">
+            <span>00{{countdownTime.miliseconds}}</span>
+          </ng-template>
+          <ng-template [ngIf]="countdownTime.miliseconds! > 10 && countdownTime.miliseconds! < 100">
+            <span>0{{countdownTime.miliseconds}}</span>
+          </ng-template>
+          <ng-template [ngIf]="countdownTime.miliseconds! >= 100">
+            <span>{{countdownTime.miliseconds}}</span>
+          </ng-template>
         </div>
       </div>
 
@@ -38,25 +47,25 @@
           </ng-template>
           <ng-template [ngIf]="isStarted && !isFinished">
 
-            <button *ngIf="!isPaused" [disabled]="isPaused" (click)="pauseTimer()" class="btn btn-grad" style="padding: 10px; width: 150px; margin-left: auto; margin-right: auto; border-radius: 20px">
+            <button *ngIf="!isPaused" [disabled]="isPaused" (click)="pauseTimer()" class="btn btn-grad" style="padding: 10px; width: 150px; margin-left: auto; margin-right: 5px; border-radius: 20px">
               Pause
             </button>
-            <button *ngIf="isPaused" [disabled]="!isPaused" (click)="resumeTimer()" class="btn btn-grad" style="padding: 10px; width: 150px; margin-left: auto; margin-right: auto; border-radius: 20px">
+            <button *ngIf="isPaused" [disabled]="!isPaused" (click)="resumeTimer()" class="btn btn-grad" style="padding: 10px; width: 150px; margin-left: auto; margin-right: 5px; border-radius: 20px">
               Resume
             </button>
 
-            <button [disabled]="isPaused" (click)="createSplit()" class="btn btn-grad" style="padding: 10px; width: 150px; margin-left: auto; margin-right: auto; border-radius: 20px">
+            <button [disabled]="isPaused" (click)="createSplit()" class="btn btn-grad" style="padding: 10px; width: 150px; margin-left: 5px; margin-right: 5px; border-radius: 20px">
               Split
             </button>
 
-            <button (click)="finishTimer()" class="btn btn-grad-th" style="padding: 10px; width: 150px; margin-left: auto; margin-right: auto; border-radius: 20px">
+            <button (click)="finishTimer()" class="btn btn-grad-th" style="padding: 10px; width: 150px; margin-left: 5px; margin-right: auto; border-radius: 20px">
               Finish
             </button>
 
           </ng-template>
           <ng-template [ngIf]="isFinished">
 
-            <button *ngIf="isFinished" (click)="reinstateTimer()" class="btn btn-grad" style="padding: 10px; width: 150px; margin-left: auto; margin-right: auto; border-radius: 20px">
+            <button *ngIf="isFinished" (click)="reinstateTimer()" class="btn btn-grad w-50" style="padding: 10px; width: 150px; margin-left: auto; margin-right: auto;">
               Reinstate
             </button>
 

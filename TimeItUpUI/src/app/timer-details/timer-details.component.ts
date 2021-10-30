@@ -18,6 +18,7 @@ export class TimerDetailsComponent implements OnInit {
     private toastr: ToastrService) { }
 
   async ngOnInit(): Promise<void> {
+    await this.timerService.calculateSelectedTimerPeriods(this.route.snapshot.params.id);
     this.timer = await this.timerService.getTimerById(this.route.snapshot.params.id);
   }
 

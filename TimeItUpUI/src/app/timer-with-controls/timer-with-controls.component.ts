@@ -32,6 +32,8 @@ export class TimerWithControlsComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
 
+    console.log(this.timer);
+
     if (this.timer.startAt?.toString() === "0001-01-01T00:00:00") {
       this.isStarted = false;
     }
