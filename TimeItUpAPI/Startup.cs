@@ -35,9 +35,9 @@ namespace TimeItUpAPI
         {
             #region DbContext
 
-            services.AddDbContext<BasicIdentityDbContext>(options =>
-                                                          options.UseSqlServer(
-                                                          Configuration.GetConnectionString("DefaultConnection")));
+            //services.AddDbContext<BasicIdentityDbContext>(options =>
+            //                                              options.UseSqlServer(
+            //                                              Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddDbContext<EFDbContext>(b => b.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("EFDatabaseConnectionString")));
 
@@ -66,7 +66,8 @@ namespace TimeItUpAPI
             services.AddDatabaseDeveloperPageExceptionFilter();
 
             services.AddDefaultIdentity<BasicIdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<BasicIdentityDbContext>()
+                //.AddEntityFrameworkStores<BasicIdentityDbContext>()
+                .AddEntityFrameworkStores<EFDbContext>()
                 .AddDefaultTokenProviders();
 
             services.AddControllersWithViews();

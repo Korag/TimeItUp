@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
 using TimeItUpData.Library.Models;
 
 namespace TimeItUpData.Library.DataAccess
 {
-    public class EFDbContext : DbContext
+    public class EFDbContext : IdentityDbContext<BasicIdentityUser>
     {
         private readonly IConfiguration _configuration;
 
@@ -17,7 +18,7 @@ namespace TimeItUpData.Library.DataAccess
         public DbSet<Alarm> Alarms { get; set; }
         public DbSet<Pause> Pauses { get; set; }
 
-        public EFDbContext(IConfiguration configuration)
+        public EFDbContext(DbContextOptions<EFDbContext> options, IConfiguration configuration) : base(options)
         {
             _configuration = configuration;
         }
