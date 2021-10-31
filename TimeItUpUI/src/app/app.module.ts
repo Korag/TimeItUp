@@ -14,7 +14,6 @@ import { RemoveAlarmModalComponent } from './remove-alarm-modal';
 import { CreateAlarmModalComponent } from './create-alarm-modal';
 import { UpdateAlarmModalComponent } from './update-alarm-modal';
 import { RemoveTimerModalComponent } from './remove-timer-modal';
-import { UpdateTimerModalComponent } from './update-timer-modal';
 import { TimerDetailsComponent } from './timer-details';
 import { ActiveTimersComponent } from './active-timers';
 import { PastTimersComponent } from './past-timers';
@@ -53,7 +52,6 @@ import { DataTablesModule } from "angular-datatables";
     UpdateAlarmModalComponent,
     CreateTimerComponent,
     RemoveTimerModalComponent,
-    UpdateTimerModalComponent,
     TimerDetailsComponent,
     ActiveTimersComponent,
     PastTimersComponent,

@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { AlarmModel } from '../_models';
 
 @Component({
   selector: 'app-remove-alarm-modal',
@@ -6,10 +8,21 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./remove-alarm-modal.component.scss']
 })
 export class RemoveAlarmModalComponent implements OnInit {
+  @Input() public alarm!: AlarmModel;
+  @Output() removeAlarmEvent = new EventEmitter<AlarmModel>();
 
-  constructor() { }
+  constructor(private modalService: NgbModal,
+    public activeModal: NgbActiveModal) { }
 
   ngOnInit(): void {
   }
 
+  closeModal() {
+    this.activeModal.close();
+  }
+
+  removeAlarm() {
+    this.removeAlarmEvent.emit(this.alarm);
+    this.closeModal();
+  }
 }

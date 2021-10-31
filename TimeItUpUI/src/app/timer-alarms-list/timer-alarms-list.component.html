@@ -28,7 +28,12 @@
           <td>{{alarm.description}}</td>
           <td>{{alarm.activationTime}}</td>
           <td>
-            BUTTONS
+            <button class="btn btn-grad-sec" (click)="openEditAlarmModal(alarm)" style="max-width:200px; margin-left:auto; margin-right:auto">
+              Edit
+            </button>
+            <button class="btn btn-grad-th" (click)="openRemoveAlarmModal(alarm)" style="max-width:200px; margin-left:auto; margin-right:auto">
+              Remove
+            </button>
           </td>
         </tr>
       </tbody>
