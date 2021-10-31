@@ -12,10 +12,46 @@ namespace TimeItUpServices.Library
         private string GenerateMagicStringOfElapsedTime(TimeSpan timePeriod)
         {
             StringBuilder result = new StringBuilder();
-            result.Append(timePeriod.Hours).Append(":");
-            result.Append(timePeriod.Minutes).Append(":");
-            result.Append(timePeriod.Seconds).Append(":");
-            result.Append(timePeriod.Milliseconds);
+
+            if (timePeriod.Hours < 10)
+            {
+                result.Append(0).Append(timePeriod.Hours).Append(":");
+            }
+            else
+            {
+                result.Append(timePeriod.Hours).Append(":");
+            }
+
+            if (timePeriod.Minutes < 10)
+            {
+                result.Append(0).Append(timePeriod.Minutes).Append(":");
+            }
+            else
+            {
+                result.Append(timePeriod.Minutes).Append(":");
+            }
+
+            if (timePeriod.Seconds < 10)
+            {
+                result.Append(0).Append(timePeriod.Seconds).Append(":");
+            }
+            else
+            {
+                result.Append(timePeriod.Seconds).Append(":");
+            }
+
+            if (timePeriod.Milliseconds < 10)
+            {
+                result.Append(00).Append(timePeriod.Milliseconds);
+            }
+            else if (timePeriod.Milliseconds >= 10 && timePeriod.Milliseconds < 100)
+            {
+                result.Append(0).Append(timePeriod.Milliseconds);
+            }
+            else
+            {
+                result.Append(timePeriod.Milliseconds);
+            }
 
             return result.ToString();
         }

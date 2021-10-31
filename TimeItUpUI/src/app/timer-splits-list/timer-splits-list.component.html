@@ -23,8 +23,8 @@
       </thead>
       <tbody class="text-white">
         <tr *ngFor="let split of splits">
-          <td>{{split.startAt}}</td>
-          <td>{{split.endAt}}</td>
+          <td>{{split.startAt + "Z" | date: 'dd/MM/yyyy HH:mm'}}</td>
+          <td>{{split.endAt + "Z" | date: 'dd/MM/yyyy HH:mm'}}</td>
           <td>{{split.totalDuration}}</td>
         </tr>
       </tbody>

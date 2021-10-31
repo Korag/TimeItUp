@@ -6,7 +6,7 @@
     </div>
   </div>
 
-  <div *ngIf="timers.length === 0" class="alert alert-info w-100" style="font-size:22px" role="alert">
+  <div *ngIf="!listLoading && timers.length === 0" class="alert alert-info w-100" style="font-size:22px" role="alert">
     <h4 class="alert-heading" style="font-size:28px">Info</h4>
     <p>You currently have no past timers</p>
   </div>
@@ -26,8 +26,8 @@
         </thead>
         <tbody class="text-white">
           <tr *ngFor="let timer of timers">
-            <td>{{timer.startAt}}</td>
-            <td>{{timer.endAt}}</td>
+            <td>{{timer.startAt + "Z" | date: 'dd/MM/yyyy HH:mm'}}</td>
+            <td>{{timer.endAt + "Z" | date: 'dd/MM/yyyy HH:mm'}}</td>
             <td>{{timer.name}}</td>
             <td>{{timer.totalCountdownTime}}</td>
             <td>
