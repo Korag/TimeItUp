@@ -196,6 +196,8 @@ namespace TimeItUpAPI
                     c.RoutePrefix = string.Empty;
                 }
             );
+
+            context.Database.EnsureCreated();
         }
     }
 }

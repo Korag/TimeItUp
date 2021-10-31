@@ -7,12 +7,18 @@
 <div *ngIf="alarms.length === 0" class="alert alert-info w-100" style="font-size:22px; margin-top:20px" role="alert">
   <h4 class="alert-heading" style="font-size:28px">Info</h4>
   <p>This timer currently have no alarms</p>
+  <button class="btn btn-grad w-50" (click)="openAddAlarmModal()" style="max-width:200px; margin-left:auto; margin-right:auto">
+    Add
+  </button>
 </div>
 
 <ng-template [ngIf]="!listLoading && alarms.length > 0">
 
   <div class="col-12 table-responsive text-white formGradientBackgroundRounded" style="padding: 5px 5px 5px 5px; margin-top:20px">
     <h3>Alarms</h3>
+    <button class="btn btn-grad" (click)="openAddAlarmModal()" style="max-width:200px; margin-left:auto; margin-right:0px">
+      Add
+    </button>
     <table id="timerAlarmsTable" datatable class="table table-bordered display text-white" style="width: 100%;" role="grid">
       <thead class="text-white text-center" style="font-weight:bold;">
         <tr style="font-size: 20px">

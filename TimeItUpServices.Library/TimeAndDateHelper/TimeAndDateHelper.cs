@@ -43,8 +43,9 @@ namespace TimeItUpServices.Library
             {
                 endDate = DateTime.UtcNow;
             }
+            var result = endDate - startDate;
 
-            return endDate.TimeOfDay - startDate.TimeOfDay;
+            return new TimeSpan(result.Days, result.Hours, result.Minutes, result.Seconds, result.Milliseconds);
         }
 
         public TimeSpan AddTimeSpans(ICollection<TimeSpan> timespans)

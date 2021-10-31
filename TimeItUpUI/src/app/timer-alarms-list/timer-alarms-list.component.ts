@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
+import { CreateAlarmModalComponent } from '../create-alarm-modal';
 import { RemoveAlarmModalComponent } from '../remove-alarm-modal';
 import { UpdateAlarmModalComponent } from '../update-alarm-modal';
 import { AlarmModel, TimerModel } from '../_models';
@@ -58,6 +59,21 @@ export class TimerAlarmsListComponent implements OnInit {
     });
   }
 
+  openAddAlarmModal() {
+    const modalRef = this.modalService.open(CreateAlarmModalComponent,
+      {
+        scrollable: true,
+        windowClass: 'myCustomModalClass',
+        keyboard: false,
+        backdrop: 'static',
+        centered: false,
+        size: "modal-lg"
+      });
+    modalRef.componentInstance.createAlarmEvent.subscribe(($e: any) => {
+      this.addAlarm($e);
+    });
+  }
+
   async removeAlarm(alarm: AlarmModel) {
     var index = this.alarms.indexOf(alarm);
     this.alarms.splice(index, 1);
@@ -67,6 +83,10 @@ export class TimerAlarmsListComponent implements OnInit {
   }
 
   async updateAlarm(alarm: AlarmModel) {
+    //TODO
+  }
+
+  async addAlarm(alarm: AlarmModel) {
     //TODO
   }
 }
