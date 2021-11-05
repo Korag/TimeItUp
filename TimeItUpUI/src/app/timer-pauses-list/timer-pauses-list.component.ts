@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, SimpleChange } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Router } from '@angular/router';
 import { PauseModel, TimerModel } from '../_models';
 import { PauseService } from '../_services';
 
@@ -17,11 +17,13 @@ export class TimerPausesListComponent implements OnInit {
   pauses: PauseModel[] = [];
   listLoading: boolean = true;
 
-  dtTrigger: Subject<any> = new Subject<any>();
-
-  constructor(private pauseService: PauseService) { }
+  constructor(private router: Router,
+              private pauseService: PauseService) { }
 
   async ngOnInit(): Promise<void> {
+
+    console.log("INIT");
+
     this.pauses = await this.pauseService.getTimerPauses(this.timer.id!);
     this.listLoading = false;
   }
@@ -35,18 +37,22 @@ export class TimerPausesListComponent implements OnInit {
 
     if (changeOfNewlyAddedPause !== undefined) {
       if (this.pauseChildMessage !== "" && changeOfNewlyAddedPause.previousValue! !== changeOfNewlyAddedPause.currentValue) {
-        this.pauses.push(this.addedPause);
+        //this.pauses.push(this.addedPause);
 
-        $('#timerPausesTable').DataTable().row.add([
-          'jassa', 'jassa@gmail.com', 'jassa.com'
-        ]).draw()
+        this.listLoading = true;
+        await this.ngOnInit();
+        this.listLoading = false;
       }
     }
 
     if (messageFromParent !== undefined && this.pauseChildMessage === "finish") {
-      this.pauses.pop();
+      //this.pauses.pop();
       await this.recalculatePauseTotalDuration();
-      this.pauses.push(await this.pauseService.getPauseById(this.addedPause.id!));
+      //this.pauses.push(await this.pauseService.getPauseById(this.addedPause.id!));
+
+      this.listLoading = true;
+      await this.ngOnInit();
+      this.listLoading = false;
     }
   }
 

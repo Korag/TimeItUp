@@ -30,14 +30,22 @@ export class TimerSplitsListComponent implements OnInit {
 
     if (changeOfNewlyAddedSplit !== undefined) {
       if (this.splitChildMessage !== "" && changeOfNewlyAddedSplit.previousValue! !== changeOfNewlyAddedSplit.currentValue) {
-        this.splits.push(this.addedSplit);
+        //this.splits.push(this.addedSplit);
+
+        this.listLoading = true;
+        await this.ngOnInit();
+        this.listLoading = false;
       }
     }
 
     if (messageFromParent !== undefined && this.splitChildMessage === "finish") {
-      this.splits.pop();
+      //this.splits.pop();
       await this.recalculateSplitTotalDuration();
-      this.splits.push(await this.splitService.getSplitById(this.addedSplit.id!));
+      //this.splits.push(await this.splitService.getSplitById(this.addedSplit.id!));
+
+      this.listLoading = true;
+      await this.ngOnInit();
+      this.listLoading = false;
     }
   }
 
