@@ -1,6 +1,6 @@
 <div class="col-md-12" style="margin-top:4%">
 
-  <app-timer-with-controls *ngIf="timer" [timer]="timer" (finishTimerEvent)="finishTimer($event)"></app-timer-with-controls>
+  <app-timer-with-controls *ngIf="timer" [timer]="timer" (finishSplitTimerEvent)="finishSplit($event)" (splitTimerEvent)="splitTimer($event)"  (finishPauseTimerEvent)="finishPause($event)" (pauseTimerEvent)="pauseTimer($event)" (finishTimerEvent)="finishTimer($event)"></app-timer-with-controls>
 
   <app-timer-info *ngIf="timer" [timer]="timer"></app-timer-info>
 
@@ -8,8 +8,8 @@
 
   <app-timer-alarms-list *ngIf="timer" [timer]="timer"></app-timer-alarms-list>
 
-  <app-timer-splits-list *ngIf="timer" [timer]="timer"></app-timer-splits-list>
+  <app-timer-splits-list *ngIf="timer" [timer]="timer" [splitChildMessage]="splitChildMessage" [addedSplit]="addedSplit"></app-timer-splits-list>
 
-  <app-timer-pauses-list *ngIf="timer" [timer]="timer"></app-timer-pauses-list>
+  <app-timer-pauses-list *ngIf="timer" [timer]="timer" [pauseChildMessage]="pauseChildMessage" [addedPause]="addedPause"></app-timer-pauses-list>
 
 </div>

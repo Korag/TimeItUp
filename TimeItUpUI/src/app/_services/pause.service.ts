@@ -52,4 +52,20 @@ export class PauseService {
 
     return await timerPauses;
   }
+
+  public async getPauseById(id: number): Promise<PauseModel> {
+    var pause = new PauseModel();
+
+    await this.http.get<PauseModel>(`${environment.apiUrl}/Pauses/${id}`, {})
+      .pipe(map(result => {
+        pause = result;
+      })).toPromise();
+
+    return await pause;
+  }
+
+  public async calculatePauseTotalDuration(id: number): Promise<void> {
+
+    await this.http.put(`${environment.apiUrl}/Pauses/CalculatePeriod/${id}`, {}).toPromise();
+  }
 }

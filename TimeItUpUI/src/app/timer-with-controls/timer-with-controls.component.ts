@@ -11,7 +11,14 @@ import { AuthService, PauseService, SplitService, TimerService } from '../_servi
 })
 export class TimerWithControlsComponent implements OnInit {
   @Input() timer!: TimerModel;
+
   @Output() finishTimerEvent = new EventEmitter<TimerModel>();
+
+  @Output() pauseTimerEvent = new EventEmitter<PauseModel>();
+  @Output() finishPauseTimerEvent = new EventEmitter<void>();
+
+  @Output() splitTimerEvent = new EventEmitter<SplitModel>();
+  @Output() finishSplitTimerEvent = new EventEmitter<void>();
 
   countdownTime: CountdownTimeModel = new CountdownTimeModel();
   intervalId!: any;
@@ -107,13 +114,17 @@ export class TimerWithControlsComponent implements OnInit {
     this.isStarted = true;
     this.toastr.success('The timer has been started');
 
+    this.splitTimerEvent.emit(this.split);
     await this.startTimerCountdown();
   }
 
   async finishTimer() {
     this.isFinished = true;
     this.pauseTimerCountdown();
+
     this.finishTimerEvent.emit(this.timer);
+    this.finishSplitTimerEvent.emit();
+    this.finishPauseTimerEvent.emit();
   }
 
   async reinstateTimer() {
@@ -121,14 +132,23 @@ export class TimerWithControlsComponent implements OnInit {
     this.toastr.success('The timer has been reinstated');
     this.isFinished = false;
 
+    this.split = await this.splitService.getTimerActiveSplit(this.timer.id!);
+    this.splitTimerEvent.emit(this.split);
+
     await this.startTimerCountdown()
   }
 
   async pauseTimer() {
     this.pause = await this.pauseService.createPause(this.timer.id!);
     await this.pauseService.startPause(this.pause.id!);
+
+    var now = new Date();
+    this.pause.startAt = new Date(now.toUTCString().slice(0, -4));
     this.isPaused = true;
     this.toastr.warning('The timer has been paused');
+
+    this.pauseTimerEvent.emit(this.pause);
+    this.finishSplitTimerEvent.emit();
 
     await this.pauseTimerCountdown();
   }
@@ -136,15 +156,26 @@ export class TimerWithControlsComponent implements OnInit {
   async resumeTimer() {
     await this.pauseService.finishPause(this.pause.id!);
     this.isPaused = false;
+    this.split = await this.splitService.getTimerActiveSplit(this.timer.id!);
     this.toastr.info('The timer has been resumed');
+
+    this.splitTimerEvent.emit(this.split);
+    this.finishPauseTimerEvent.emit();
 
     await this.startTimerCountdown();
   }
 
   async createSplit() {
     await this.splitService.finishSplit(this.split.id!);
+    this.finishSplitTimerEvent.emit();
+
     this.split = await this.splitService.createSplit(this.timer.id!);
     await this.splitService.startSplit(this.split.id!);
+
+    var now = new Date();
+    this.split.startAt = new Date(now.toUTCString().slice(0, -4));
     this.toastr.info('New split has been created');
+
+    this.splitTimerEvent.emit(this.split);
   }
 }

@@ -24,8 +24,14 @@
       <tbody class="text-white">
         <tr *ngFor="let split of splits">
           <td>{{split.startAt + "Z" | date: 'dd/MM/yyyy HH:mm'}}</td>
-          <td>{{split.endAt + "Z" | date: 'dd/MM/yyyy HH:mm'}}</td>
-          <td>{{split.totalDuration}}</td>
+          <ng-template [ngIf]="split.endAt?.toString() === '0001-01-01T00:00:00'">
+            <td>---</td>
+            <td>In progress</td>
+          </ng-template>
+          <ng-template [ngIf]="split.endAt?.toString() !== '0001-01-01T00:00:00'">
+            <td>{{split.endAt + "Z" | date: 'dd/MM/yyyy HH:mm'}}</td>
+            <td>{{split.totalDuration}}</td>
+          </ng-template>
         </tr>
       </tbody>
     </table>

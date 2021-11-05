@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, SimpleChange } from '@angular/core';
 import { SplitModel, TimerModel } from '../_models';
 import { SplitService } from '../_services';
 
@@ -9,13 +9,39 @@ import { SplitService } from '../_services';
 })
 export class TimerSplitsListComponent implements OnInit {
   @Input() timer!: TimerModel;
+  @Input() addedSplit!: SplitModel;
+
+  @Input() splitChildMessage: string = "";
+
   splits: SplitModel[] = [];
   listLoading: boolean = true;
 
-  constructor(private splitService: SplitService,) { }
+  constructor(private splitService: SplitService) { }
 
   async ngOnInit(): Promise<void> {
+
     this.splits = await this.splitService.getTimerSplits(this.timer.id!);
     this.listLoading = false;
+  }
+
+  async ngOnChanges(changes: { [property: string]: SimpleChange }) {
+    let changeOfNewlyAddedSplit: SimpleChange = changes['addedSplit'];
+    let messageFromParent: SimpleChange = changes['splitChildMessage'];
+
+    if (changeOfNewlyAddedSplit !== undefined) {
+      if (this.splitChildMessage !== "" && changeOfNewlyAddedSplit.previousValue! !== changeOfNewlyAddedSplit.currentValue) {
+        this.splits.push(this.addedSplit);
+      }
+    }
+
+    if (messageFromParent !== undefined && this.splitChildMessage === "finish") {
+      this.splits.pop();
+      await this.recalculateSplitTotalDuration();
+      this.splits.push(await this.splitService.getSplitById(this.addedSplit.id!));
+    }
+  }
+
+  async recalculateSplitTotalDuration() {
+    await this.splitService.calculateSplitTotalDuration(this.addedSplit.id!);
   }
 }

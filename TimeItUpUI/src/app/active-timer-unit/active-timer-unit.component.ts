@@ -59,6 +59,8 @@ export class ActiveTimerUnitComponent implements OnInit {
     this.countdownTime.minutes = parseInt(countdownTimeSplitted![1]);
     this.countdownTime.seconds = parseInt(countdownTimeSplitted![2]);
     this.countdownTime.miliseconds = parseInt(countdownTimeSplitted![3]);
+
+    console.log(this.timer.totalCountdownTime);
   }
 
   async runningCountdown() {

@@ -24,8 +24,14 @@
       <tbody class="text-white">
         <tr *ngFor="let pause of pauses">
           <td>{{pause.startAt + "Z" | date: 'dd/MM/yyyy HH:mm'}}</td>
-          <td>{{pause.endAt + "Z" | date: 'dd/MM/yyyy HH:mm'}}</td>
-          <td>{{pause.totalDuration}}</td>
+          <ng-template [ngIf]="pause.endAt?.toString() === '0001-01-01T00:00:00'">
+            <td>---</td>
+            <td>In progress</td>
+          </ng-template>
+          <ng-template [ngIf]="pause.endAt?.toString() !== '0001-01-01T00:00:00'">
+            <td>{{pause.endAt + "Z" | date: 'dd/MM/yyyy HH:mm'}}</td>
+            <td>{{pause.totalDuration}}</td>
+          </ng-template>
         </tr>
       </tbody>
     </table>

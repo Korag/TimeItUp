@@ -42,6 +42,22 @@ export class SplitService {
     return await activeSplit;
   }
 
+  public async getSplitById(id: number): Promise<SplitModel> {
+    var split = new SplitModel();
+
+    await this.http.get<SplitModel>(`${environment.apiUrl}/Splits/${id}`, {})
+      .pipe(map(result => {
+        split = result;
+      })).toPromise();
+
+    return await split;
+  }
+
+  public async calculateSplitTotalDuration(id: number): Promise<void> {
+
+    await this.http.put(`${environment.apiUrl}/Splits/CalculatePeriod/${id}`, {}).toPromise();
+  }
+
   public async getTimerSplits(timerId: number): Promise<SplitModel[]> {
     var timerSplits: SplitModel[] = [];
 
