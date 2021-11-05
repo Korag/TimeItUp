@@ -1,1 +1,104 @@
-<p>timer-duration-section works!</p>
+<div class="col-md-12" style="margin-top:20px">
+  <div class="card formGradientBackgroundRounded text-light">
+    <div class="card-body">
+      <h2>Timings</h2>
+
+      <div class="col-md-12" style="text-align:center">
+        <!--<div class="row" style="font-size: 32px">
+          <div class="col-md-6">
+            <span>Total Timer Duration</span>
+          </div>
+          <div class="col-md-6">
+            <span>Total Paused Time</span>
+          </div>
+        </div>-->
+
+        <div class="row">
+          <div class="col-md-6">
+
+            <div class="col-md-12" style="font-size: 28px">
+              <span>Total Timer Duration</span>
+            </div>
+
+            <div class="col-md-12 formGradientBackgroundRounded" style="font-size: 24px">
+              <ng-template [ngIf]="totalDurationTime.hours! < 10">
+                <span>0{{totalDurationTime.hours}}:</span>
+              </ng-template>
+              <ng-template [ngIf]="totalDurationTime.hours! >= 10">
+                <span>{{totalDurationTime.hours}}:</span>
+              </ng-template>
+
+              <ng-template [ngIf]="totalDurationTime.minutes! < 10">
+                <span>0{{totalDurationTime.minutes}}:</span>
+              </ng-template>
+              <ng-template [ngIf]="totalDurationTime.minutes! >= 10">
+                <span>{{totalDurationTime.minutes}}:</span>
+              </ng-template>
+
+              <ng-template [ngIf]="totalDurationTime.seconds! < 10">
+                <span>0{{totalDurationTime.seconds}}::</span>
+              </ng-template>
+              <ng-template [ngIf]="totalDurationTime.seconds! >= 10">
+                <span>{{totalDurationTime.seconds}}::</span>
+              </ng-template>
+
+              <ng-template [ngIf]="totalDurationTime.miliseconds! < 10">
+                <span>00{{totalDurationTime.miliseconds}}</span>
+              </ng-template>
+              <ng-template [ngIf]="totalDurationTime.miliseconds! > 10 && totalDurationTime.miliseconds! < 100">
+                <span>0{{totalDurationTime.miliseconds}}</span>
+              </ng-template>
+              <ng-template [ngIf]="totalDurationTime.miliseconds! >= 100">
+                <span>{{totalDurationTime.miliseconds}}</span>
+              </ng-template>
+            </div>
+
+          </div>
+
+          <div class="col-md-6">
+
+            <div class="col-md-12" style="font-size: 28px">
+              <span>Total Pause Time</span>
+            </div>
+
+            <div class="col-md-12 formGradientBackgroundRounded" style="font-size: 24px">
+
+              <ng-template [ngIf]="totalPauseTime.hours! < 10">
+                <span>0{{totalPauseTime.hours}}:</span>
+              </ng-template>
+              <ng-template [ngIf]="totalPauseTime.hours! >= 10">
+                <span>{{totalPauseTime.hours}}:</span>
+              </ng-template>
+
+              <ng-template [ngIf]="totalPauseTime.minutes! < 10">
+                <span>0{{totalPauseTime.minutes}}:</span>
+              </ng-template>
+              <ng-template [ngIf]="totalPauseTime.minutes! >= 10">
+                <span>{{totalPauseTime.minutes}}:</span>
+              </ng-template>
+
+              <ng-template [ngIf]="totalPauseTime.seconds! < 10">
+                <span>0{{totalPauseTime.seconds}}::</span>
+              </ng-template>
+              <ng-template [ngIf]="totalPauseTime.seconds! >= 10">
+                <span>{{totalPauseTime.seconds}}::</span>
+              </ng-template>
+
+              <ng-template [ngIf]="totalPauseTime.miliseconds! < 10">
+                <span>00{{totalPauseTime.miliseconds}}</span>
+              </ng-template>
+              <ng-template [ngIf]="totalPauseTime.miliseconds! > 10 && totalPauseTime.miliseconds! < 100">
+                <span>0{{totalPauseTime.miliseconds}}</span>
+              </ng-template>
+              <ng-template [ngIf]="totalPauseTime.miliseconds! >= 100">
+                <span>{{totalPauseTime.miliseconds}}</span>
+              </ng-template>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
