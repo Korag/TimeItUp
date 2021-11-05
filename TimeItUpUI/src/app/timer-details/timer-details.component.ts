@@ -46,6 +46,9 @@ export class TimerDetailsComponent implements OnInit {
 
   async finishTimer(timer: TimerModel): Promise<void> {
     await this.timerService.finishTimer(timer.id!);
+    await this.finishPause(event);
+    await this.finishSplit(event);
+
     this.toastr.success('The timer has been terminated');
   }
 

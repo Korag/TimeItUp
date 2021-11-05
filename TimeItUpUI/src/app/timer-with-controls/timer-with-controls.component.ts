@@ -123,8 +123,6 @@ export class TimerWithControlsComponent implements OnInit {
     this.pauseTimerCountdown();
 
     this.finishTimerEvent.emit(this.timer);
-    this.finishSplitTimerEvent.emit();
-    this.finishPauseTimerEvent.emit();
   }
 
   async reinstateTimer() {

@@ -34,18 +34,16 @@ export class TimerSplitsListComponent implements OnInit {
 
         this.listLoading = true;
         await this.ngOnInit();
-        this.listLoading = false;
       }
     }
 
     if (messageFromParent !== undefined && this.splitChildMessage === "finish") {
       //this.splits.pop();
-      await this.recalculateSplitTotalDuration();
+      //await this.recalculateSplitTotalDuration();
       //this.splits.push(await this.splitService.getSplitById(this.addedSplit.id!));
 
       this.listLoading = true;
       await this.ngOnInit();
-      this.listLoading = false;
     }
   }
 

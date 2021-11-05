@@ -22,8 +22,6 @@ export class TimerPausesListComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
 
-    console.log("INIT");
-
     this.pauses = await this.pauseService.getTimerPauses(this.timer.id!);
     this.listLoading = false;
   }
@@ -41,18 +39,16 @@ export class TimerPausesListComponent implements OnInit {
 
         this.listLoading = true;
         await this.ngOnInit();
-        this.listLoading = false;
       }
     }
 
     if (messageFromParent !== undefined && this.pauseChildMessage === "finish") {
       //this.pauses.pop();
-      await this.recalculatePauseTotalDuration();
+      //await this.recalculatePauseTotalDuration();
       //this.pauses.push(await this.pauseService.getPauseById(this.addedPause.id!));
 
       this.listLoading = true;
       await this.ngOnInit();
-      this.listLoading = false;
     }
   }
 
