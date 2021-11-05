@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace TimeItUpServices.Library
 {
@@ -12,14 +9,15 @@ namespace TimeItUpServices.Library
         private string GenerateMagicStringOfElapsedTime(TimeSpan timePeriod)
         {
             StringBuilder result = new StringBuilder();
+            int timerHours = (timePeriod.Days * 24) + timePeriod.Hours;
 
-            if (timePeriod.Hours < 10)
+            if (timerHours < 10)
             {
-                result.Append(0).Append(timePeriod.Hours).Append(":");
+                result.Append(0).Append(timerHours).Append(":");
             }
             else
             {
-                result.Append(timePeriod.Hours).Append(":");
+                result.Append(timerHours).Append(":");
             }
 
             if (timePeriod.Minutes < 10)
@@ -65,6 +63,11 @@ namespace TimeItUpServices.Library
 
             var timePeriod = endDate.Subtract(startDate);
 
+            if (startDate == endDate)
+            {
+                timePeriod = TimeSpan.Zero;
+            }
+
             return GenerateMagicStringOfElapsedTime(timePeriod);
         }
 
@@ -75,13 +78,18 @@ namespace TimeItUpServices.Library
 
         public TimeSpan CalculateDateTimePeriodAsTimeSpan(DateTime startDate, DateTime endDate)
         {
+            if (startDate == endDate)
+            {
+                return TimeSpan.Zero;
+            }
+
             if (endDate == DateTime.MinValue)
             {
                 endDate = DateTime.UtcNow;
             }
             var result = endDate - startDate;
 
-            return new TimeSpan(result.Days, result.Hours, result.Minutes, result.Seconds, result.Milliseconds);
+            return new TimeSpan(0, result.Hours, result.Minutes, result.Seconds, result.Milliseconds);
         }
 
         public TimeSpan AddTimeSpans(ICollection<TimeSpan> timespans)
@@ -91,6 +99,19 @@ namespace TimeItUpServices.Library
             foreach (var timespan in timespans)
             {
                 result = result.Add(timespan);
+            }
+
+            return result;
+        }
+
+        public TimeSpan AddTimeFromMagicStrings(ICollection<string> timeStrings)
+        {
+            TimeSpan result = TimeSpan.Zero;
+
+            foreach (var time in timeStrings)
+            {
+                var timeArray = time.Split(":");
+                result = result.Add(new TimeSpan(0, Convert.ToInt32(timeArray[0]), Convert.ToInt32(timeArray[1]), Convert.ToInt32(timeArray[2]), Convert.ToInt32(timeArray[3])));
             }
 
             return result;

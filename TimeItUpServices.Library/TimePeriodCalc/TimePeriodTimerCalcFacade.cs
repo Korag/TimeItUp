@@ -33,11 +33,11 @@ namespace TimeItUpServices.Library
             timer.TotalDurationTimeSpan = _timeHelper.CalculateDateTimePeriodAsTimeSpan(timer.StartAt, timer.EndAt);
             timer.TotalDuration = _timeHelper.CalculateDateTimePeriodAsString(timer.StartAt, timer.EndAt);
 
-            timer.TotalPausedTimeSpan = _timeHelper.AddTimeSpans(timer.Pauses.Select(z => z.TotalDurationTimeSpan).ToList());
-            timer.TotalPausedTime = _timeHelper.CalculateDateTimePeriodAsString(timer.TotalPausedTimeSpan);
+            timer.TotalPausedTimeSpan = _timeHelper.AddTimeSpans(timer.Pauses.Select(z => z.TotalDurationTimeSpan).ToList()); 
+            timer.TotalPausedTime = _timeHelper.CalculateDateTimePeriodAsString(_timeHelper.AddTimeFromMagicStrings(timer.Pauses.Select(z => z.TotalDuration).ToList()));
 
-            timer.TotalCountdownTimeSpan = _timeHelper.AddTimeSpans(timer.Splits.Select(z => z.TotalDurationTimeSpan).ToList());
-            timer.TotalCountdownTime = _timeHelper.CalculateDateTimePeriodAsString(timer.TotalCountdownTimeSpan);
+            timer.TotalCountdownTimeSpan = _timeHelper.AddTimeSpans(timer.Splits.Select(z => z.TotalDurationTimeSpan).ToList());      
+            timer.TotalCountdownTime = _timeHelper.CalculateDateTimePeriodAsString(_timeHelper.AddTimeFromMagicStrings(timer.Splits.Select(z => z.TotalDuration).ToList()));
 
             return timer;
         }

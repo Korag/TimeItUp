@@ -27,7 +27,6 @@ namespace TimeItUpData.Library.Models
         public string TotalDuration { get; set; } = "0:0:0:0";
 
         [Required]
-        [DataType(DataType.Time)]
         public TimeSpan TotalDurationTimeSpan { get; set; } = TimeSpan.Zero;
 
         public Split()

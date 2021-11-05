@@ -9,5 +9,6 @@ namespace TimeItUpServices.Library
         string CalculateDateTimePeriodAsString(TimeSpan timePeriod);
         TimeSpan CalculateDateTimePeriodAsTimeSpan(DateTime startDate, DateTime endDate);
         TimeSpan AddTimeSpans(ICollection<TimeSpan> timespans);
+        TimeSpan AddTimeFromMagicStrings(ICollection<string> timeStrings);
     }
 }

@@ -33,15 +33,12 @@ namespace TimeItUpData.Library.Models
         public DateTime EndAt { get; set; } = DateTime.MinValue;
 
         [Required]
-        [DataType(DataType.Time)]
         public TimeSpan TotalDurationTimeSpan { get; set; } = TimeSpan.Zero;
 
         [Required]
-        [DataType(DataType.Time)]
         public TimeSpan TotalPausedTimeSpan { get; set; } = TimeSpan.Zero;
 
         [Required]
-        [DataType(DataType.Time)]
         public TimeSpan TotalCountdownTimeSpan { get; set; } = TimeSpan.Zero;
 
         [Required]
