@@ -1,8 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CountdownTimeModel, PauseModel, SplitModel, TimerModel } from '../_models';
-import { AuthService, PauseService, SplitService, TimerService } from '../_services';
+import { PauseService, SplitService, TimerService } from '../_services';
 
 @Component({
   selector: 'app-active-timer-unit',
@@ -22,8 +21,7 @@ export class ActiveTimerUnitComponent implements OnInit {
   pause!: PauseModel;
   split!: SplitModel;
 
-  constructor(private router: Router,
-    private authService: AuthService,
+  constructor(
     private timerService: TimerService,
     private pauseService: PauseService,
     private splitService: SplitService,
@@ -53,14 +51,12 @@ export class ActiveTimerUnitComponent implements OnInit {
   }
 
   async calculateCountdownTime() {
-    var countdownTimeSplitted = this.timer.totalCountdownTime?.split(":");
+    var countdownTimeSplitted = await this.timer.totalCountdownTime?.split(":");
 
     this.countdownTime.hours = parseInt(countdownTimeSplitted![0]);
     this.countdownTime.minutes = parseInt(countdownTimeSplitted![1]);
     this.countdownTime.seconds = parseInt(countdownTimeSplitted![2]);
     this.countdownTime.miliseconds = parseInt(countdownTimeSplitted![3]);
-
-    console.log(this.timer.totalCountdownTime);
   }
 
   async runningCountdown() {
@@ -93,11 +89,11 @@ export class ActiveTimerUnitComponent implements OnInit {
   }
 
   async startTimerCountdown() {
-    this.intervalId = setInterval(this.runningCountdown.bind(this), 1);
+    this.intervalId = await setInterval(this.runningCountdown.bind(this), 1);
   }
 
   async pauseTimerCountdown() {
-    clearInterval(this.intervalId);
+    await clearInterval(this.intervalId);
   }
 
   async startTimer() {
@@ -110,7 +106,7 @@ export class ActiveTimerUnitComponent implements OnInit {
   }
 
   async finishTimer() {
-    this.finishTimerEvent.emit(this.timer);
+    await this.finishTimerEvent.emit(this.timer);
   }
 
   async pauseTimer() {

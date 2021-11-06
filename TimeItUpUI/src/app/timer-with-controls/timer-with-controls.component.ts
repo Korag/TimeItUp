@@ -1,8 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CountdownTimeModel, PauseModel, SplitModel, TimerModel } from '../_models';
-import { AuthService, PauseService, SplitService, TimerService } from '../_services';
+import { PauseService, SplitService, TimerService } from '../_services';
 
 @Component({
   selector: 'app-timer-with-controls',
@@ -12,6 +11,7 @@ import { AuthService, PauseService, SplitService, TimerService } from '../_servi
 export class TimerWithControlsComponent implements OnInit {
   @Input() timer!: TimerModel;
 
+  @Output() startTimerEvent = new EventEmitter<void>();
   @Output() finishTimerEvent = new EventEmitter<TimerModel>();
 
   @Output() pauseTimerEvent = new EventEmitter<PauseModel>();
@@ -30,8 +30,7 @@ export class TimerWithControlsComponent implements OnInit {
   pause!: PauseModel;
   split!: SplitModel;
 
-  constructor(private router: Router,
-    private authService: AuthService,
+  constructor(
     private timerService: TimerService,
     private pauseService: PauseService,
     private splitService: SplitService,
@@ -63,7 +62,7 @@ export class TimerWithControlsComponent implements OnInit {
   }
 
   async calculateCountdownTime() {
-    var countdownTimeSplitted = this.timer.totalCountdownTime?.split(":");
+    var countdownTimeSplitted = await this.timer.totalCountdownTime?.split(":");
 
     this.countdownTime.hours = parseInt(countdownTimeSplitted![0]);
     this.countdownTime.minutes = parseInt(countdownTimeSplitted![1]);
@@ -101,11 +100,11 @@ export class TimerWithControlsComponent implements OnInit {
   }
 
   async startTimerCountdown() {
-    this.intervalId = setInterval(this.runningCountdown.bind(this), 1);
+    this.intervalId = await setInterval(this.runningCountdown.bind(this), 1);
   }
 
   async pauseTimerCountdown() {
-    clearInterval(this.intervalId);
+    await clearInterval(this.intervalId);
   }
 
   async startTimer() {
@@ -114,15 +113,17 @@ export class TimerWithControlsComponent implements OnInit {
     this.isStarted = true;
     this.toastr.success('The timer has been started');
 
-    this.splitTimerEvent.emit(this.split);
+    await this.splitTimerEvent.emit(this.split);
+    await this.startTimerEvent.emit();
+
     await this.startTimerCountdown();
   }
 
   async finishTimer() {
     this.isFinished = true;
-    this.pauseTimerCountdown();
+    await this.pauseTimerCountdown();
 
-    this.finishTimerEvent.emit(this.timer);
+    await this.finishTimerEvent.emit(this.timer);
   }
 
   async reinstateTimer() {
@@ -131,7 +132,8 @@ export class TimerWithControlsComponent implements OnInit {
     this.isFinished = false;
 
     this.split = await this.splitService.getTimerActiveSplit(this.timer.id!);
-    this.splitTimerEvent.emit(this.split);
+    await this.splitTimerEvent.emit(this.split);
+    await this.startTimerEvent.emit();
 
     await this.startTimerCountdown()
   }
@@ -145,8 +147,8 @@ export class TimerWithControlsComponent implements OnInit {
     this.isPaused = true;
     this.toastr.warning('The timer has been paused');
 
-    this.pauseTimerEvent.emit(this.pause);
-    this.finishSplitTimerEvent.emit();
+    await this.pauseTimerEvent.emit(this.pause);
+    await this.finishSplitTimerEvent.emit();
 
     await this.pauseTimerCountdown();
   }
@@ -157,15 +159,15 @@ export class TimerWithControlsComponent implements OnInit {
     this.split = await this.splitService.getTimerActiveSplit(this.timer.id!);
     this.toastr.info('The timer has been resumed');
 
-    this.splitTimerEvent.emit(this.split);
-    this.finishPauseTimerEvent.emit();
+    await this.splitTimerEvent.emit(this.split);
+    await this.finishPauseTimerEvent.emit();
 
     await this.startTimerCountdown();
   }
 
   async createSplit() {
     await this.splitService.finishSplit(this.split.id!);
-    this.finishSplitTimerEvent.emit();
+    await this.finishSplitTimerEvent.emit();
 
     this.split = await this.splitService.createSplit(this.timer.id!);
     await this.splitService.startSplit(this.split.id!);
@@ -174,6 +176,6 @@ export class TimerWithControlsComponent implements OnInit {
     this.split.startAt = new Date(now.toUTCString().slice(0, -4));
     this.toastr.info('New split has been created');
 
-    this.splitTimerEvent.emit(this.split);
+    await this.splitTimerEvent.emit(this.split);
   }
 }

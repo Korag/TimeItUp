@@ -100,4 +100,21 @@ export class TimerDurationSectionComponent implements OnInit {
   async pausePauseDurationCountdown() {
     clearInterval(this.totalPauseIntervalId);
   }
+
+  async startTimer() {
+    await this.startTotalDurationCountdown();
+  }
+
+  async finishTimer() {
+    await this.pauseTotalDurationCountdown();
+    await this.pausePauseDurationCountdown();
+  }
+
+  async pauseTimer() {
+    await this.startPauseDurationCountdown();
+  }
+
+  async resumeTimer() {
+    await this.pausePauseDurationCountdown();
+  }
 }

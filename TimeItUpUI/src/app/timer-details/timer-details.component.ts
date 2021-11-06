@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { TimerDurationSectionComponent } from '../timer-duration-section';
 import { PauseModel, SplitModel, TimerModel } from '../_models';
 import { PauseService, SplitService, TimerService } from '../_services';
 
@@ -13,6 +14,8 @@ export class TimerDetailsComponent implements OnInit {
   timer!: TimerModel;
   addedPause!: PauseModel
   addedSplit!: SplitModel;
+
+  @ViewChild(TimerDurationSectionComponent) timings!: TimerDurationSectionComponent;
 
   splitChildMessage!: string;
   pauseChildMessage!: string;
@@ -49,11 +52,15 @@ export class TimerDetailsComponent implements OnInit {
     await this.finishPause(event);
     await this.finishSplit(event);
 
+    await this.timings.finishTimer();
+
     this.toastr.success('The timer has been terminated');
   }
 
   async pauseTimer(pause: PauseModel): Promise<void> {
     this.addedPause = pause;
+
+    await this.timings.pauseTimer();
   }
 
   async splitTimer(split: SplitModel): Promise<void> {
@@ -68,5 +75,11 @@ export class TimerDetailsComponent implements OnInit {
   async finishPause($event: any): Promise<void> {
     this.pauseChildMessage = "";
     this.pauseChildMessage = "finish";
+
+    await this.timings.resumeTimer();
+  }
+
+  async startTimer($event: any): Promise<void> {
+    await this.timings.startTimer();
   }
 }
