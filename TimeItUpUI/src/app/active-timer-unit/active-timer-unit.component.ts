@@ -28,8 +28,6 @@ export class ActiveTimerUnitComponent implements OnInit {
     private toastr: ToastrService) { }
 
   async ngOnInit(): Promise<void> {
-    console.log(this.timer);
-
     if (this.timer.startAt?.toString() === "0001-01-01T00:00:00") {
       this.isStarted = false;
     }

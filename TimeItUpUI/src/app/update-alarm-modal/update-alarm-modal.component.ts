@@ -21,7 +21,7 @@ export class UpdateAlarmModalComponent implements OnInit {
   submitted = false;
   reqErrors: any[] = [];
 
-  constructor(private modalService: NgbModal,
+  constructor(
     private alarmService: AlarmService,
     public activeModal: NgbActiveModal,
     private formBuilder: FormBuilder,

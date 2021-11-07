@@ -21,12 +21,11 @@ export class CreateAlarmModalComponent implements OnInit {
 
   alarmActivationTime?: Date = new Date();
 
-  constructor(private modalService: NgbModal,
-    private alarmService: AlarmService,
-    public activeModal: NgbActiveModal,
-    private formBuilder: FormBuilder,
-    private toastr: ToastrService,
-    private validHelp: ValidationErrorPopulatorService) { }
+  constructor(private alarmService: AlarmService,
+              private activeModal: NgbActiveModal,
+              private formBuilder: FormBuilder,
+              private toastr: ToastrService,
+              private validHelp: ValidationErrorPopulatorService) { }
 
   async ngOnInit(): Promise<void> {
     this.createAlarmForm = this.formBuilder.group({
