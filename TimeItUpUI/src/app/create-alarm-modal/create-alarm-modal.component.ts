@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
-import { AlarmModel, TimerModel } from '../_models';
+import { TimerModel } from '../_models';
 import { AlarmService, ValidationErrorPopulatorService } from '../_services';
 
 @Component({
@@ -60,6 +60,10 @@ export class CreateAlarmModalComponent implements OnInit {
       if (createdAlarm) {
         this.toastr.success('New alarm has been created');
       }
+
+      this.createAlarmEvent.emit();
+      this.closeModal();
+
     } catch (err) {
       this.reqErrors = await this.validHelp.populateValidationErrorArray(err, this.reqErrors);
 
@@ -67,13 +71,8 @@ export class CreateAlarmModalComponent implements OnInit {
         this.reqErrors.push("The indicated timer does not exist.");
         this.toastr.warning("Timer doesn't exist");
       }
-
-      this.closeModal();
     }
 
     this.loading = false;
-
-    this.createAlarmEvent.emit();
-    this.closeModal();
   }
 }

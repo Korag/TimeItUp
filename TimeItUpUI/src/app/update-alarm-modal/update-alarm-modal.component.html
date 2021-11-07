@@ -1,1 +1,50 @@
-<p>update-alarm-modal works!</p>
+<div class="modal modal-alert d-block py-5" tabindex="-1" role="dialog" id="updateAlarmModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered " role="document">
+    <div class="modal-content rounded-4">
+      <div class="modal-body p-4 text-center">
+        <h5 class="mb-4">Update alarm</h5>
+
+        <form [formGroup]="updateAlarmForm" (ngSubmit)="updateAlarm()">
+          <div class="form-floating mb-3">
+            <input type="text" formControlName="name" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.name.errors }" />
+            <label for="floatingInput">Name</label>
+            <div *ngIf="submitted && f.name.errors" class="invalid-feedback text-left">
+              <div *ngIf="f.name.errors.required">Name is required</div>
+              <div *ngIf="f.name.errors.minlength || f.name.errors.maxlength">Name must be between 2 and 100 characters long</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-floating mb-3">
+              <textarea type="text" formControlName="description" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.description.errors }"></textarea>
+              <label for="floatingInput" style="margin-left:12px">Description</label>
+              <div *ngIf="submitted && f.description.errors" class="invalid-feedback text-left">
+                <div *ngIf="f.description.errors.maxlength">Description must not be longer than 255 characters</div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-floating mb-3">
+              <input formControlName="alarmActivationTime" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.alarmActivationTime.errors }"
+                     [owlDateTimeTrigger]="dtPicker2" [owlDateTime]="dtPicker2">
+              <label for="floatingInput" style="margin-left:12px">Alarm Activation Time</label>
+              <owl-date-time #dtPicker2></owl-date-time>
+              <div *ngIf="submitted && f.alarmActivationTime.errors" class="invalid-feedback text-left">
+                <div *ngIf="f.alarmActivationTime.errors.required">Alarm Activation Time is required</div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="reqErrors!.length > 0" class="alert alert-danger mt-3 mb-0">
+            <p *ngFor="let error of reqErrors!" style="margin-bottom: 0px">{{error}}</p>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer flex-nowrap p-0">
+        <button [disabled]="loading" class="btn btn-lg btn-grad-sec fs-6 text-decoration-none col-6 m-0 rounded-0" (click)="updateAlarm()">
+          <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+          <strong>Update</strong>
+        </button>
+        <button [disabled]="loading" class="btn btn-lg btn-grad-th fs-6 text-decoration-none col-6 m-0 rounded-0" (click)="closeModal()"><strong>Cancel</strong></button>
+      </div>
+    </div>
+  </div>
+</div>

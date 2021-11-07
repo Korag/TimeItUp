@@ -43,6 +43,17 @@ import { CreateTimerComponent } from './create-timer';
 
 import { DataTablesModule } from "angular-datatables";
 
+import { OwlDateTimeModule, OwlNativeDateTimeModule, OWL_DATE_TIME_FORMATS } from 'ng-pick-datetime';
+
+export const MY_NATIVE_FORMATS = {
+  fullPickerInput: { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' },
+  datePickerInput: { year: 'numeric', month: 'numeric', day: 'numeric' },
+  timePickerInput: { hour: 'numeric', minute: 'numeric' },
+  monthYearLabel: { year: 'numeric', month: 'short' },
+  dateA11yLabel: { year: 'numeric', month: 'long', day: 'numeric' },
+  monthYearA11yLabel: { year: 'numeric', month: 'long' },
+};
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -73,7 +84,7 @@ import { DataTablesModule } from "angular-datatables";
     TimerPausesListComponent,
     ErrorComponent,
     LogoutUserModalComponent,
-    CreateTimerComponent,
+    CreateTimerComponent
   ],
   imports: [
     BrowserModule,
@@ -84,11 +95,14 @@ import { DataTablesModule } from "angular-datatables";
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
     NgbModule,
-    DataTablesModule
+    DataTablesModule,
+    OwlDateTimeModule,
+    OwlNativeDateTimeModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AttachJWTToRequestInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: RequestNonAuthorizedErrorInterceptor, multi: true },
+    { provide: OWL_DATE_TIME_FORMATS, useValue: MY_NATIVE_FORMATS },
   ],
   bootstrap: [AppComponent]
 })

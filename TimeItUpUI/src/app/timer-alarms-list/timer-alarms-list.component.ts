@@ -27,7 +27,7 @@ export class TimerAlarmsListComponent implements OnInit {
     this.listLoading = false;
   }
 
-  openEditAlarmModal(alarm: AlarmModel) {
+  openUpdateAlarmModal(alarm: AlarmModel) {
     const modalRef = this.modalService.open(UpdateAlarmModalComponent,
       {
         scrollable: true,
@@ -38,7 +38,7 @@ export class TimerAlarmsListComponent implements OnInit {
         size: "modal-lg"
       });
     modalRef.componentInstance.alarm = alarm;
-    modalRef.componentInstance.editAlarmEvent.subscribe(($e: any) => {
+    modalRef.componentInstance.updateAlarmEvent.subscribe(($e: any) => {
       this.updateAlarm();
     });
   }
@@ -86,8 +86,6 @@ export class TimerAlarmsListComponent implements OnInit {
   }
 
   async updateAlarm() {
-    //await this.alarmService.updateAlarmData(alarm.id!, alarm.name!, alarm.description!, alarm.activationTime!);
-
     this.listLoading = false;
     await this.ngOnInit();
   }
