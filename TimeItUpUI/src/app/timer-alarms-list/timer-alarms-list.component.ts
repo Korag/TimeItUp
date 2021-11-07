@@ -39,7 +39,7 @@ export class TimerAlarmsListComponent implements OnInit {
       });
     modalRef.componentInstance.alarm = alarm;
     modalRef.componentInstance.editAlarmEvent.subscribe(($e: any) => {
-      this.updateAlarm($e);
+      this.updateAlarm();
     });
   }
 
@@ -69,25 +69,32 @@ export class TimerAlarmsListComponent implements OnInit {
         centered: false,
         size: "modal-lg"
       });
+    modalRef.componentInstance.timer = this.timer;
     modalRef.componentInstance.createAlarmEvent.subscribe(($e: any) => {
-      this.addAlarm($e);
+      this.addAlarm();
     });
   }
 
   async removeAlarm(alarm: AlarmModel) {
-    var index = this.alarms.indexOf(alarm);
-    this.alarms.splice(index, 1);
+    //var index = this.alarms.indexOf(alarm);
+    //this.alarms.splice(index, 1);
     await this.alarmService.removeAlarm(alarm.id!);
 
     this.toastr.success('The alarm has been removed');
+    this.listLoading = false;
+    await this.ngOnInit();
   }
 
-  async updateAlarm(alarm: AlarmModel) {
-    //TODO
+  async updateAlarm() {
+    //await this.alarmService.updateAlarmData(alarm.id!, alarm.name!, alarm.description!, alarm.activationTime!);
+
+    this.listLoading = false;
+    await this.ngOnInit();
   }
 
-  async addAlarm(alarm: AlarmModel) {
-    //TODO
+  async addAlarm() {
+    this.listLoading = false;
+    await this.ngOnInit();
   }
 }
 

@@ -12,29 +12,33 @@
 <ng-template [ngIf]="!listLoading && pauses.length > 0">
 
   <div class="col-12 table-responsive text-white formGradientBackgroundRounded" style="padding: 5px 5px 5px 5px; margin-top:20px">
-    <h3>Pauses</h3>
-    <table id="timerPausesTable" datatable class="table table-bordered display text-white" style="width: 100%;" role="grid">
-      <thead class="text-white text-center" style="font-weight:bold;">
-        <tr style="font-size: 20px">
-          <td>Start At</td>
-          <td>End At</td>
-          <td>Duration</td>
-        </tr>
-      </thead>
-      <tbody class="text-white">
-        <tr *ngFor="let pause of pauses">
-          <td>{{pause.startAt + "Z" | date: 'dd/MM/yyyy HH:mm'}}</td>
-          <ng-template [ngIf]="pause.endAt?.toString() === '0001-01-01T00:00:00'">
-            <td>---</td>
-            <td>In progress</td>
-          </ng-template>
-          <ng-template [ngIf]="pause.endAt?.toString() !== '0001-01-01T00:00:00'">
-            <td>{{pause.endAt + "Z" | date: 'dd/MM/yyyy HH:mm'}}</td>
-            <td>{{pause.totalDuration}}</td>
-          </ng-template>
-        </tr>
-      </tbody>
-    </table>
+    <div class="card formGradientBackgroundRounded text-light">
+      <div class="card-body">
+        <h3>Pauses</h3>
+        <table id="timerPausesTable" datatable class="table table-bordered display text-white" style="width: 100%;" role="grid">
+          <thead class="text-white text-center" style="font-weight:bold;">
+            <tr style="font-size: 20px">
+              <td>Start At</td>
+              <td>End At</td>
+              <td>Duration</td>
+            </tr>
+          </thead>
+          <tbody class="text-white">
+            <tr *ngFor="let pause of pauses">
+              <td>{{pause.startAt + "Z" | date: 'dd/MM/yyyy HH:mm'}}</td>
+              <ng-template [ngIf]="pause.endAt?.toString() === '0001-01-01T00:00:00'">
+                <td>---</td>
+                <td>In progress</td>
+              </ng-template>
+              <ng-template [ngIf]="pause.endAt?.toString() !== '0001-01-01T00:00:00'">
+                <td>{{pause.endAt + "Z" | date: 'dd/MM/yyyy HH:mm'}}</td>
+                <td>{{pause.totalDuration}}</td>
+              </ng-template>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 
 </ng-template>

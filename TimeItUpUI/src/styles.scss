@@ -1,4 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
+@import "~ng-pick-datetime/assets/style/picker.min.css";
 
 .backgroundMain {
   background-image: linear-gradient(to top, #09203f 0%, #537895 100%);
@@ -94,6 +95,11 @@
 
 .page-item.active .page-link {
   background-image: #3f7cd7;
+}
+
+.cdk-overlay-container
+{
+    z-index: 5000;
 }
 
 @media screen and (max-width: 1000px) {

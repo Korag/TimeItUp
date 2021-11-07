@@ -15,35 +15,41 @@
 <ng-template [ngIf]="!listLoading && alarms.length > 0">
 
   <div class="col-12 table-responsive text-white formGradientBackgroundRounded" style="padding: 5px 5px 5px 5px; margin-top:20px">
-    <h3>Alarms</h3>
-    <button class="btn btn-grad" (click)="openAddAlarmModal()" style="max-width:200px; margin-left:auto; margin-right:0px">
-      Add
-    </button>
-    <table id="timerAlarmsTable" datatable class="table table-bordered display text-white" style="width: 100%;" role="grid">
-      <thead class="text-white text-center" style="font-weight:bold;">
-        <tr style="font-size: 20px">
-          <td>Name</td>
-          <td>Description</td>
-          <td>Activation time</td>
-          <td>Operations</td>
-        </tr>
-      </thead>
-      <tbody class="text-white">
-        <tr *ngFor="let alarm of alarms">
-          <td>{{alarm.name}}</td>
-          <td>{{alarm.description}}</td>
-          <td>{{alarm.activationTime + "Z" | date: 'dd/MM/yyyy HH:mm'}}</td>
-          <td>
-            <button class="btn btn-grad-sec" (click)="openEditAlarmModal(alarm)" style="max-width:200px; margin-left:auto; margin-right:auto">
-              Edit
-            </button>
-            <button class="btn btn-grad-th" (click)="openRemoveAlarmModal(alarm)" style="max-width:200px; margin-left:auto; margin-right:auto">
-              Remove
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="card formGradientBackgroundRounded text-light">
+      <div class="card-body">
+        <h3>Alarms</h3>
+        <button class="btn btn-grad" (click)="openAddAlarmModal()" style="width:200px; margin-left: auto; margin-right: auto">
+          Add
+        </button>
+        <table id="timerAlarmsTable" datatable class="table table-bordered display text-white" style="width: 100%;" role="grid">
+          <thead class="text-white text-center" style="font-weight:bold;">
+            <tr style="font-size: 20px">
+              <td>Name</td>
+              <td>Description</td>
+              <td>Activation time</td>
+              <td>Operations</td>
+            </tr>
+          </thead>
+          <tbody class="text-white">
+            <tr *ngFor="let alarm of alarms">
+              <td>{{alarm.name}}</td>
+              <td>{{alarm.description}}</td>
+              <td>{{alarm.activationTime + "Z" | date: 'dd/MM/yyyy HH:mm'}}</td>
+              <td>
+                  <div class="btn-group w-100" role="group">
+                    <button class="btn btn-grad-sec" (click)="openEditAlarmModal(alarm)" style="max-width: 120px; margin-left: auto">
+                      Edit
+                    </button>
+                    <button class="btn btn-grad-th" (click)="openRemoveAlarmModal(alarm)" style="max-width: 120px; margin-right: auto">
+                      Remove
+                    </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 
 </ng-template>
