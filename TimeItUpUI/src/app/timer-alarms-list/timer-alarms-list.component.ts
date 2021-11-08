@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { CreateAlarmModalComponent } from '../create-alarm-modal';
@@ -17,10 +17,15 @@ export class TimerAlarmsListComponent implements OnInit {
   alarms: AlarmModel[] = [];
   listLoading: boolean = true;
 
+  public addUpdateRemoveAlarmEvent: CustomEvent = new CustomEvent('addUpdateRemoveAlarmEvent', {
+    bubbles: true
+  });
+
   constructor(
     private alarmService: AlarmService,
     private modalService: NgbModal,
-    private toastr: ToastrService) { }
+    private toastr: ToastrService,
+    private elementRef: ElementRef) { }
 
   async ngOnInit(): Promise<void> {
     this.alarms = await this.alarmService.getTimerAlarms(this.timer.id!);
@@ -83,16 +88,19 @@ export class TimerAlarmsListComponent implements OnInit {
     this.toastr.success('The alarm has been removed');
     this.listLoading = false;
     await this.ngOnInit();
+    this.elementRef.nativeElement.dispatchEvent(this.addUpdateRemoveAlarmEvent);
   }
 
   async updateAlarm() {
     this.listLoading = false;
     await this.ngOnInit();
+    this.elementRef.nativeElement.dispatchEvent(this.addUpdateRemoveAlarmEvent);
   }
 
   async addAlarm() {
     this.listLoading = false;
     await this.ngOnInit();
+    this.elementRef.nativeElement.dispatchEvent(this.addUpdateRemoveAlarmEvent);
   }
 }
 

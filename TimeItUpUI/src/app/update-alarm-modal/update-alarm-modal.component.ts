@@ -32,7 +32,7 @@ export class UpdateAlarmModalComponent implements OnInit {
     this.updateAlarmForm = this.formBuilder.group({
       name: [{ value: this.alarm.name, disabled: false }, Validators.compose([Validators.required, Validators.minLength(2), Validators.maxLength(100)])],
       description: [{ value: this.alarm.description, disabled: false }, Validators.compose([Validators.maxLength(255)])],
-      alarmActivationTime: [{ value: this.alarm.activationTime, disabled: false }],
+      alarmActivationTime: [{ value: this.alarm.activationTime+"Z", disabled: false }],
     })
   }
 
@@ -55,6 +55,8 @@ export class UpdateAlarmModalComponent implements OnInit {
 
     try {
       const activationTimeLocalDate = new Date(this.f.alarmActivationTime.value);
+      activationTimeLocalDate.setSeconds(0, 0);
+
       await this.alarmService.updateAlarmData(this.alarm.id!, this.f.name.value, this.f.description.value, activationTimeLocalDate);
 
       this.toastr.success('Selected alarm has been updated');

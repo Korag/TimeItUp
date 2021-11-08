@@ -1,5 +1,5 @@
 <div class="modal modal-alert d-block py-5" tabindex="-1" role="dialog" id="activeAlarmModal" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered " role="document">
+  <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content rounded-4">
       <div class="modal-body p-4 text-center">
         <h5 class="mb-4">ALARM!</h5>
@@ -11,23 +11,31 @@
         </ng-container>
 
         <ng-container *ngIf="!loading">
-          <div class="form-floating mb-3">
+          <div class="form-floating mb-3 text-center">
             <input type="text" readonly class="form-control" value="{{timer.name}}" />
             <label for="floatingInput">Timer Name</label>
           </div>
-          <div class="form-floating mb-3">
+          <div class="form-floating mb-3 text-center">
             <input type="text" readonly class="form-control" value="{{alarm.name}}" />
             <label for="floatingInput">Alarm Name</label>
           </div>
           <div class="row">
             <div class="form-floating mb-3">
-              <textarea readonly type="text" formControlName="description" class="form-control">{{alarm.description}}</textarea>
+              <textarea readonly type="text" class="form-control">{{alarm.description}}</textarea>
               <label for="floatingInput" style="margin-left:12px">Description</label>
             </div>
           </div>
-          <div class="row">
-            {{alarm.activationTime + "Z" | date: 'HH:mm dd/MM/yyyy'}}
+          <div class="w-100 alert alert-danger" style="font-weight: bold">
+            <div class="row" style="font-size: 34px">
+              <span>{{alarm.activationTime + "Z" | date: 'HH:mm'}}</span>
+            </div>
+            <div class="row" style="font-size: 26px">
+              <span>{{alarm.activationTime + "Z" | date: 'dd/MM/yyyy'}}</span>
+            </div>
           </div>
+          <audio loop autoplay>
+            <source [src]="alarmSound" type="audio/mpeg">
+          </audio>
         </ng-container>
       </div>
       <div class="modal-footer flex-nowrap p-0">

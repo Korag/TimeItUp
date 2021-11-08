@@ -54,6 +54,8 @@ export class CreateAlarmModalComponent implements OnInit {
 
     try {
       const activationTimeLocalDate = new Date(this.f.alarmActivationTime.value);
+      activationTimeLocalDate.setSeconds(0, 0);
+
       var createdAlarm = await this.alarmService.createAlarm(this.timer.id!, this.f.name.value, this.f.description.value, activationTimeLocalDate);
 
       if (createdAlarm) {

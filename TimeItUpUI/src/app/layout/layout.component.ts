@@ -1,3 +1,4 @@
+import { HostListener } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActiveAlarmNotificationModalComponent } from '../active-alarm-notification-modal';
@@ -10,7 +11,21 @@ import { AlarmService, AuthService } from '../_services';
   styleUrls: ['./layout.component.scss']
 })
 export class LayoutComponent implements OnInit {
+  @HostListener('addUpdateRemoveAlarmEvent', ['$event'])
+  async onCustomEventCaptured(event: any) {
+
+    console.log("JEST EVENT");
+
+    await clearInterval(this.intervalId);
+    for (var i = 0; i < this.timeouts.length; i++) {
+      clearTimeout(this.timeouts[i]);
+    }
+    this.timeouts = [];
+    await this.ngOnInit();
+  }
+
   intervalId!: any;
+  timeouts: any[] = [];
   userActiveAlarms: AlarmModel[] = [];
 
   constructor(private alarmService: AlarmService,
@@ -18,6 +33,7 @@ export class LayoutComponent implements OnInit {
     private modalService: NgbModal) { }
 
   async ngOnInit(): Promise<void> {
+    this.checkUserAlarms();
     this.intervalId = await setInterval(this.checkUserAlarms.bind(this), 60000);
   }
 
@@ -26,8 +42,10 @@ export class LayoutComponent implements OnInit {
     const currentTime = new Date();
 
     for (let activeAlarm of this.userActiveAlarms) {
-      if ((activeAlarm.activationTime!.getMinutes() - currentTime.getMinutes()) === 0) {
-        setTimeout(() => { this.displayAlarm(activeAlarm) }, 10000);
+      let alarmActTime = new Date(activeAlarm.activationTime! + "Z")
+
+      if ((alarmActTime.getTime() - currentTime.getTime()) < 60000) {
+        this.timeouts.push(setTimeout(() => { this.displayAlarm(activeAlarm) }, alarmActTime.getTime() - currentTime.getTime()));
       }
     }
   }
