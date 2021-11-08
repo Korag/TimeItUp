@@ -10,10 +10,7 @@ export class NonAuthUserGuard implements CanActivate {
 
   constructor(
     private router: Router,
-    private _authService: AuthService
-  ){
-
-  }
+    private _authService: AuthService) {}
 
   canActivate(
     route: ActivatedRouteSnapshot,

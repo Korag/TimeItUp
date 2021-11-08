@@ -7,8 +7,7 @@ import { environment } from '../../environments/environment.prod';
 })
 export class UserService {
 
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) { }
 
   public async getResetPasswordToken(email: string): Promise<void> {
     await this.http.post(`${environment.apiUrl}/Accounts/TryResetPassword/${email}`, {})

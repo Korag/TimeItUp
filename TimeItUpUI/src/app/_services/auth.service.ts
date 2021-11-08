@@ -16,8 +16,6 @@ export class AuthService {
 
   constructor(private http: HttpClient) {
     this.loggedUser = this.getUserDataFromLocalStorage();
-    console.log(this.loggedUser);
-
     const jwtHelper = new JwtHelperService();
 
     if (jwtHelper.isTokenExpired(this.loggedUser?.token)) {

@@ -37,8 +37,6 @@ export class TimerDurationSectionComponent implements OnInit {
     this.isPaused = this.timer.paused!;
     this.isFinished = this.timer.finished!;
 
-    console.log(this.timer);
-
     if (this.isPaused) {
       await this.startPauseDurationCountdown();
     }

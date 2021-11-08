@@ -32,7 +32,7 @@ export class UpdateAlarmModalComponent implements OnInit {
     this.updateAlarmForm = this.formBuilder.group({
       name: [{ value: this.alarm.name, disabled: false }, Validators.compose([Validators.required, Validators.minLength(2), Validators.maxLength(100)])],
       description: [{ value: this.alarm.description, disabled: false }, Validators.compose([Validators.maxLength(255)])],
-      alarmActivationTime: [{ value: this.alarm.activationTime+"Z", disabled: false }],
+      alarmActivationTime: [{ value: this.alarm.activationTime + "Z", disabled: false }],
     })
   }
 

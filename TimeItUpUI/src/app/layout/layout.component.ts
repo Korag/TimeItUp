@@ -14,8 +14,6 @@ export class LayoutComponent implements OnInit {
   @HostListener('addUpdateRemoveAlarmEvent', ['$event'])
   async onCustomEventCaptured(event: any) {
 
-    console.log("JEST EVENT");
-
     await clearInterval(this.intervalId);
     for (var i = 0; i < this.timeouts.length; i++) {
       clearTimeout(this.timeouts[i]);

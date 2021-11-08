@@ -5,8 +5,6 @@ import { ToastrService } from 'ngx-toastr';
 import { AlarmModel, TimerModel } from '../_models';
 import { TimerService } from '../_services';
 
-declare var require: any;
-
 @Component({
   selector: 'app-active-alarm-notification-modal',
   templateUrl: './active-alarm-notification-modal.component.html',
@@ -24,9 +22,6 @@ export class ActiveAlarmNotificationModalComponent implements OnInit {
               private toastr: ToastrService) { }
 
   async ngOnInit(): Promise<void> {
-
-    console.log(this.alarm);
-
     this.loading = true;
     this.timer = await this.timerService.getTimerById(this.alarm.timerId!);
     this.loading = false;

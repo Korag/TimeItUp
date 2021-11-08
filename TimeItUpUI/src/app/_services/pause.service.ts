@@ -9,8 +9,7 @@ import { PauseModel } from '../_models';
 })
 export class PauseService {
 
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) { }
 
   public async createPause(timerId: number): Promise<PauseModel> {
     var createdPause = new PauseModel();

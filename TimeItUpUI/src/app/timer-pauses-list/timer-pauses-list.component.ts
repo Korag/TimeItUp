@@ -1,5 +1,4 @@
 import { Component, Input, OnInit, SimpleChange } from '@angular/core';
-import { Router } from '@angular/router';
 import { PauseModel, TimerModel } from '../_models';
 import { PauseService } from '../_services';
 
@@ -17,8 +16,8 @@ export class TimerPausesListComponent implements OnInit {
   pauses: PauseModel[] = [];
   listLoading: boolean = true;
 
-  constructor(private router: Router,
-              private pauseService: PauseService) { }
+  constructor(
+    private pauseService: PauseService) { }
 
   async ngOnInit(): Promise<void> {
 
@@ -29,9 +28,6 @@ export class TimerPausesListComponent implements OnInit {
   async ngOnChanges(changes: { [property: string]: SimpleChange }) {
     let changeOfNewlyAddedPause: SimpleChange = changes['addedPause'];
     let messageFromParent: SimpleChange = changes['pauseChildMessage'];
-
-    console.log(changeOfNewlyAddedPause);
-    console.log(messageFromParent);
 
     if (changeOfNewlyAddedPause !== undefined) {
       if (this.pauseChildMessage !== "" && changeOfNewlyAddedPause.previousValue! !== changeOfNewlyAddedPause.currentValue) {

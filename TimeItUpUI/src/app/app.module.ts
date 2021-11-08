@@ -43,16 +43,7 @@ import { CreateTimerComponent } from './create-timer';
 
 import { DataTablesModule } from "angular-datatables";
 
-import { OwlDateTimeModule, OwlNativeDateTimeModule, OWL_DATE_TIME_FORMATS } from 'ng-pick-datetime';
-
-export const MY_NATIVE_FORMATS = {
-  fullPickerInput: { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' },
-  datePickerInput: { year: 'numeric', month: 'numeric', day: 'numeric' },
-  timePickerInput: { hour: 'numeric', minute: 'numeric' },
-  monthYearLabel: { year: 'numeric', month: 'short' },
-  dateA11yLabel: { year: 'numeric', month: 'long', day: 'numeric' },
-  monthYearA11yLabel: { year: 'numeric', month: 'long' },
-};
+import { OwlDateTimeModule, OwlNativeDateTimeModule, OWL_DATE_TIME_LOCALE } from 'ng-pick-datetime';
 
 @NgModule({
   declarations: [
@@ -102,7 +93,7 @@ export const MY_NATIVE_FORMATS = {
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AttachJWTToRequestInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: RequestNonAuthorizedErrorInterceptor, multi: true },
-    { provide: OWL_DATE_TIME_FORMATS, useValue: MY_NATIVE_FORMATS },
+    { provide: OWL_DATE_TIME_LOCALE, useValue: 'in' },
   ],
   bootstrap: [AppComponent]
 })

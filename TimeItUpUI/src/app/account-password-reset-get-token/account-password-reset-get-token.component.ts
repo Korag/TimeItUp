@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
 import { FormBuilder } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { UserService, ValidationErrorPopulatorService } from '../_services';
 
@@ -20,12 +19,9 @@ export class AccountPasswordResetGetTokenComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private route: ActivatedRoute,
-    private router: Router,
     private userService: UserService,
     private toastr: ToastrService,
-    private validHelp: ValidationErrorPopulatorService) {
-  }
+    private validHelp: ValidationErrorPopulatorService) { }
 
   ngOnInit(): void {
     this.getResetPasswordTokenForm = this.formBuilder.group({

@@ -13,7 +13,7 @@ export class ActiveTimersComponent implements OnInit {
   timers: TimerModel[] = [];
   listLoading: boolean = true;
 
-  constructor(private router: Router,
+  constructor(
     private authService: AuthService,
     private timerService: TimerService,
     private toastr: ToastrService) { }

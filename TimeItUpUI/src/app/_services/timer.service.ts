@@ -9,8 +9,7 @@ import { TimerModel } from '../_models';
 })
 export class TimerService {
 
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) { }
 
   public async createTimer(userId: string, name: string, description: string): Promise<TimerModel> {
     var createdTimer = new TimerModel();
@@ -40,7 +39,7 @@ export class TimerService {
   }
 
   public async removeTimer(id: number): Promise<void> {
-    await this.http.delete(`${environment.apiUrl}/Timers/${id}`, { })
+    await this.http.delete(`${environment.apiUrl}/Timers/${id}`, {})
       .toPromise();
   }
 

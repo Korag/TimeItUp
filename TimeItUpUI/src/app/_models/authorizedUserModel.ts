@@ -5,5 +5,5 @@ export class AuthorizedUserModel {
   lastName?: string;
   token? : string;
 
-  constructor( ) {}
+  constructor() {}
 }

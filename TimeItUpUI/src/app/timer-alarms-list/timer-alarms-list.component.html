@@ -36,13 +36,13 @@
               <td>{{alarm.description}}</td>
               <td>{{alarm.activationTime + "Z" | date: 'dd/MM/yyyy HH:mm'}}</td>
               <td>
-                  <div class="btn-group w-100" role="group">
-                    <button class="btn btn-grad-sec" (click)="openUpdateAlarmModal(alarm)" style="max-width: 120px; margin-left: auto">
-                      Edit
-                    </button>
-                    <button class="btn btn-grad-th" (click)="openRemoveAlarmModal(alarm)" style="max-width: 120px; margin-right: auto">
-                      Remove
-                    </button>
+                <div class="btn-group w-100" role="group">
+                  <button class="btn btn-grad-sec" (click)="openUpdateAlarmModal(alarm)" style="max-width: 120px; margin-left: auto">
+                    Edit
+                  </button>
+                  <button class="btn btn-grad-th" (click)="openRemoveAlarmModal(alarm)" style="max-width: 120px; margin-right: auto">
+                    Remove
+                  </button>
                 </div>
               </td>
             </tr>

@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { TimerDurationSectionComponent } from '../timer-duration-section';
 import { PauseModel, SplitModel, TimerModel } from '../_models';
@@ -20,7 +20,7 @@ export class TimerDetailsComponent implements OnInit {
   splitChildMessage!: string;
   pauseChildMessage!: string;
 
-  constructor(private router: Router,
+  constructor(
     private route: ActivatedRoute,
     private timerService: TimerService,
     private splitService: SplitService,

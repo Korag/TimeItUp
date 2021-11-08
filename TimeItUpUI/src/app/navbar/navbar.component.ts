@@ -19,7 +19,7 @@ export class NavbarComponent implements OnInit {
     private authService: AuthService,
     private modalService: NgbModal,
     private router: Router,
-    private toastr: ToastrService) {}
+    private toastr: ToastrService) { }
 
   ngOnInit(): void {
   }

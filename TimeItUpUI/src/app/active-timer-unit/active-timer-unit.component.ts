@@ -109,7 +109,6 @@ export class ActiveTimerUnitComponent implements OnInit {
 
   async pauseTimer() {
     this.pause = await this.pauseService.createPause(this.timer.id!);
-    console.log(this.pause);
     await this.pauseService.startPause(this.pause.id!);
     this.isPaused = true;
     this.toastr.warning('The timer has been paused');

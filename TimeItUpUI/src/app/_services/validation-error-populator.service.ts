@@ -6,7 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class ValidationErrorPopulatorService {
 
-  constructor(private toastr: ToastrService,) { }
+  constructor(private toastr: ToastrService) { }
 
   public async populateValidationErrorArray(err: any, reqErrors: string[]): Promise<string[]> {
     let validationErrorDictionary = err.error.errors;

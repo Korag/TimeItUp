@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { TimerModel } from '../_models';
 import { AuthService, TimerService } from '../_services';
 
@@ -12,7 +11,7 @@ export class PastTimersComponent implements OnInit {
   timers: TimerModel[] = [];
   listLoading: boolean = true;
 
-  constructor(private router: Router,
+  constructor(
     private authService: AuthService,
     private timerService: TimerService) { }
 

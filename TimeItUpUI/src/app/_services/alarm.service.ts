@@ -9,8 +9,7 @@ import { AlarmModel } from '../_models';
 })
 export class AlarmService {
 
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) { }
 
   public async createAlarm(timerId: number, name: string, description: string, activationTime: Date): Promise<AlarmModel> {
     var createdAlarm = new AlarmModel();
@@ -65,5 +64,4 @@ export class AlarmService {
 
     return await timerAlarms;
   }
-
 }

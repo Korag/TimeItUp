@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -11,8 +10,7 @@ export class LogoutUserModalComponent {
 
   @Output() logoutUserEvent = new EventEmitter<string>();
 
-  constructor(private modalService: NgbModal,
-    public activeModal: NgbActiveModal  ) { }
+  constructor(public activeModal: NgbActiveModal) { }
 
   ngOnInit() {
 

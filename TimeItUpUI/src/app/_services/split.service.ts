@@ -9,8 +9,7 @@ import { SplitModel } from '../_models';
 })
 export class SplitService {
 
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) { }
 
   public async createSplit(timerId: number): Promise<SplitModel> {
     var createdSplit = new SplitModel();

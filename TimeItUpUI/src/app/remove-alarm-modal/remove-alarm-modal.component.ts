@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { AlarmModel } from '../_models';
 
 @Component({
@@ -11,7 +11,7 @@ export class RemoveAlarmModalComponent implements OnInit {
   @Input() public alarm!: AlarmModel;
   @Output() removeAlarmEvent = new EventEmitter<AlarmModel>();
 
-  constructor(private modalService: NgbModal,
+  constructor(
     public activeModal: NgbActiveModal) { }
 
   ngOnInit(): void {

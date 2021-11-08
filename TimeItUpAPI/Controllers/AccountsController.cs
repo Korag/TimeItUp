@@ -189,7 +189,7 @@ namespace TimeItUpAPI.Controllers
 
                 var updatedUser = await _userRepo.GetUserByEmailAddress(email);
                 updatedUser.EmailAddress = userAccount.NewEmail;
-                
+
                 await _generalRepo.ChangeEntryStateToModified(updatedUser);
                 await _generalRepo.SaveChangesAsync();
 
