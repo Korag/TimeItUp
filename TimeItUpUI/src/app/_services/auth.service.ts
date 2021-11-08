@@ -1,12 +1,10 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment.prod';
+import { environment } from '../../environments/environment';
 import { JwtHelperService } from "@auth0/angular-jwt";
 
 import { AuthorizedUserModel, AuthTokenModel, UserModel } from '../_models';
 import { map } from 'rxjs/operators';
-import { Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root'
