@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'https://timeitupapi.azurewebsites.net/api'
+  apiUrl: 'https://localhost:44314/api'
 };
 
 /*
